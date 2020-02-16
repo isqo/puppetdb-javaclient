@@ -9,11 +9,6 @@ jobs:
       # specify the version you desire here
       - image: circleci/openjdk:8-jdk
 
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/postgres:9.4
-
     working_directory: ~/repo
 
     environment:
@@ -29,27 +24,33 @@ jobs:
           - v1-dependencies-{{ checksum "pom.xml" }}
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
-
       - run: mvn dependency:go-offline
-
       - save_cache:
           paths:
             - ~/.m2
           key: v1-dependencies-{{ checksum "pom.xml" }}
 
       # run tests!
-      #- run: mvn integration-test
+      - run: mvn integration-test
 
-      #- run:
-      #    name: Save test results
-      #    command: |
-      #      mkdir -p ~/junit/
-      #      find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} ~/junit/ \;
-      #    when: always
-      #- store_test_results:
-      #    path: ~/junit
-      #- store_artifacts:
-      #    path: ~/junit
+      - run:
+          name: Save test results
+          command: |
+            mkdir -p ~/junit/
+            find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} ~/junit/ \;
+          when: always
+      - store_test_results:
+          path: ~/junit
+      - store_artifacts:
+          path: ~/junit
+  acceptancetests:
+    docker:
+      # specify the version you desire here
+      - image: circleci/openjdk:8-jdk
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - setup_remote_docker
       - run:
           name: Start containers and verify they are working
           command: |
@@ -58,6 +59,18 @@ jobs:
             docker create -v /docker-entrypoint-initdb.d --name configs alpine:3.4 /bin/true
             # copy a config file into this volume
             docker cp acceptance/docker/initdb/puppetdb.sql configs:/docker-entrypoint-initdb.d
-            docker run -d -p 5432 -e POSTGRES_PASSWORD=puppetdb -e POSTGRES_USER=puppetdb --volumes-from configs --name postgres postgres:9.6
-            docker run -p 8080:8080 -p 8081 -e USE_PUPPETSERVER=false -e CONSUL_ENABLED=false --network container:postgres --name puppetdb puppet/puppetdb
-            docker exec puppetdb curl --retry 10 --retry-connrefused http://puppetdb:8080/pdb/query/v4/nodes?query=%5B%22%3D%22%2C%22certname%22%2C%22c826a077907a.us-east-2.compute.internal%22%5D
+            # create a dummy container which will hold a volume with config
+            docker create -v /usr/src/mymaven --name acceptance alpine:3.4 /bin/true
+            # copy a config file into this volume
+            docker cp . acceptance:/usr/src/mymaven
+            docker network create mynetwork
+            docker run -d --expose 5432 -e POSTGRES_PASSWORD=puppetdb -e POSTGRES_USER=puppetdb --network mynetwork --volumes-from configs --name postgres postgres:9.6
+            docker run -d --expose 8081 --expose 8080 -e USE_PUPPETSERVER=false -e CONSUL_ENABLED=false --network mynetwork  --name puppetdb puppet/puppetdb
+            docker exec puppetdb curl --retry 20 --retry-connrefused http://puppetdb:8080/pdb/query/v4/nodes?query=%5B%22%3D%22%2C%22certname%22%2C%22c826a077907a.us-east-2.compute.internal%22%5D
+            docker run -it --rm --name acceptancetests --volumes-from acceptance --network mynetwork -w /usr/src/mymaven maven:3.3-jdk-8 mvn clean install
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
+      - acceptancetests
