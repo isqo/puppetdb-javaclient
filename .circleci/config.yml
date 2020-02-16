@@ -22,7 +22,7 @@ jobs:
 
     steps:
       - checkout
-
+      - setup_remote_docker
       # Download and cache dependencies
       - restore_cache:
           keys:
@@ -50,3 +50,13 @@ jobs:
           path: ~/junit
       - store_artifacts:
           path: ~/junit
+      - run:
+          name: Start containers and verify they are working
+          command: |
+            set -x
+            # create a dummy container which will hold a volume with config
+            docker create -v /docker-entrypoint-initdb.d --name configs alpine:3.4 /bin/true
+            # copy a config file into this volume
+            docker cp acceptance/docker/initdb/puppetdb.sql configs:/docker-entrypoint-initdb.d
+            docker-compose up -d
+            docker exec puppetdb curl --retry 10 --retry-connrefused http://puppetdb:8080/pdb/query/v4/nodes?query=%5B%22%3D%22%2C%22certname%22%2C%22c826a077907a.us-east-2.compute.internal%22%5D
