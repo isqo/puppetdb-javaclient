@@ -1,0 +1,23 @@
+version: '2'
+
+services:
+  puppetdb-postgres:
+    container_name: postgres
+    image: postgres:9.6
+    environment:
+      - POSTGRES_PASSWORD=puppetdb
+      - POSTGRES_USER=puppetdb
+    ports:
+      - 5432
+    volumes_from:
+      - configs:rw
+
+  puppetdb:
+    hostname: puppetdb
+    image: puppet/puppetdb
+    ports:
+      - 8080:8080
+      - 8081
+    environment:
+      - USE_PUPPETSERVER=false
+      - CONSUL_ENABLED=false
