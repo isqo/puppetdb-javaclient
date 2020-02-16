@@ -43,7 +43,7 @@ jobs:
           path: ~/junit
       - store_artifacts:
           path: ~/junit
-  acceptancetests:
+  acceptance-latestpdb:
     docker:
       # specify the version you desire here
       - image: circleci/openjdk:8-jdk
@@ -67,15 +67,13 @@ jobs:
             docker run -d --expose 5432 -e POSTGRES_PASSWORD=puppetdb -e POSTGRES_USER=puppetdb --network mynetwork --volumes-from configs --name postgres postgres:9.6
             docker run -d --expose 8081 --expose 8080 -e USE_PUPPETSERVER=false -e CONSUL_ENABLED=false --network mynetwork  --name puppetdb puppet/puppetdb
             docker exec puppetdb curl --retry 20 --retry-connrefused http://puppetdb:8080/pdb/query/v4/nodes?query=%5B%22%3D%22%2C%22certname%22%2C%22c826a077907a.us-east-2.compute.internal%22%5D
-            docker run -it --rm --name acceptancetests --volumes-from acceptance --network mynetwork -w /usr/src/mymaven maven:3.3-jdk-8 mvn clean install
-      - run: |
-          # after application container finishes, copy artifacts directly from it
-          docker cp acceptancetests:/usr/src/mymaven/ acceptance
+            docker run -it --name acceptancetests --volumes-from acceptance --network mynetwork -w /usr/src/mymaven maven:3.3-jdk-8 mvn clean install
       - run:
           name: Save test results
           command: |
-            mkdir -p ~/acceptance-junit/
-            find . -type f -regex "acceptance/target/surefire-reports/.*xml" -exec cp {} ~/acceptance-junit/ \;
+            docker cp acceptancetests:/usr/src/mymaven/target acceptance
+            mkdir -p ~/acceptance-junit
+            find . -type f -regex "./acceptance/target/surefire-reports/.*xml" -exec cp {} ~/acceptance-junit \;
           when: always
       - store_test_results:
           path: ~/acceptance-junit
@@ -86,4 +84,4 @@ workflows:
   build_and_test:
     jobs:
       - build
-      - acceptancetests
+      - acceptance-latestpdb
