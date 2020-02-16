@@ -38,18 +38,18 @@ jobs:
           key: v1-dependencies-{{ checksum "pom.xml" }}
 
       # run tests!
-      - run: mvn integration-test
+      #- run: mvn integration-test
 
-      - run:
-          name: Save test results
-          command: |
-            mkdir -p ~/junit/
-            find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} ~/junit/ \;
-          when: always
-      - store_test_results:
-          path: ~/junit
-      - store_artifacts:
-          path: ~/junit
+      #- run:
+      #    name: Save test results
+      #    command: |
+      #      mkdir -p ~/junit/
+      #      find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} ~/junit/ \;
+      #    when: always
+      #- store_test_results:
+      #    path: ~/junit
+      #- store_artifacts:
+      #    path: ~/junit
       - run:
           name: Start containers and verify they are working
           command: |
