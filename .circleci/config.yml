@@ -62,7 +62,7 @@ jobs:
             # create a dummy container which will hold a volume with config
             docker create -v /usr/src/mymaven --name acceptance alpine:3.4 /bin/true
             # copy a config file into this volume
-            docker cp acceptance acceptance:/usr/src/mymaven
+            docker cp ./acceptance acceptance:/usr/src/mymaven
             docker network create mynetwork
             docker run -d --expose 5432 -e POSTGRES_PASSWORD=puppetdb -e POSTGRES_USER=puppetdb --network mynetwork --volumes-from configs --name postgres postgres:9.6
             docker run -d --expose 8081 --expose 8080 -e USE_PUPPETSERVER=false -e CONSUL_ENABLED=false --network mynetwork  --name puppetdb puppet/puppetdb

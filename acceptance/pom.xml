@@ -8,8 +8,6 @@
     <artifactId>acceptance-tests</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    <packaging>jar</packaging>
-
     <properties>
         <junit-jupiter-api.version>5.1.0</junit-jupiter-api.version>
     </properties>
