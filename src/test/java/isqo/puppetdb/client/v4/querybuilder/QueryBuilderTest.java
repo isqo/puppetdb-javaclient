@@ -10,8 +10,8 @@ public class QueryBuilderTest {
     @DisplayName("ASTQueryBuilder should return a valid 3 elements query string for equal binary operator")
     public void equalOperator() {
         assertEquals("[\"=\",\"certname\",\"c9d2ddc6b309.us-east-2.compute.internal\"]",
-                new AstQueryBuilder("certname", "c9d2ddc6b309.us-east-2.compute.internal")
-                        .equal()
+                new AstQueryBuilder("certname")
+                        .equal("c9d2ddc6b309.us-east-2.compute.internal")
                         .build());
     }
 
@@ -19,8 +19,8 @@ public class QueryBuilderTest {
     @DisplayName("ASTQueryBuilder should return a valid 3 elements query string for 'greater than' operator")
     public void greaterThanOperator() {
         assertEquals("[\">\",\"rubyversion\",\"2.4.3\"]",
-                new AstQueryBuilder("rubyversion", "2.4.3")
-                        .greaterThan()
+                new AstQueryBuilder("rubyversion")
+                        .greaterThan("2.4.3")
                         .build());
     }
 
@@ -28,8 +28,8 @@ public class QueryBuilderTest {
     @DisplayName("ASTQueryBuilder should return a valid 3 elements query string for 'less than' operator")
     public void lessThanOperator() {
         assertEquals("[\"<\",\"rubyversion\",\"2.4.3\"]",
-                new AstQueryBuilder("rubyversion", "2.4.3")
-                        .lessThan()
+                new AstQueryBuilder("rubyversion")
+                        .lessThan("2.4.3")
                         .build());
     }
 
@@ -37,8 +37,8 @@ public class QueryBuilderTest {
     @DisplayName("ASTQueryBuilder should return a valid 3 elements query string for 'greater than or equal to' operator")
     public void greaterThanOrEqualOperator() {
         assertEquals("[\">=\",\"rubyversion\",\"2.4.3\"]",
-                new AstQueryBuilder("rubyversion", "2.4.3")
-                        .greaterThanOrEq()
+                new AstQueryBuilder("rubyversion")
+                        .greaterThanOrEq("2.4.3")
                         .build());
     }
 
@@ -46,8 +46,8 @@ public class QueryBuilderTest {
     @DisplayName("ASTQueryBuilder should return a valid 3 elements query string for 'less than or equal to' operator")
     public void lessThanOrEqualOperator() {
         assertEquals("[\"<=\",\"rubyversion\",\"2.4.3\"]",
-                new AstQueryBuilder("rubyversion", "2.4.3")
-                        .lessThanOrEq()
+                new AstQueryBuilder("rubyversion")
+                        .lessThanOrEq("2.4.3")
                         .build());
     }
 }

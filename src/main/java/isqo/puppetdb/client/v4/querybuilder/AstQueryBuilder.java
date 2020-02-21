@@ -9,18 +9,19 @@ public class AstQueryBuilder {
     private String operator;
     private String queryStringFormat = "[\"%s\",\"%s\",\"%s\"]";
 
-    public AstQueryBuilder(String field, String value) {
+    public AstQueryBuilder(String field) {
         this.field = field;
-        this.value = value;
     }
 
-    public AstQueryBuilder equal() {
+    public AstQueryBuilder equal(String value) {
         this.operator = EQUAL_OP;
+        this.value = value;
         return this;
     }
 
-    public AstQueryBuilder greaterThan() {
+    public AstQueryBuilder greaterThan(String value) {
         this.operator = GREATERTHAN_OP;
+        this.value = value;
         return this;
     }
 
@@ -28,17 +29,20 @@ public class AstQueryBuilder {
         return String.format(queryStringFormat, operator, field, value);
     }
 
-    public AstQueryBuilder lessThan() {
+    public AstQueryBuilder lessThan(String value) {
+        this.value = value;
         this.operator = LESS_THAN_OP;
         return this;
     }
 
-    public AstQueryBuilder greaterThanOrEq() {
+    public AstQueryBuilder greaterThanOrEq(String value) {
+        this.value = value;
         this.operator = GREATERTHAN_OP + EQUAL_OP;
         return this;
     }
 
-    public AstQueryBuilder lessThanOrEq() {
+    public AstQueryBuilder lessThanOrEq(String value) {
+        this.value = value;
         this.operator = LESS_THAN_OP + EQUAL_OP;
         return this;
     }
