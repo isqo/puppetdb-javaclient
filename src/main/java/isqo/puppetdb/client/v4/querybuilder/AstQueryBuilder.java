@@ -2,8 +2,8 @@ package isqo.puppetdb.client.v4.querybuilder;
 
 public class AstQueryBuilder {
     private static final String EQUAL_OP = "=";
-    public static final String GREATERTHAN_OP = ">";
-    public static final String LESS_THAN_OP = "<";
+    private static final String GREATERTHAN_OP = ">";
+    private static final String LESS_THAN_OP = "<";
     private String field;
     private String value;
     private String operator;
