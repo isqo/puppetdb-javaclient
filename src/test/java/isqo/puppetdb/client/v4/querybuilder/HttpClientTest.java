@@ -5,6 +5,7 @@ import isqo.puppetdb.client.v4.http.HttpClient;
 import isqo.puppetdb.client.v4.http.HttpConnection;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
@@ -25,6 +26,7 @@ class HttpClientTest {
     }
 
     @Test
+    @DisplayName("httpclient response should contain nodes data when nodes endpoint responds correctly ")
     void getData() {
         stubFor(get(urlEqualTo("/pdb/query/v4/nodes/mbp.local"))
                 .willReturn(aResponse()
@@ -35,7 +37,7 @@ class HttpClientTest {
         connection.setPort(8080);
         HttpClient httpClient = new HttpClient(connection);
         String data = httpClient.get("/pdb/query/v4/nodes/mbp.local");
-        assertThat(data, containsString("\"facts_environment\" : \"production\""));
-        assertThat(data, containsString("\"latest_report_hash\": \"2625d1b601e98ed1e281ccd79ca8d16b9f74fea6\","));
+        assertThat(data, containsString("facts_environment"));
+        assertThat(data, containsString("2625d1b601e98ed1e281ccd79ca8d16b9f74fea6"));
     }
 }
