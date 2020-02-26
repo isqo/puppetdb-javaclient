@@ -35,7 +35,7 @@ class HttpClientTest {
 
     @Test
     @DisplayName("response should contain 2625d1b value and facts_environment property when pdb endpoint responds correctly ")
-    void getDataOK() {
+    void everythingIsOk() {
         stubFor(get(urlEqualTo("/pdb/query/v4/nodes/mbp.local"))
                 .willReturn(aResponse()
                         .withBodyFile("mbp.local.json")));
@@ -51,7 +51,7 @@ class HttpClientTest {
 
     @Test
     @DisplayName("PuppetdbHttpException should be thrown when http status code is < 200 and >=300")
-    void getDataKo1() {
+    void httpStatusKoCheck() {
         stubFor(get(urlEqualTo("/pdb/query/v4/nodes/mbp.local"))
                 .willReturn(status(500)));
 
@@ -60,13 +60,13 @@ class HttpClientTest {
         connection.setPort(8080);
         HttpClient httpClient = new HttpClient(connection);
         PuppetdbHttpException exception = assertThrows(PuppetdbHttpException.class,
-                () -> httpClient.get("/pdb/query/v4/nodes/mbp.local"));
+                () -> httpClient.get("/pdb/query/v4/nodes"));
         assertThat(exception.getMessage(), containsString("500"));
     }
 
     @Test
     @DisplayName("throws puppetdbHttpException when apache httpclient returns null entity")
-    void getDataKo2() throws IOException {
+    void httpEntityNullCheck() throws IOException {
         CloseableHttpClient httpClient = mock(CloseableHttpClient.class);
         CloseableHttpResponse httpResponse = mock(CloseableHttpResponse.class);
         StatusLine statusLine = mock(StatusLine.class);
@@ -82,5 +82,21 @@ class HttpClientTest {
         PuppetdbHttpException exception = assertThrows(PuppetdbHttpException.class,
                 () -> new HttpClient(connection, httpClient).get("/pdb/query/v4/nodes/mbp.local"));
         assertThat(exception.getMessage(), containsString("null"));
+    }
+
+    @Test
+    @DisplayName("ast query should be present in the http request when passed to the httpclient")
+    void astQueryCheck() {
+        stubFor(get(urlPathEqualTo("/pdb/query/v4/nodes"))
+                .willReturn(status(200)));
+
+        HttpConnection connection = new HttpConnection();
+        connection.setHost("localhost");
+        connection.setPort(8080);
+
+        new HttpClient(connection).get("/pdb/query/v4/nodes", "[\"=\", \"certname\", \"example.local\"]");
+
+        verify(getRequestedFor(urlPathEqualTo("/pdb/query/v4/nodes"))
+                .withQueryParam("query", containing("[\"=\", \"certname\", \"example.local\"]")));
     }
 }
