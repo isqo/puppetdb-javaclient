@@ -60,7 +60,7 @@ class HttpClientTest {
         connection.setPort(8080);
         HttpClient httpClient = new HttpClient(connection);
         PuppetdbHttpException exception = assertThrows(PuppetdbHttpException.class,
-                () -> httpClient.get("/pdb/query/v4/nodes"));
+                () -> httpClient.get("/pdb/query/v4/nodes/mbp.local"));
         assertThat(exception.getMessage(), containsString("500"));
     }
 
