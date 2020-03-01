@@ -21,7 +21,8 @@ public class NodeEndPointTest {
     @DisplayName("unmarshalling node data should be done successfully when httpclient behaves normally")
     void everythingIsOk() {
         String query = "[\"=\", \"certname\", \"mbp.local\"]";
-        File file = new File("src\\test\\resources\\__files\\mbp.local.json");
+
+        File file = new File("src" + File.separator + "test" + File.separator + "resources" + File.separator + "__files" + File.separator + "mbp.local.json");
         Charset charset = StandardCharsets.UTF_8;
         String content = null;
         try (InputStream in = new FileInputStream(file)) {
