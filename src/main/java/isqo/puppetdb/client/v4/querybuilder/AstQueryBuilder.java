@@ -14,7 +14,7 @@ public class AstQueryBuilder {
         this.field = field;
     }
 
-    public AstQueryBuilder equal(String value) {
+    public AstQueryBuilder equals(String value) {
         this.operator = EQUAL_OP;
         this.value = value;
         return this;

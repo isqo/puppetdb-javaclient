@@ -14,7 +14,7 @@ public class QueryBuilderTest {
     public void equalOperator() {
         Assertions.assertEquals("[\"=\",\"certname\",\"c9d2ddc6b309.us-east-2.compute.internal\"]",
                 new AstQueryBuilder("certname")
-                        .equal("c9d2ddc6b309.us-east-2.compute.internal")
+                        .equals("c9d2ddc6b309.us-east-2.compute.internal")
                         .build());
     }
 
