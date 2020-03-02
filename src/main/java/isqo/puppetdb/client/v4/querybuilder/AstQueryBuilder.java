@@ -1,5 +1,6 @@
 package isqo.puppetdb.client.v4.querybuilder;
 
+@SuppressWarnings("checkstyle:Indentation")
 public class AstQueryBuilder {
     private static final String EQUAL_OP = "=";
     private static final String GREATERTHAN_OP = ">";

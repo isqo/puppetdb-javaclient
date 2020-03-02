@@ -1,158 +1,174 @@
 package isqo.puppetdb.client.v4.api;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
 
 public class NodeData {
-    private String deactivated;
-    private String facts_environment;
-    private String report_environment;
-    private String catalog_environment;
-    private String facts_timestamp;
-    private String expired;
-    private String report_timestamp;
-    private String catalog_timestamp;
-    private String certname;
-    private String latest_report_status;
-    private boolean latest_report_noop;
-    private boolean latest_report_noop_pending;
-    private String latest_report_hash;
-    private String latest_report_job_id;
+  private String deactivated;
+  private String factsEnvironment;
+  private String reportEnvironment;
+  private String catalogEnvironment;
+  private String factsTimestamp;
+  private String expired;
+  private String reportTimestamp;
+  private String catalogTimestamp;
+  private String certname;
+  private String latestReportStatus;
+  private boolean latestReportNoop;
+  private boolean latestReportNoopPending;
+  private String latestReportHash;
+  private String latestReportJobId;
 
-    public String getDeactivated() {
-        return deactivated;
-    }
+  public String getDeactivated() {
+    return deactivated;
+  }
 
-    public void setDeactivated(String deactivated) {
-        this.deactivated = deactivated;
-    }
+  public void setDeactivated(String deactivated) {
+    this.deactivated = deactivated;
+  }
 
-    public String getFacts_environment() {
-        return facts_environment;
-    }
+  @JsonProperty("facts_environment")
+  public String getFactsEnvironment() {
+    return factsEnvironment;
+  }
 
-    public void setFacts_environment(String facts_environment) {
-        this.facts_environment = facts_environment;
-    }
+  public void setFactsEnvironment(String factsEnvironment) {
+    this.factsEnvironment = factsEnvironment;
+  }
 
-    public String getReport_environment() {
-        return report_environment;
-    }
+  @JsonProperty("report_environment")
+  public String getReportEnvironment() {
+    return reportEnvironment;
+  }
 
-    public void setReport_environment(String report_environment) {
-        this.report_environment = report_environment;
-    }
+  public void setReportEnvironment(String reportEnvironment) {
+    this.reportEnvironment = reportEnvironment;
+  }
 
-    public String getCatalog_environment() {
-        return catalog_environment;
-    }
+  @JsonProperty("catalog_environment")
+  public String getCatalogEnvironment() {
+    return catalogEnvironment;
+  }
 
-    public void setCatalog_environment(String catalog_environment) {
-        this.catalog_environment = catalog_environment;
-    }
+  public void setCatalogEnvironment(String catalogEnvironment) {
+    this.catalogEnvironment = catalogEnvironment;
+  }
 
-    public String getFacts_timestamp() {
-        return facts_timestamp;
-    }
+  @JsonProperty("facts_timestamp")
+  public String getFactsTimestamp() {
+    return factsTimestamp;
+  }
 
-    public void setFacts_timestamp(String facts_timestamp) {
-        this.facts_timestamp = facts_timestamp;
-    }
+  public void setFactsTimestamp(String factsTimestamp) {
+    this.factsTimestamp = factsTimestamp;
+  }
 
-    public String getExpired() {
-        return expired;
-    }
+  public String getExpired() {
+    return expired;
+  }
 
-    public void setExpired(String expired) {
-        this.expired = expired;
-    }
+  public void setExpired(String expired) {
+    this.expired = expired;
+  }
 
-    public String getReport_timestamp() {
-        return report_timestamp;
-    }
+  @JsonProperty("report_timestamp")
+  public String getReportTimestamp() {
+    return reportTimestamp;
+  }
 
-    public void setReport_timestamp(String report_timestamp) {
-        this.report_timestamp = report_timestamp;
-    }
+  public void setReportTimestamp(String reportTimestamp) {
+    this.reportTimestamp = reportTimestamp;
+  }
 
-    public String getCatalog_timestamp() {
-        return catalog_timestamp;
-    }
+  @JsonProperty("catalog_timestamp")
+  public String getCatalogTimestamp() {
+    return catalogTimestamp;
+  }
 
-    public void setCatalog_timestamp(String catalog_timestamp) {
-        this.catalog_timestamp = catalog_timestamp;
-    }
+  public void setCatalogTimestamp(String catalogTimestamp) {
+    this.catalogTimestamp = catalogTimestamp;
+  }
 
-    public String getCertname() {
-        return certname;
-    }
+  public String getCertname() {
+    return certname;
+  }
 
-    public void setCertname(String certname) {
-        this.certname = certname;
-    }
+  public void setCertname(String certname) {
+    this.certname = certname;
+  }
 
-    public String getLatest_report_status() {
-        return latest_report_status;
-    }
+  @JsonProperty("latest_report_status")
+  public String getLatestReportStatus() {
+    return latestReportStatus;
+  }
 
-    public void setLatest_report_status(String latest_report_status) {
-        this.latest_report_status = latest_report_status;
-    }
+  public void setLatestReportStatus(String latestReportStatus) {
+    this.latestReportStatus = latestReportStatus;
+  }
 
-    public boolean isLatest_report_noop() {
-        return latest_report_noop;
-    }
+  @JsonProperty("latest_report_noop")
+  public boolean isLatestReportNoop() {
+    return latestReportNoop;
+  }
 
-    public void setLatest_report_noop(boolean latest_report_noop) {
-        this.latest_report_noop = latest_report_noop;
-    }
+  public void setLatestReportNoop(boolean latestReportNoop) {
+    this.latestReportNoop = latestReportNoop;
+  }
 
-    public boolean isLatest_report_noop_pending() {
-        return latest_report_noop_pending;
-    }
+  @JsonProperty("latest_report_noop_pending")
+  public boolean isLatestReportNoopPending() {
+    return latestReportNoopPending;
+  }
 
-    public void setLatest_report_noop_pending(boolean latest_report_noop_pending) {
-        this.latest_report_noop_pending = latest_report_noop_pending;
-    }
+  public void setLatestReportNoopPending(boolean latestReportNoopPending) {
+    this.latestReportNoopPending = latestReportNoopPending;
+  }
 
-    public String getLatest_report_hash() {
-        return latest_report_hash;
-    }
+  @JsonProperty("latest_report_hash")
+  public String getLatestReportHash() {
+    return latestReportHash;
+  }
 
-    public void setLatest_report_hash(String latest_report_hash) {
-        this.latest_report_hash = latest_report_hash;
-    }
+  public void setLatestReportHash(String latestReportHash) {
+    this.latestReportHash = latestReportHash;
+  }
 
-    public String getLatest_report_job_id() {
-        return latest_report_job_id;
-    }
+  @JsonProperty("latest_report_job_id")
+  public String getLatestReportJobId() {
+    return latestReportJobId;
+  }
 
-    public void setLatest_report_job_id(String latest_report_job_id) {
-        this.latest_report_job_id = latest_report_job_id;
-    }
+  public void setLatestReportJobId(String latestReportJobId) {
+    this.latestReportJobId = latestReportJobId;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        NodeData nodeData = (NodeData) o;
-        return Objects.equals(deactivated, nodeData.deactivated) &&
-                Objects.equals(facts_environment, nodeData.facts_environment) &&
-                Objects.equals(report_environment, nodeData.report_environment) &&
-                Objects.equals(catalog_environment, nodeData.catalog_environment) &&
-                Objects.equals(facts_timestamp, nodeData.facts_timestamp) &&
-                Objects.equals(expired, nodeData.expired) &&
-                Objects.equals(report_timestamp, nodeData.report_timestamp) &&
-                Objects.equals(catalog_timestamp, nodeData.catalog_timestamp) &&
-                Objects.equals(certname, nodeData.certname) &&
-                Objects.equals(latest_report_status, nodeData.latest_report_status) &&
-                Objects.equals(latest_report_noop, nodeData.latest_report_noop) &&
-                Objects.equals(latest_report_noop_pending, nodeData.latest_report_noop_pending) &&
-                Objects.equals(latest_report_hash, nodeData.latest_report_hash) &&
-                Objects.equals(latest_report_job_id, nodeData.latest_report_job_id);
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    NodeData nodeData = (NodeData) o;
+    return Objects.equals(deactivated, nodeData.deactivated)
+            && Objects.equals(factsEnvironment, nodeData.factsEnvironment)
+            && Objects.equals(reportEnvironment, nodeData.reportEnvironment)
+            && Objects.equals(catalogEnvironment, nodeData.catalogEnvironment)
+            && Objects.equals(factsTimestamp, nodeData.factsTimestamp)
+            && Objects.equals(expired, nodeData.expired)
+            && Objects.equals(reportTimestamp, nodeData.reportTimestamp)
+            && Objects.equals(catalogTimestamp, nodeData.catalogTimestamp)
+            && Objects.equals(certname, nodeData.certname)
+            && Objects.equals(latestReportStatus, nodeData.latestReportStatus)
+            && Objects.equals(latestReportNoop, nodeData.latestReportNoop)
+            && Objects.equals(latestReportNoopPending, nodeData.latestReportNoopPending)
+            && Objects.equals(latestReportHash, nodeData.latestReportHash)
+            && Objects.equals(latestReportJobId, nodeData.latestReportJobId);
+  }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(deactivated, facts_environment, report_environment, catalog_environment, facts_timestamp, expired, report_timestamp, catalog_timestamp, certname, latest_report_status, latest_report_noop, latest_report_noop_pending, latest_report_hash, latest_report_job_id);
-    }
+  @Override
+  public int hashCode() {
+    return Objects.hash(deactivated, factsEnvironment, reportEnvironment, catalogEnvironment, factsTimestamp, expired, reportTimestamp, catalogTimestamp, certname, latestReportStatus, latestReportNoop, latestReportNoopPending, latestReportHash, latestReportJobId);
+  }
 }

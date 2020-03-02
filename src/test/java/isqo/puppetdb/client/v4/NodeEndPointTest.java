@@ -1,14 +1,16 @@
-package isqo.puppetdb.client.v4.api;
+package isqo.puppetdb.client.v4;
 
+import isqo.puppetdb.client.v4.api.NodeData;
+import isqo.puppetdb.client.v4.api.NodeEndPoint;
 import isqo.puppetdb.client.v4.http.HttpClient;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.samePropertyValuesAs;
@@ -39,19 +41,19 @@ public class NodeEndPointTest {
 
         NodeData expected = new NodeData();
         expected.setDeactivated(null);
-        expected.setFacts_environment("production");
-        expected.setReport_environment("production");
-        expected.setCatalog_environment("production");
-        expected.setFacts_timestamp("2015-06-19T23:03:42.401Z");
+        expected.setFactsEnvironment("production");
+        expected.setReportEnvironment("production");
+        expected.setCatalogEnvironment("production");
+        expected.setFactsTimestamp("2015-06-19T23:03:42.401Z");
         expected.setExpired(null);
-        expected.setReport_timestamp("2015-06-19T23:03:37.709Z");
+        expected.setReportTimestamp("2015-06-19T23:03:37.709Z");
         expected.setCertname("mbp.local");
-        expected.setCatalog_timestamp("2015-06-19T23:03:43.007Z");
-        expected.setLatest_report_status("success");
-        expected.setLatest_report_noop(false);
-        expected.setLatest_report_noop_pending(true);
-        expected.setLatest_report_hash("2625d1b601e98ed1e281ccd79ca8d16b9f74fea6");
-        expected.setLatest_report_job_id(null);
+        expected.setCatalogTimestamp("2015-06-19T23:03:43.007Z");
+        expected.setLatestReportStatus("success");
+        expected.setLatestReportNoop(false);
+        expected.setLatestReportNoopPending(true);
+        expected.setLatestReportHash("2625d1b601e98ed1e281ccd79ca8d16b9f74fea6");
+        expected.setLatestReportJobId(null);
 
         NodeData data = nodeEndPoint.getData(query);
         assertThat(data, samePropertyValuesAs(expected));
