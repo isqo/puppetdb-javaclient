@@ -12,17 +12,17 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 
 
-public class HttpClient {
+public class PdbHttpClient {
   private final CloseableHttpClient httpClient;
-  private final HttpConnection httpConnection;
+  private final PdbHttpConnection pdbHttpConnection;
 
-  public HttpClient(HttpConnection httpConnection, CloseableHttpClient httpclient) {
-    this.httpConnection = httpConnection;
+  public PdbHttpClient(PdbHttpConnection pdbHttpConnection, CloseableHttpClient httpclient) {
+    this.pdbHttpConnection = pdbHttpConnection;
     this.httpClient = httpclient;
   }
 
-  public HttpClient(HttpConnection httpConnection) {
-    this(httpConnection, HttpClients.createDefault());
+  public PdbHttpClient(PdbHttpConnection pdbHttpConnection) {
+    this(pdbHttpConnection, HttpClients.createDefault());
   }
 
   /*** this function is used to request puppetdb and get the needed information.
@@ -32,7 +32,7 @@ public class HttpClient {
    */
   public String get(String path) {
     URI uri = new UriBuilder()
-            .setHttpConnection(httpConnection)
+            .setPdbHttpConnection(pdbHttpConnection)
             .setPath(path).build();
     return get(uri);
   }
@@ -46,7 +46,7 @@ public class HttpClient {
    */
   public String get(String path, String query) {
     URI uri = new UriBuilder()
-            .setHttpConnection(httpConnection)
+            .setPdbHttpConnection(pdbHttpConnection)
             .setPath(path)
             .setQuery(query)
             .build();

@@ -1,6 +1,6 @@
 package isqo.puppetdb.client.v4.http;
 
-public class HttpConnection {
+public class PdbHttpConnection {
   public static final String SCHEME = "http";
   private String host;
   private int port;

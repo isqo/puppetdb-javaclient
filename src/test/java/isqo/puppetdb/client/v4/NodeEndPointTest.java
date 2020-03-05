@@ -2,7 +2,7 @@ package isqo.puppetdb.client.v4;
 
 import isqo.puppetdb.client.v4.api.NodeData;
 import isqo.puppetdb.client.v4.api.NodeEndPoint;
-import isqo.puppetdb.client.v4.http.HttpClient;
+import isqo.puppetdb.client.v4.http.PdbHttpClient;
 import isqo.puppetdb.client.v4.querybuilder.AstQueryBuilder;
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,9 +25,9 @@ public class NodeEndPointTest {
   void everythingIsOk() {
     String query = new AstQueryBuilder("certname").equals("mbp.local").build();
     String content = readFileFromFiles("mbp.local.json");
-    HttpClient httpClient = mock(HttpClient.class);
-    NodeEndPoint nodeEndPoint = new NodeEndPoint(httpClient);
-    when(httpClient.get(nodeEndPoint.getEndpoint(), query)).thenReturn(content);
+    PdbHttpClient pdbHttpClient = mock(PdbHttpClient.class);
+    NodeEndPoint nodeEndPoint = new NodeEndPoint(pdbHttpClient);
+    when(pdbHttpClient.get(nodeEndPoint.getEndpoint(), query)).thenReturn(content);
 
     NodeData expected = new NodeData();
     expected.setDeactivated(null);

@@ -1,11 +1,11 @@
 package isqo.puppetdb.client.v4.api;
 
-import isqo.puppetdb.client.v4.http.HttpClient;
+import isqo.puppetdb.client.v4.http.PdbHttpClient;
 
 public class NodeEndPoint extends AbstractEndpoint {
 
-  public NodeEndPoint(HttpClient pdbHttpClient) {
-    super(pdbHttpClient);
+  public NodeEndPoint(PdbHttpClient pdbPdbHttpClient) {
+    super(pdbPdbHttpClient);
   }
 
   @Override

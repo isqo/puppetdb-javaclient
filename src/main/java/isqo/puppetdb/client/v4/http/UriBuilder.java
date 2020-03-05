@@ -10,7 +10,7 @@ public class UriBuilder {
   private static final String EMPTY_STRING = "";
   private String path;
   private String query;
-  private HttpConnection httpConnection;
+  private PdbHttpConnection pdbHttpConnection;
 
   public UriBuilder setPath(String path) {
     this.path = path;
@@ -22,8 +22,8 @@ public class UriBuilder {
     return this;
   }
 
-  public UriBuilder setHttpConnection(HttpConnection httpConnection) {
-    this.httpConnection = httpConnection;
+  public UriBuilder setPdbHttpConnection(PdbHttpConnection pdbHttpConnection) {
+    this.pdbHttpConnection = pdbHttpConnection;
     return this;
   }
 
@@ -35,9 +35,9 @@ public class UriBuilder {
   public URI build() {
     try {
       URIBuilder uriBuilder = new URIBuilder()
-              .setScheme(HttpConnection.SCHEME)
-              .setHost(httpConnection.getHost())
-              .setPort(httpConnection.getPort())
+              .setScheme(PdbHttpConnection.SCHEME)
+              .setHost(pdbHttpConnection.getHost())
+              .setPort(pdbHttpConnection.getPort())
               .setPath(path);
 
       if (query != null) {
