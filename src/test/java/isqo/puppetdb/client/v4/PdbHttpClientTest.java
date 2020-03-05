@@ -41,10 +41,10 @@ class PdbHttpClientTest {
             .willReturn(aResponse()
                     .withBodyFile("mbp.local.json")));
 
-    PdbHttpConnection connection = new PdbHttpConnection();
-    connection.setHost("localhost");
-    connection.setPort(8080);
-    PdbHttpClient pdbHttpClient = new PdbHttpClient(connection);
+    PdbHttpClient pdbHttpClient = new PdbHttpClient(
+            new PdbHttpConnection()
+                    .setHost("localhost")
+                    .setPort(8080));
     String data = pdbHttpClient.get("/pdb/query/v4/nodes/mbp.local");
     assertThat(data, containsString("facts_environment"));
     assertThat(data, containsString("2625d1b601e98ed1e281ccd79ca8d16b9f74fea6"));
@@ -56,10 +56,10 @@ class PdbHttpClientTest {
     stubFor(get(urlEqualTo("/pdb/query/v4/nodes/mbp.local"))
             .willReturn(status(500)));
 
-    PdbHttpConnection connection = new PdbHttpConnection();
-    connection.setHost("localhost");
-    connection.setPort(8080);
-    PdbHttpClient pdbHttpClient = new PdbHttpClient(connection);
+    PdbHttpClient pdbHttpClient = new PdbHttpClient(
+            new PdbHttpConnection()
+                    .setHost("localhost")
+                    .setPort(8080));
     PuppetdbHttpException exception = assertThrows(PuppetdbHttpException.class,
             () -> pdbHttpClient.get("/pdb/query/v4/nodes/mbp.local"));
     assertThat(exception.getMessage(), containsString("500"));
@@ -76,12 +76,10 @@ class PdbHttpClientTest {
     when(httpResponse.getStatusLine()).thenReturn(statusLine);
     when(httpResponse.getEntity()).thenReturn(null);
 
-    PdbHttpConnection connection = new PdbHttpConnection();
-    connection.setHost("localhost");
-    connection.setPort(8080);
-
     PuppetdbHttpException exception = assertThrows(PuppetdbHttpException.class,
-            () -> new PdbHttpClient(connection, httpClient).get("/pdb/query/v4/nodes/mbp.local"));
+            () -> new PdbHttpClient(new PdbHttpConnection()
+                    .setHost("localhost")
+                    .setPort(8080), httpClient).get("/pdb/query/v4/nodes/mbp.local"));
     assertThat(exception.getMessage(), containsString("null"));
   }
 
@@ -91,11 +89,9 @@ class PdbHttpClientTest {
     stubFor(get(urlPathEqualTo("/pdb/query/v4/nodes"))
             .willReturn(status(200)));
 
-    PdbHttpConnection connection = new PdbHttpConnection();
-    connection.setHost("localhost");
-    connection.setPort(8080);
-
-    new PdbHttpClient(connection).get("/pdb/query/v4/nodes", "[\"=\", \"certname\", \"example.local\"]");
+    new PdbHttpClient(new PdbHttpConnection()
+            .setHost("localhost")
+            .setPort(8080)).get("/pdb/query/v4/nodes", "[\"=\", \"certname\", \"example.local\"]");
 
     verify(getRequestedFor(urlPathEqualTo("/pdb/query/v4/nodes"))
             .withQueryParam("query", containing("[\"=\", \"certname\", \"example.local\"]")));

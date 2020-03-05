@@ -9,15 +9,17 @@ public class PdbHttpConnection {
     return host;
   }
 
-  public void setHost(String host) {
+  public PdbHttpConnection setHost(String host) {
     this.host = host;
+    return this;
   }
 
   public int getPort() {
     return port;
   }
 
-  public void setPort(int port) {
+  public PdbHttpConnection setPort(int port) {
     this.port = port;
+    return this;
   }
 }

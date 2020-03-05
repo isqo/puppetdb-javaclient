@@ -10,12 +10,12 @@ abstract class AbstractEndpoint {
   private final ObjectMapper mapper = new ObjectMapper();
   private PdbHttpClient pdbPdbHttpClient;
 
-  AbstractEndpoint(PdbHttpClient pdbPdbHttpClient) {
-    this.pdbPdbHttpClient = pdbPdbHttpClient;
+  AbstractEndpoint(PdbHttpClient client) {
+    this.pdbPdbHttpClient = client;
   }
 
-  AbstractEndpoint(PdbHttpConnection pdbHttpCnx) {
-    this.pdbPdbHttpClient = new PdbHttpClient(pdbHttpCnx) ;
+  AbstractEndpoint(PdbHttpConnection cnx) {
+    this(new PdbHttpClient(cnx));
   }
 
 
