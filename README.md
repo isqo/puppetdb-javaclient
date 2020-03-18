@@ -6,20 +6,21 @@ Puppetdb api v4
 ## Contribution
 ### Standalone puppetdb
 For end-to-end tests, we use docker to launch a standalone prefilled puppetdb containing 4 nodes and their facts.
-you could also start these containers locally by using docker-compose: 
-- before cd to ./acceptance/docker
+you could also start these containers locally by using docker-compose, **but before you should cd to ./acceptance/docker of the project**
 
 `
  docker-compose up -d
 `
 
 once started successfully, check that puppetdb responds correctly by calling the nodes puppetdb endpoint
+
 `
 curl -X GET http://{your-ip}:8080/pdb/query/v4/nodes
 `
+
 you should receive
 
-`
+```json
 [
     {
         "deactivated": null,
@@ -94,4 +95,4 @@ you should receive
         "latest_report_status": null
     }
 ]
-`
+```
