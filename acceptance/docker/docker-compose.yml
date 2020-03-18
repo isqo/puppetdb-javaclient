@@ -1,16 +1,22 @@
 version: '2'
 
+networks:
+ puppet:
+  driver: bridge
+
 services:
   puppetdb-postgres:
     container_name: postgres
+    networks:
+      - puppet
     image: postgres:9.6
     environment:
       - POSTGRES_PASSWORD=puppetdb
       - POSTGRES_USER=puppetdb
     ports:
       - 5432
-    volumes_from:
-      - configs:rw
+    volumes:
+      - ./initdb/:/docker-entrypoint-initdb.d
 
   puppetdb:
     hostname: puppetdb
@@ -18,6 +24,9 @@ services:
     ports:
       - 8080:8080
       - 8081
+    networks:
+      - puppet
     environment:
       - USE_PUPPETSERVER=false
       - CONSUL_ENABLED=false
+      - PUPPETDB_NODE_TTL=0s
