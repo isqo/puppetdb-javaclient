@@ -18,7 +18,7 @@ once started successfully, check that puppetdb responds correctly by calling the
 curl -X GET http://{your-ip}:8080/pdb/query/v4/nodes
 `
 
-you should receive something like
+you should receive something resembling
 
 ```json
 [
@@ -39,7 +39,6 @@ you should receive something like
         "catalog_timestamp": "2020-02-15T22:25:53.744Z",
         "latest_report_job_id": null,
         "latest_report_status": null
-    },
-    ....
+    }
 ]
 ```
