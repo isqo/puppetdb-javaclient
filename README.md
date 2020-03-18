@@ -18,7 +18,7 @@ once started successfully, check that puppetdb responds correctly by calling the
 curl -X GET http://{your-ip}:8080/pdb/query/v4/nodes
 `
 
-you should receive
+you should receive something like
 
 ```json
 [
@@ -40,59 +40,6 @@ you should receive
         "latest_report_job_id": null,
         "latest_report_status": null
     },
-    {
-        "deactivated": null,
-        "latest_report_hash": null,
-        "facts_environment": "production",
-        "cached_catalog_status": null,
-        "report_environment": null,
-        "latest_report_corrective_change": null,
-        "catalog_environment": "production",
-        "facts_timestamp": "2020-02-15T22:30:15.551Z",
-        "latest_report_noop": null,
-        "expired": null,
-        "latest_report_noop_pending": null,
-        "report_timestamp": null,
-        "certname": "1c886b50728b.us-east-2.compute.internal",
-        "catalog_timestamp": "2020-02-15T22:30:15.729Z",
-        "latest_report_job_id": null,
-        "latest_report_status": null
-    },
-    {
-        "deactivated": null,
-        "latest_report_hash": null,
-        "facts_environment": "production",
-        "cached_catalog_status": null,
-        "report_environment": null,
-        "latest_report_corrective_change": null,
-        "catalog_environment": "production",
-        "facts_timestamp": "2020-02-15T22:35:45.584Z",
-        "latest_report_noop": null,
-        "expired": null,
-        "latest_report_noop_pending": null,
-        "report_timestamp": null,
-        "certname": "9c8048877524.us-east-2.compute.internal",
-        "catalog_timestamp": "2020-02-15T22:35:45.851Z",
-        "latest_report_job_id": null,
-        "latest_report_status": null
-    },
-    {
-        "deactivated": null,
-        "latest_report_hash": null,
-        "facts_environment": "production",
-        "cached_catalog_status": null,
-        "report_environment": null,
-        "latest_report_corrective_change": null,
-        "catalog_environment": "production",
-        "facts_timestamp": "2020-02-15T23:02:52.843Z",
-        "latest_report_noop": null,
-        "expired": null,
-        "latest_report_noop_pending": null,
-        "report_timestamp": null,
-        "certname": "edbe0bdb0c1e.us-east-2.compute.internal",
-        "catalog_timestamp": "2020-02-15T23:02:53.376Z",
-        "latest_report_job_id": null,
-        "latest_report_status": null
-    }
+    ....
 ]
 ```
