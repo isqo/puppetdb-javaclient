@@ -51,7 +51,7 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - run: mvn -Dmaven.test.skip=true package
+      - run: mvn -Dmaven.test.skip=true install
       - run:
           name: Start containers and verify they are working
           command: |
