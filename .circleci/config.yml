@@ -51,7 +51,6 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - run: mvn -Dmaven.test.skip=true install
       - run:
           name: Start containers and verify they are working
           command: |
@@ -68,8 +67,7 @@ jobs:
             docker run -d --expose 5432 -e POSTGRES_PASSWORD=puppetdb -e POSTGRES_USER=puppetdb --network mynetwork --volumes-from configs --name postgres postgres:9.6
             docker run -d --expose 8081 --expose 8080 -e USE_PUPPETSERVER=false -e CONSUL_ENABLED=false --network mynetwork  --name puppetdb puppet/puppetdb
             docker exec puppetdb curl --retry 20 --retry-connrefused http://puppetdb:8080/pdb/query/v4/nodes?query=%5B%22%3D%22%2C%22certname%22%2C%22c826a077907a.us-east-2.compute.internal%22%5D
-            docker run -it --name debug --volumes-from acceptance --network mynetwork -w /usr/src/mymaven maven:3.3-jdk-8 ls --all target
-            docker run -it --name acceptancetests --volumes-from acceptance --network mynetwork -w /usr/src/mymaven/acceptance maven:3.3-jdk-8 mvn clean install
+            docker run -it --name acceptancetests --volumes-from acceptance --network mynetwork -w /usr/src/mymaven/acceptance maven:3.3-jdk-8 /bin/bash -c "mvn -Dmaven.test.skip=true install && cd acceptance && mvn clean install"
       - run:
           name: Save test results
           command: |
