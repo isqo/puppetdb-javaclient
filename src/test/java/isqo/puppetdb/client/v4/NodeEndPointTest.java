@@ -9,12 +9,14 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.samePropertyValuesAs;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -45,8 +47,9 @@ public class NodeEndPointTest {
     expected.setLatestReportHash("2625d1b601e98ed1e281ccd79ca8d16b9f74fea6");
     expected.setLatestReportJobId(null);
 
-    NodeData data = nodeEndPoint.getData(query);
-    assertThat(data, samePropertyValuesAs(expected));
+    List<NodeData> data = nodeEndPoint.getData(query);
+    assertFalse(data.isEmpty(), "nodes list data isn't empty");
+    assertThat(data.get(0), samePropertyValuesAs(expected));
 
   }
 

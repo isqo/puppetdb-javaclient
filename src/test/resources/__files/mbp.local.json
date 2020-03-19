@@ -1,16 +1,18 @@
-{
-  "deactivated": null,
-  "facts_environment": "production",
-  "report_environment": "production",
-  "catalog_environment": "production",
-  "facts_timestamp": "2015-06-19T23:03:42.401Z",
-  "expired": null,
-  "report_timestamp": "2015-06-19T23:03:37.709Z",
-  "certname": "mbp.local",
-  "catalog_timestamp": "2015-06-19T23:03:43.007Z",
-  "latest_report_status": "success",
-  "latest_report_noop": false,
-  "latest_report_noop_pending": true,
-  "latest_report_hash": "2625d1b601e98ed1e281ccd79ca8d16b9f74fea6",
-  "latest_report_job_id": null
-}
+[
+  {
+    "deactivated": null,
+    "facts_environment": "production",
+    "report_environment": "production",
+    "catalog_environment": "production",
+    "facts_timestamp": "2015-06-19T23:03:42.401Z",
+    "expired": null,
+    "report_timestamp": "2015-06-19T23:03:37.709Z",
+    "certname": "mbp.local",
+    "catalog_timestamp": "2015-06-19T23:03:43.007Z",
+    "latest_report_status": "success",
+    "latest_report_noop": false,
+    "latest_report_noop_pending": true,
+    "latest_report_hash": "2625d1b601e98ed1e281ccd79ca8d16b9f74fea6",
+    "latest_report_job_id": null
+  }
+]

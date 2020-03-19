@@ -2,6 +2,8 @@ package isqo.puppetdb.client.v4.api;
 
 import isqo.puppetdb.client.v4.http.PdbHttpClient;
 import isqo.puppetdb.client.v4.http.PdbHttpConnection;
+import java.util.Arrays;
+import java.util.List;
 
 public class NodeEndPoint extends AbstractEndpoint {
 
@@ -18,7 +20,7 @@ public class NodeEndPoint extends AbstractEndpoint {
     return "/pdb/query/v4/nodes";
   }
 
-  public NodeData getData(String query) {
-    return super.getData(query, NodeData.class);
+  public List<NodeData> getData(String query) {
+    return Arrays.asList(super.getData(query, NodeData[].class));
   }
 }
