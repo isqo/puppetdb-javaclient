@@ -6,15 +6,15 @@ import isqo.puppetdb.client.v4.PuppetdbClientException;
 import isqo.puppetdb.client.v4.http.PdbHttpClient;
 import isqo.puppetdb.client.v4.http.PdbHttpConnection;
 
-abstract class AbstractEndpoint {
+abstract class PuppetdbEndpoint {
   private final ObjectMapper mapper = new ObjectMapper();
   private PdbHttpClient pdbPdbHttpClient;
 
-  AbstractEndpoint(PdbHttpClient client) {
+  PuppetdbEndpoint(PdbHttpClient client) {
     this.pdbPdbHttpClient = client;
   }
 
-  AbstractEndpoint(PdbHttpConnection cnx) {
+  PuppetdbEndpoint(PdbHttpConnection cnx) {
     this(new PdbHttpClient(cnx));
   }
 

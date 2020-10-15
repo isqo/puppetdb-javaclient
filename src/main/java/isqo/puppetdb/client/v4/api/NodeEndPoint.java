@@ -1,11 +1,12 @@
 package isqo.puppetdb.client.v4.api;
 
+import isqo.puppetdb.client.v4.api.models.NodeData;
 import isqo.puppetdb.client.v4.http.PdbHttpClient;
 import isqo.puppetdb.client.v4.http.PdbHttpConnection;
 import java.util.Arrays;
 import java.util.List;
 
-public class NodeEndPoint extends AbstractEndpoint {
+public class NodeEndPoint extends PuppetdbEndpoint {
 
   public NodeEndPoint(PdbHttpClient client) {
     super(client);

@@ -1,4 +1,4 @@
-package isqo.puppetdb.client.v4.api;
+package isqo.puppetdb.client.v4.api.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;

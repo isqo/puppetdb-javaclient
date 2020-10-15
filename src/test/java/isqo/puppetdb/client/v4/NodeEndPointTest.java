@@ -1,6 +1,6 @@
 package isqo.puppetdb.client.v4;
 
-import isqo.puppetdb.client.v4.api.NodeData;
+import isqo.puppetdb.client.v4.api.models.NodeData;
 import isqo.puppetdb.client.v4.api.NodeEndPoint;
 import isqo.puppetdb.client.v4.http.PdbHttpClient;
 import isqo.puppetdb.client.v4.querybuilder.AstQueryBuilder;
