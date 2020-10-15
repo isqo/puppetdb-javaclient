@@ -1,7 +1,7 @@
 package api.v4;
 
-import isqo.puppetdb.client.v4.api.NodeData;
 import isqo.puppetdb.client.v4.api.NodeEndPoint;
+import isqo.puppetdb.client.v4.api.models.NodeData;
 import isqo.puppetdb.client.v4.http.PdbHttpConnection;
 import isqo.puppetdb.client.v4.querybuilder.AstQueryBuilder;
 import java.util.List;
@@ -19,7 +19,7 @@ public class NodeApiTest {
   public void normalCase1() {
     NodeEndPoint endPoint = new NodeEndPoint(new PdbHttpConnection().setHost("puppetdb").setPort(8080));
     List<NodeData> nodes = endPoint.getData(new AstQueryBuilder("certname").equals("c826a077907a.us-east-2.compute.internal").build());
-    assertFalse(nodes.isEmpty(), "Nodes list data isn't empty");
+    assertFalse(nodes.isEmpty(), "Nodes list data shouldn't be empty");
     NodeData node = nodes.get(0);
     assertEquals("production", node.getFactsEnvironment());
     assertEquals("production", node.getCatalogEnvironment());
