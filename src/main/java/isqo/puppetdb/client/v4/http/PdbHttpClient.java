@@ -85,6 +85,8 @@ public class PdbHttpClient {
             throw new PuppetdbHttpException(uri,status,body,errorMessage);
           }
 
+          LOGGER.debug("calling "+uri+" ,status: "+status+" ,body: "+body);
+
           return body;
       }
     } catch (IOException e) {
