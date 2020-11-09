@@ -10,9 +10,12 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 public class PdbHttpClient {
+  private static final Logger LOGGER = LogManager.getLogger();
   private final CloseableHttpClient httpClient;
   private final PdbHttpConnection pdbHttpConnection;
 
@@ -58,12 +61,13 @@ public class PdbHttpClient {
       HttpGet httpGet = new HttpGet(uri);
       try (CloseableHttpResponse response = httpClient.execute(httpGet)) {
         int status = response.getStatusLine().getStatusCode();
-        if (status >= 200 && status < 300) {
+
           HttpEntity entity = response.getEntity();
 
           if (entity == null) {
             throw new PuppetdbHttpException(uri, "got null HttpEntity");
           }
+          String body = "empty";
 
           try (InputStream inputStream = entity.getContent()) {
             ByteArrayOutputStream result = new ByteArrayOutputStream();
@@ -72,11 +76,16 @@ public class PdbHttpClient {
             while ((length = inputStream.read(buffer)) != -1) {
               result.write(buffer, 0, length);
             }
-            return result.toString("UTF-8");
+            body=result.toString("UTF-8");
           }
-        } else {
-          throw new PuppetdbHttpException(uri, status);
-        }
+
+          if (status < 200 || status > 399) {
+            String errorMessage = "Unexpected http response status " + status + " received after calling " + uri+ " ,here is the body's content : "+body;
+            LOGGER.error(errorMessage);
+            throw new PuppetdbHttpException(uri,status,body,errorMessage);
+          }
+
+          return body;
       }
     } catch (IOException e) {
       throw new PuppetdbHttpException(e);

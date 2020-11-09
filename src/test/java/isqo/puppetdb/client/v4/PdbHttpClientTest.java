@@ -16,8 +16,9 @@ import org.junit.jupiter.api.Test;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyObject;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -51,18 +52,22 @@ class PdbHttpClientTest {
   }
 
   @Test
-  @DisplayName("PuppetdbHttpException should be thrown when http status code is < 200 and >=300")
+  @DisplayName("PuppetdbHttpException should be thrown when http status code is < 200 and >399")
   void httpStatusKoCheck() {
+    String serverMessage = "5xx server error";
     stubFor(get(urlEqualTo("/pdb/query/v4/nodes/mbp.local"))
-            .willReturn(status(500)));
+            .willReturn(aResponse().withStatus(500).withBody(serverMessage)));
 
     PdbHttpClient pdbHttpClient = new PdbHttpClient(
             new PdbHttpConnection()
                     .setHost("localhost")
                     .setPort(8080));
+
     PuppetdbHttpException exception = assertThrows(PuppetdbHttpException.class,
             () -> pdbHttpClient.get("/pdb/query/v4/nodes/mbp.local"));
-    assertThat(exception.getMessage(), containsString("500"));
+
+    assertEquals(500,exception.getResponseCode());
+    assertEquals(serverMessage,exception.getBody());
   }
 
   @Test
@@ -72,7 +77,7 @@ class PdbHttpClientTest {
     CloseableHttpResponse httpResponse = mock(CloseableHttpResponse.class);
     StatusLine statusLine = mock(StatusLine.class);
     when(statusLine.getStatusCode()).thenReturn(200);
-    when(httpClient.execute(anyObject())).thenReturn(httpResponse);
+    when(httpClient.execute(any())).thenReturn(httpResponse);
     when(httpResponse.getStatusLine()).thenReturn(statusLine);
     when(httpResponse.getEntity()).thenReturn(null);
 
