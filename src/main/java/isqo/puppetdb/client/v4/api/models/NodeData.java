@@ -1,8 +1,10 @@
 package isqo.puppetdb.client.v4.api.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class NodeData {
   private String deactivated;
   private String factsEnvironment;
@@ -18,6 +20,7 @@ public class NodeData {
   private boolean latestReportNoopPending;
   private String latestReportHash;
   private String latestReportJobId;
+  private String cachedCatalogStatus;
 
   public String getDeactivated() {
     return deactivated;
@@ -142,6 +145,15 @@ public class NodeData {
     this.latestReportJobId = latestReportJobId;
   }
 
+  @JsonProperty("cached_catalog_status")
+  public String getCachedCatalogStatus() {
+    return cachedCatalogStatus;
+  }
+
+  public void setCachedCatalogStatus(String cachedCatalogStatus) {
+    this.cachedCatalogStatus = cachedCatalogStatus;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -164,6 +176,7 @@ public class NodeData {
             && Objects.equals(latestReportNoop, nodeData.latestReportNoop)
             && Objects.equals(latestReportNoopPending, nodeData.latestReportNoopPending)
             && Objects.equals(latestReportHash, nodeData.latestReportHash)
+            && Objects.equals(cachedCatalogStatus, nodeData.cachedCatalogStatus)
             && Objects.equals(latestReportJobId, nodeData.latestReportJobId);
   }
 
