@@ -14,18 +14,19 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 
+import static isqo.puppetdb.client.v4.querybuilder.AstQueryBuilder.Fields.certname;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.samePropertyValuesAs;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class NodeEndPointTest {
+class NodeEndPointTest {
 
   @Test
   @DisplayName("unmarshalling node data should be done successfully when httpclient behaves normally")
   void everythingIsOk() {
-    String query = new AstQueryBuilder("certname").equals("mbp.local").build();
+    String query = certname.equals("mbp.local").build();
     String content = readFileFromFiles("mbp.local.json");
     PdbHttpClient pdbHttpClient = mock(PdbHttpClient.class);
     NodeEndPoint nodeEndPoint = new NodeEndPoint(pdbHttpClient);

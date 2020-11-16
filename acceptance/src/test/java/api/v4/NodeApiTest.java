@@ -9,6 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 
+import static isqo.puppetdb.client.v4.querybuilder.AstQueryBuilder.Fields.certname;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
@@ -16,9 +17,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 public class NodeApiTest {
   @Test
   @DisplayName("puppetdb should responds correctly for c826a077907a.us-east-2.compute.internal node")
-  public void normalCase1() {
+  void normalCase1() {
     NodeEndPoint endPoint = new NodeEndPoint(new PdbHttpConnection().setHost("puppetdb").setPort(8080));
-    List<NodeData> nodes = endPoint.getData(new AstQueryBuilder("certname").equals("c826a077907a.us-east-2.compute.internal").build());
+    List<NodeData> nodes = endPoint.getData(certname.equals("c826a077907a.us-east-2.compute.internal").build());
     assertFalse(nodes.isEmpty(), "Nodes list data shouldn't be empty");
     NodeData node = nodes.get(0);
     assertEquals("production", node.getFactsEnvironment());

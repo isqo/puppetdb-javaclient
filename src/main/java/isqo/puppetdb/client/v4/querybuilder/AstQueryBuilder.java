@@ -1,81 +1,108 @@
 package isqo.puppetdb.client.v4.querybuilder;
 
+/*** Manages the building of Ast queries that should be sent marshalled to puppet db.
+ */
 public class AstQueryBuilder {
-  private static final String EQUAL_OP = "=";
-  private static final String GREATERTHAN_OP = ">";
-  private static final String LESS_THAN_OP = "<";
-  private String field;
-  private String value;
-  private String operator;
-  private String queryStringFormat = "[\"%s\",\"%s\",\"%s\"]";
 
-  /*** Instantiate an object that allows building Ast queries to request puppet db.
-   * @param field the parameter field is mandatory and binary operators operate against it.
+  /***
+   * contains the fields that PuppetDB queries operate on
    */
-  public AstQueryBuilder(String field) {
-    this.field = field;
+  public enum Fields {
+    certname,
+    rubyversion;
+
+    /*** construct the = operator query.
+     *
+     * @param value the value of comparison
+     * @return unmarshalled PuppetDB query
+     */
+    public RawQuery equals(String value) {
+      return BinaryOperators.EQUAL.getRawQuery(this.toString(), value);
+    }
+
+    /*** constructs the > operator query.
+     *
+     * @param value the value of comparison
+     * @return unmarshalled PuppetDB query
+     */
+    public RawQuery greaterThan(String value) {
+      return BinaryOperators.GREATER_THAN.getRawQuery(this.toString(), value);
+    }
+
+    /*** constructs the < operator query.
+     *
+     * @param value the value of comparison
+     * @return unmarshalled PuppetDB query
+     */
+    public RawQuery lessThan(String value) {
+      return BinaryOperators.LESS_THAN.getRawQuery(this.toString(), value);
+    }
+
+    /*** constructs the >= operator query.
+     *
+     * @param value the value of comparison
+     * @return
+     */
+    public RawQuery greaterThanOrEq(String value) {
+      return BinaryOperators.GREATER_THAN_OR_EQUAL.getRawQuery(this.toString(), value);
+    }
+
+    /*** constructs the <= operator query.
+     *
+     * @param value the value of comparison
+     * @return
+     */
+    public RawQuery lessThanOrEq(String value) {
+      return BinaryOperators.LESS_THAN_OR_EQUAL.getRawQuery(this.toString(), value);
+    }
   }
 
-  /*** construct the = operator query.
-   *
-   * @param value the value of comparison
-   * @return
+  /***
+   * the interface for all kinds of queries
    */
-  public AstQueryBuilder equals(String value) {
-    this.operator = EQUAL_OP;
-    this.value = value;
-    return this;
+  public interface RawQuery {
+    /*** marshal the object into a string query to be sent to puppetdb.
+     *
+     * @return marshalled PuppetDB query
+     */
+    String build();
   }
 
-  /*** construct the > operator query.
-   *
-   * @param value the value of comparison
-   * @return
-   */
-  public AstQueryBuilder greaterThan(String value) {
-    this.operator = GREATERTHAN_OP;
-    this.value = value;
-    return this;
+  static class BinaryOperatorsRawQuery implements RawQuery {
+    String queryFormat = "[\"%s\",\"%s\",\"%s\"]";
+    private String operator;
+    private String field;
+    private String value;
+
+    BinaryOperatorsRawQuery(String operator, String field, String value) {
+      this.operator = operator;
+      this.field = field;
+      this.value = value;
+    }
+
+    @Override
+    public String build() {
+      return String.format(queryFormat, operator, field, value);
+    }
+
   }
 
-  /*** marshal the object into a string query to be sent to puppetdb.
-   *
-   * @return
-   */
-  public String build() {
-    return String.format(queryStringFormat, operator, field, value);
-  }
+  enum BinaryOperators {
+    EQUAL("="),
+    GREATER_THAN(">"),
+    LESS_THAN("<"),
+    GREATER_THAN_OR_EQUAL(">="),
+    LESS_THAN_OR_EQUAL("<="),
+    ;
 
-  /*** construct the lessThan operator query.
-   *
-   * @param value the value of comparison
-   * @return
-   */
-  public AstQueryBuilder lessThan(String value) {
-    this.value = value;
-    this.operator = LESS_THAN_OP;
-    return this;
-  }
+    private final String operator;
 
-  /*** construct the >= operator query.
-   *
-   * @param value the value of comparison
-   * @return
-   */
-  public AstQueryBuilder greaterThanOrEq(String value) {
-    this.value = value;
-    this.operator = GREATERTHAN_OP + EQUAL_OP;
-    return this;
-  }
+    BinaryOperators(String operator) {
+      this.operator = operator;
+    }
 
-  /*** construct the <= operator query.
-   *
-   * @param value the value of comparison
-   * @return
-   */
-  public AstQueryBuilder lessThanOrEq(String value) {
-    this.value = value;
-    this.operator = LESS_THAN_OP + EQUAL_OP;
-    return this;
+    public BinaryOperatorsRawQuery getRawQuery(String field, String value) {
+      return new BinaryOperatorsRawQuery(this.operator, field, value);
+    }
   }
 }
