@@ -1,15 +1,40 @@
 package isqo.puppetdb.client.v4.querybuilder;
 
-/*** Manages the building of Ast queries that should be sent marshalled to puppet db.
+import java.util.Arrays;
+import java.util.List;
+
+
+import static java.util.stream.Collectors.joining;
+
+/*** Manages the building of Ast queries that can be sent marshalled to puppet db.
  */
 public class AstQueryBuilder {
+
+  /***
+   *
+   * @param queries nested queries of the and operator
+   * @return RawQuery of Boolean operator type
+   */
+  public static RawQuery and(RawQuery... queries) {
+    return new BooleanOperatorsRawQuery("and", Arrays.asList(queries));
+  }
+
+  /***
+   *
+   * @param queries nested queries of the or operator
+   * @return RawQuery of Boolean operator type
+   */
+  public static RawQuery or(RawQuery... queries) {
+    return new BooleanOperatorsRawQuery("or", Arrays.asList(queries));
+  }
 
   /***
    * contains the fields that PuppetDB queries operate on
    */
   public enum Fields {
     certname,
-    rubyversion;
+    rubyversion,
+    catalog_environment;
 
     /*** construct the = operator query.
      *
@@ -68,8 +93,26 @@ public class AstQueryBuilder {
     String build();
   }
 
+  public static class BooleanOperatorsRawQuery implements RawQuery {
+    private String queryFormat = "[\"%s\",%s]";
+    private List<RawQuery> nestedQueryies;
+    private String operator;
+
+    public BooleanOperatorsRawQuery(String operator, List<RawQuery> nestedQueryies) {
+      if (nestedQueryies == null)
+        throw new IllegalArgumentException("nestedQueryies list cannot be null");
+      this.nestedQueryies = nestedQueryies;
+      this.operator = operator;
+    }
+
+    @Override
+    public String build() {
+      return String.format(this.queryFormat, operator, nestedQueryies.stream().map(RawQuery::build).collect(joining(",")));
+    }
+  }
+
   static class BinaryOperatorsRawQuery implements RawQuery {
-    String queryFormat = "[\"%s\",\"%s\",\"%s\"]";
+    private String queryFormat = "[\"%s\",\"%s\",\"%s\"]";
     private String operator;
     private String field;
     private String value;
@@ -92,8 +135,7 @@ public class AstQueryBuilder {
     GREATER_THAN(">"),
     LESS_THAN("<"),
     GREATER_THAN_OR_EQUAL(">="),
-    LESS_THAN_OR_EQUAL("<="),
-    ;
+    LESS_THAN_OR_EQUAL("<="),;
 
     private final String operator;
 

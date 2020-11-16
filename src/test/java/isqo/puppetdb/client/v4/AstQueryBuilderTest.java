@@ -5,8 +5,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 
-import static isqo.puppetdb.client.v4.querybuilder.AstQueryBuilder.Fields.certname;
-import static isqo.puppetdb.client.v4.querybuilder.AstQueryBuilder.Fields.rubyversion;
+import static isqo.puppetdb.client.v4.querybuilder.AstQueryBuilder.Fields.*;
+import static isqo.puppetdb.client.v4.querybuilder.AstQueryBuilder.and;
+import static isqo.puppetdb.client.v4.querybuilder.AstQueryBuilder.or;
 
 class AstQueryBuilderTest {
   @Test
@@ -51,5 +52,51 @@ class AstQueryBuilderTest {
             rubyversion
                     .lessThanOrEq("2.4.3")
                     .build());
+  }
+
+  @Test
+  @DisplayName("null should be marshalled")
+  void passingNullToEquals() {
+    Assertions.assertEquals("[\"=\",\"rubyversion\",\"null\"]",
+            rubyversion
+                    .equals(null)
+                    .build());
+  }
+
+  @Test
+  @DisplayName("empty should be marshalled")
+  void passingEmptyToEquals() {
+    Assertions.assertEquals("[\"=\",\"rubyversion\",\"\"]",
+            rubyversion
+                    .equals("")
+                    .build());
+  }
+
+
+  @Test
+  @DisplayName("should marshall and contain all the first level subQueries")
+  void AndBooleanOperator() {
+    Assertions.assertEquals("[\"and\",[\"=\",\"certname\",\"foo.local\"],[\"=\",\"rubyversion\",\"2.4.3\"],[\"=\",\"catalog_environment\",\"staging\"]]",
+            and(certname.equals("foo.local"),
+                    rubyversion.equals("2.4.3"),
+                    catalog_environment.equals("staging")).build());
+  }
+
+  @Test
+  @DisplayName("should marshall and contain all the nested subQueries of any level")
+  void OrBooleanOperator() {
+    Assertions.assertEquals("[\"or\",[\"and\",[\"=\",\"certname\",\"foo.local\"],[\"=\",\"certname\",\"bar.local\"],[\"or\",[\"=\",\"certname\",\"bar.local\"],[\"=\",\"certname\",\"baz.local\"]]],[\"=\",\"certname\",\"baz.local\"]]",
+            or(
+                    and(
+                            certname.equals("foo.local"),
+                            certname.equals("bar.local"),
+                            or(
+                                    certname.equals("bar.local"),
+                                    certname.equals("baz.local")
+                            )
+                    ),
+                    certname.equals("baz.local")
+            ).build()
+    );
   }
 }
