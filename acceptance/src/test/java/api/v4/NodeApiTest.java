@@ -3,7 +3,6 @@ package api.v4;
 import isqo.puppetdb.client.v4.api.NodeEndPoint;
 import isqo.puppetdb.client.v4.api.models.NodeData;
 import isqo.puppetdb.client.v4.http.PdbHttpConnection;
-import isqo.puppetdb.client.v4.querybuilder.AstQueryBuilder;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

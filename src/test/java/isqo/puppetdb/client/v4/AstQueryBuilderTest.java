@@ -5,9 +5,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 
+import static isqo.puppetdb.client.v4.querybuilder.AstQueryBuilder.BooleanOperators.and;
+import static isqo.puppetdb.client.v4.querybuilder.AstQueryBuilder.BooleanOperators.or;
 import static isqo.puppetdb.client.v4.querybuilder.AstQueryBuilder.Fields.*;
-import static isqo.puppetdb.client.v4.querybuilder.AstQueryBuilder.and;
-import static isqo.puppetdb.client.v4.querybuilder.AstQueryBuilder.or;
 
 class AstQueryBuilderTest {
   @Test

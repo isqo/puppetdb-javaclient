@@ -9,25 +9,6 @@ import static java.util.stream.Collectors.joining;
 /*** Manages the building of Ast queries that can be sent marshalled to puppet db.
  */
 public class AstQueryBuilder {
-
-  /***
-   *
-   * @param queries nested queries of the and operator
-   * @return RawQuery of Boolean operator type
-   */
-  public static RawQuery and(RawQuery... queries) {
-    return new BooleanOperatorsRawQuery("and", Arrays.asList(queries));
-  }
-
-  /***
-   *
-   * @param queries nested queries of the or operator
-   * @return RawQuery of Boolean operator type
-   */
-  public static RawQuery or(RawQuery... queries) {
-    return new BooleanOperatorsRawQuery("or", Arrays.asList(queries));
-  }
-
   /***
    * contains the fields that PuppetDB queries operate on
    */
@@ -80,71 +61,82 @@ public class AstQueryBuilder {
     public RawQuery lessThanOrEq(String value) {
       return BinaryOperators.LESS_THAN_OR_EQUAL.getRawQuery(this.toString(), value);
     }
+
+    enum BinaryOperators {
+      EQUAL("="),
+      GREATER_THAN(">"),
+      LESS_THAN("<"),
+      GREATER_THAN_OR_EQUAL(">="),
+      LESS_THAN_OR_EQUAL("<="),;
+
+      private final String operator;
+
+      BinaryOperators(String operator) {
+        this.operator = operator;
+      }
+
+      public BinaryOperatorsRawQuery getRawQuery(String field, String value) {
+        return new BinaryOperatorsRawQuery(this.operator, field, value);
+      }
+
+      static class BinaryOperatorsRawQuery implements RawQuery {
+        private String queryFormat = "[\"%s\",\"%s\",\"%s\"]";
+        private String operator;
+        private String field;
+        private String value;
+
+        BinaryOperatorsRawQuery(String operator, String field, String value) {
+          this.operator = operator;
+          this.field = field;
+          this.value = value;
+        }
+
+        @Override
+        public String build() {
+          return String.format(queryFormat, operator, field, value);
+        }
+      }
+    }
   }
 
-  /***
-   * the interface for all kinds of queries
-   */
-  public interface RawQuery {
-    /*** marshal the object into a string query to be sent to puppetdb.
+  public static class BooleanOperators {
+    static final String AND = "and";
+    static final String OR = "or";
+
+    /***
      *
-     * @return marshalled PuppetDB query
+     * @param queries nested queries of the and operator
+     * @return RawQuery of Boolean operator type
      */
-    String build();
-  }
-
-  public static class BooleanOperatorsRawQuery implements RawQuery {
-    private String queryFormat = "[\"%s\",%s]";
-    private List<RawQuery> nestedQueryies;
-    private String operator;
-
-    public BooleanOperatorsRawQuery(String operator, List<RawQuery> nestedQueryies) {
-      if (nestedQueryies == null)
-        throw new IllegalArgumentException("nestedQueryies list cannot be null");
-      this.nestedQueryies = nestedQueryies;
-      this.operator = operator;
+    public static RawQuery and(RawQuery... queries) {
+      return new BooleanOperatorsRawQuery(AND, Arrays.asList(queries));
     }
 
-    @Override
-    public String build() {
-      return String.format(this.queryFormat, operator, nestedQueryies.stream().map(RawQuery::build).collect(joining(",")));
-    }
-  }
-
-  static class BinaryOperatorsRawQuery implements RawQuery {
-    private String queryFormat = "[\"%s\",\"%s\",\"%s\"]";
-    private String operator;
-    private String field;
-    private String value;
-
-    BinaryOperatorsRawQuery(String operator, String field, String value) {
-      this.operator = operator;
-      this.field = field;
-      this.value = value;
+    /***
+     *
+     * @param queries nested queries of the or operator
+     * @return RawQuery of Boolean operator type
+     */
+    public static RawQuery or(RawQuery... queries) {
+      return new BooleanOperatorsRawQuery(OR, Arrays.asList(queries));
     }
 
-    @Override
-    public String build() {
-      return String.format(queryFormat, operator, field, value);
-    }
+     static class BooleanOperatorsRawQuery implements RawQuery {
+      private String queryFormat = "[\"%s\",%s]";
+      private List<RawQuery> nestedQueryies;
+      private String operator;
 
-  }
+      BooleanOperatorsRawQuery(String operator, List<RawQuery> nestedQueryies) {
+        if (nestedQueryies == null)
+          throw new IllegalArgumentException("nestedQueryies list cannot be null");
+        this.nestedQueryies = nestedQueryies;
+        this.operator = operator;
+      }
 
-  enum BinaryOperators {
-    EQUAL("="),
-    GREATER_THAN(">"),
-    LESS_THAN("<"),
-    GREATER_THAN_OR_EQUAL(">="),
-    LESS_THAN_OR_EQUAL("<="),;
-
-    private final String operator;
-
-    BinaryOperators(String operator) {
-      this.operator = operator;
-    }
-
-    public BinaryOperatorsRawQuery getRawQuery(String field, String value) {
-      return new BinaryOperatorsRawQuery(this.operator, field, value);
+      @Override
+      public String build() {
+        return String.format(this.queryFormat, operator, nestedQueryies.stream().map(RawQuery::build).collect(joining(",")));
+      }
     }
   }
 }
