@@ -1,9 +1,9 @@
 package isqo.puppetdb.client.v4;
 
+import isqo.puppetdb.client.v4.api.Endpoints;
 import isqo.puppetdb.client.v4.api.models.NodeData;
-import isqo.puppetdb.client.v4.api.NodeEndPoint;
-import isqo.puppetdb.client.v4.http.PdbHttpClient;
-import isqo.puppetdb.client.v4.querybuilder.AstQueryBuilder;
+import isqo.puppetdb.client.v4.http.HttpClient;
+import isqo.puppetdb.client.v4.querybuilder.RawQuery;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -26,11 +26,11 @@ class NodeEndPointTest {
   @Test
   @DisplayName("unmarshalling node data should be done successfully when httpclient behaves normally")
   void everythingIsOk() {
-    String query = certname.equals("mbp.local").build();
+    RawQuery query = certname.equals("mbp.local");
     String content = readFileFromFiles("mbp.local.json");
-    PdbHttpClient pdbHttpClient = mock(PdbHttpClient.class);
-    NodeEndPoint nodeEndPoint = new NodeEndPoint(pdbHttpClient);
-    when(pdbHttpClient.get(nodeEndPoint.getEndpoint(), query)).thenReturn(content);
+    HttpClient httpClient = mock(HttpClient.class);
+    Endpoints.NodeApi nodeApi = new Endpoints.NodeApi(httpClient);
+    when(httpClient.get(nodeApi.getEndpoint(), query.build())).thenReturn(content);
 
     NodeData expected = new NodeData();
     expected.setDeactivated(null);
@@ -48,7 +48,7 @@ class NodeEndPointTest {
     expected.setLatestReportHash("2625d1b601e98ed1e281ccd79ca8d16b9f74fea6");
     expected.setLatestReportJobId(null);
 
-    List<NodeData> data = nodeEndPoint.getData(query);
+    List<NodeData> data = nodeApi.get(query);
     assertFalse(data.isEmpty(), "nodes list data isn't empty");
     assertThat(data.get(0), samePropertyValuesAs(expected));
 

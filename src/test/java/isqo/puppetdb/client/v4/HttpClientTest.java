@@ -1,8 +1,7 @@
 package isqo.puppetdb.client.v4;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
-import isqo.puppetdb.client.v4.http.PdbHttpClient;
-import isqo.puppetdb.client.v4.http.PdbHttpConnection;
+import isqo.puppetdb.client.v4.http.HttpClient;
 import java.io.IOException;
 import org.apache.http.StatusLine;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -22,7 +21,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-class PdbHttpClientTest {
+class HttpClientTest {
   private static WireMockServer wireMockServer = new WireMockServer();
 
   @BeforeAll
@@ -42,11 +41,9 @@ class PdbHttpClientTest {
             .willReturn(aResponse()
                     .withBodyFile("mbp.local.json")));
 
-    PdbHttpClient pdbHttpClient = new PdbHttpClient(
-            new PdbHttpConnection()
-                    .setHost("localhost")
-                    .setPort(8080));
-    String data = pdbHttpClient.get("/pdb/query/v4/nodes/mbp.local");
+    HttpClient httpClient = new HttpClient(
+            "localhost",8080);
+    String data = httpClient.get("/pdb/query/v4/nodes/mbp.local");
     assertThat(data, containsString("facts_environment"));
     assertThat(data, containsString("2625d1b601e98ed1e281ccd79ca8d16b9f74fea6"));
   }
@@ -58,13 +55,11 @@ class PdbHttpClientTest {
     stubFor(get(urlEqualTo("/pdb/query/v4/nodes/mbp.local"))
             .willReturn(aResponse().withStatus(500).withBody(serverMessage)));
 
-    PdbHttpClient pdbHttpClient = new PdbHttpClient(
-            new PdbHttpConnection()
-                    .setHost("localhost")
-                    .setPort(8080));
+    HttpClient httpClient = new HttpClient(
+            "localhost",8080);
 
     PuppetdbHttpException exception = assertThrows(PuppetdbHttpException.class,
-            () -> pdbHttpClient.get("/pdb/query/v4/nodes/mbp.local"));
+            () -> httpClient.get("/pdb/query/v4/nodes/mbp.local"));
 
     assertEquals(500,exception.getResponseCode());
     assertEquals(serverMessage,exception.getBody());
@@ -82,9 +77,7 @@ class PdbHttpClientTest {
     when(httpResponse.getEntity()).thenReturn(null);
 
     PuppetdbHttpException exception = assertThrows(PuppetdbHttpException.class,
-            () -> new PdbHttpClient(new PdbHttpConnection()
-                    .setHost("localhost")
-                    .setPort(8080), httpClient).get("/pdb/query/v4/nodes/mbp.local"));
+            () -> new HttpClient("localhost",8080, httpClient).get("/pdb/query/v4/nodes/mbp.local"));
     assertThat(exception.getMessage(), containsString("null"));
   }
 
@@ -94,9 +87,7 @@ class PdbHttpClientTest {
     stubFor(get(urlPathEqualTo("/pdb/query/v4/nodes"))
             .willReturn(status(200)));
 
-    new PdbHttpClient(new PdbHttpConnection()
-            .setHost("localhost")
-            .setPort(8080)).get("/pdb/query/v4/nodes", "[\"=\", \"certname\", \"example.local\"]");
+    new HttpClient("localhost",8080).get("/pdb/query/v4/nodes", "[\"=\", \"certname\", \"example.local\"]");
 
     verify(getRequestedFor(urlPathEqualTo("/pdb/query/v4/nodes"))
             .withQueryParam("query", containing("[\"=\", \"certname\", \"example.local\"]")));

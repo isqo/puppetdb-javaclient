@@ -1,8 +1,7 @@
 package api.v4;
 
-import isqo.puppetdb.client.v4.api.NodeEndPoint;
+import isqo.puppetdb.client.v4.api.Endpoints;
 import isqo.puppetdb.client.v4.api.models.NodeData;
-import isqo.puppetdb.client.v4.http.PdbHttpConnection;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,8 +16,11 @@ public class NodeApiTest {
   @Test
   @DisplayName("puppetdb should responds correctly for c826a077907a.us-east-2.compute.internal node")
   void normalCase1() {
-    NodeEndPoint endPoint = new NodeEndPoint(new PdbHttpConnection().setHost("puppetdb").setPort(8080));
-    List<NodeData> nodes = endPoint.getData(certname.equals("c826a077907a.us-east-2.compute.internal").build());
+
+    List<NodeData> nodes = Endpoints
+            .node("puppetdb", 8080)
+            .get(certname.equals("c826a077907a.us-east-2.compute.internal"));
+
     assertFalse(nodes.isEmpty(), "Nodes list data shouldn't be empty");
     NodeData node = nodes.get(0);
     assertEquals("production", node.getFactsEnvironment());

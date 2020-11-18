@@ -3,6 +3,16 @@
 # puppetdb-javaclient
 Puppetdb api v4
 
+# usage examples
+
+to query the node definition of an instance whose certname is "c826a077907a.us-east-2.compute.internal":
+
+```
+    List<NodeData> nodes = Endpoints
+                                .node("puppetdb", 8080)
+                                .get(certname.equals("c826a077907a.us-east-2.compute.internal"));
+```
+
 ## Contribution
 ### Standalone puppetdb for testing purposes
 For end-to-end tests, we use docker to launch a standalone prefilled puppetdb containing 4 nodes and their facts.
