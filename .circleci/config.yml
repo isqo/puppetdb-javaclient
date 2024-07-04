@@ -1,87 +1,55 @@
-# Java Maven CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-java/ for more details
-#
-version: 2
+# Use the latest 2.1 version of CircleCI pipeline process engine.
+# See: https://circleci.com/docs/configuration-reference
+version: 2.1
+
+# Define a job to be invoked later in a workflow.
+# See: https://circleci.com/docs/jobs-steps/#jobs-overview & https://circleci.com/docs/configuration-reference/#jobs
 jobs:
   build:
+    # Specify the execution environment. You can specify an image from Docker Hub or use one of our convenience images from CircleCI's Developer Hub.
+    # See: https://circleci.com/docs/executor-intro/ & https://circleci.com/docs/configuration-reference/#executor-job
     docker:
-      # specify the version you desire here
-      - image: circleci/openjdk:8-jdk
+      # Specify the version you desire here
+      # See: https://circleci.com/developer/images/image/cimg/openjdk
+      - image: cimg/openjdk:8.0
 
-    working_directory: ~/repo
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/circleci-images/
+      # - image: circleci/postgres:9.4
 
     environment:
       # Customize the JVM maximum heap limit
-      MAVEN_OPTS: -Xmx3200m
+      JVM_OPTS: -Xmx3200m
+      TERM: dumb
 
+    # Add steps to the job
+    # See: https://circleci.com/docs/jobs-steps/#steps-overview & https://circleci.com/docs/configuration-reference/#steps
     steps:
+      # Checkout the code as the first step.
       - checkout
-      - setup_remote_docker
+
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "pom.xml" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
-      - run: mvn dependency:go-offline
+            - v1-dependencies-{{ checksum "build.gradle" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      - run: gradle dependencies
+
       - save_cache:
           paths:
-            - ~/.m2
-          key: v1-dependencies-{{ checksum "pom.xml" }}
+            - ~/.gradle
+          key: v1-dependencies-{{ checksum "build.gradle" }}
 
       # run tests!
-      - run: mvn integration-test
+      - run: gradle test
 
-      - run:
-          name: Save test results
-          command: |
-            mkdir -p ~/junit/
-            find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} ~/junit/ \;
-          when: always
-      - store_test_results:
-          path: ~/junit
-      - store_artifacts:
-          path: ~/junit
-  acceptance-latestpdb:
-    docker:
-      # specify the version you desire here
-      - image: circleci/openjdk:8-jdk
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - setup_remote_docker
-      - run:
-          name: Start containers and verify they are working
-          command: |
-            set -x
-            # create a dummy container which will hold a volume with config
-            docker create -v /docker-entrypoint-initdb.d --name configs alpine:3.4 /bin/true
-            # copy a config file into this volume
-            docker cp acceptance/docker/initdb/puppetdb.sql configs:/docker-entrypoint-initdb.d
-            # create a dummy container which will hold a volume with config
-            docker create -v /usr/src/mymaven --name acceptance alpine:3.4 /bin/true
-            # copy a config file into this volume
-            docker cp ./. acceptance:/usr/src/mymaven
-            docker network create mynetwork
-            docker run -d --expose 5432 -e POSTGRES_PASSWORD=puppetdb -e POSTGRES_USER=puppetdb --network mynetwork --volumes-from configs --name postgres postgres:9.6
-            docker run -d --expose 8081 --expose 8080 -e PUPPETDB_NODE_TTL=0s -e USE_PUPPETSERVER=false -e CONSUL_ENABLED=false --network mynetwork  --name puppetdb puppet/puppetdb
-            docker exec puppetdb curl --retry 20 --retry-connrefused http://puppetdb:8080/pdb/query/v4/nodes?query=%5B%22%3D%22%2C%22certname%22%2C%22c826a077907a.us-east-2.compute.internal%22%5D
-            docker run -it --name acceptancetests --volumes-from acceptance --network mynetwork -w /usr/src/mymaven maven:3.3-jdk-8 /bin/bash -c "mvn -Dmaven.test.skip=true install && cd acceptance && mvn clean install"
-      - run:
-          name: Save test results
-          command: |
-            docker cp acceptancetests:/usr/src/mymaven/acceptance/target acceptance
-            mkdir -p ~/acceptance-junit
-            find . -type f -regex "./acceptance/target/surefire-reports/.*xml" -exec cp {} ~/acceptance-junit \;
-          when: always
-      - store_test_results:
-          path: ~/acceptance-junit
-      - store_artifacts:
-          path: ~/acceptance-junit
+# Orchestrate jobs using workflows
+# See: https://circleci.com/docs/workflows/ & https://circleci.com/docs/configuration-reference/#workflows
 workflows:
-  version: 2
-  build_and_test:
+  sample: # This is the name of the workflow, feel free to change it to better match your workflow.
+    # Inside the workflow, you define the jobs you want to run.
     jobs:
       - build
-      - acceptance-latestpdb
