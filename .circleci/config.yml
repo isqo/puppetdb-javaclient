@@ -69,7 +69,7 @@ jobs:
             docker ps -a
             docker ps -a
             docker ps -a
-            docker exec puppetdb pwd
+            docker exec puppetdb ls
             docker ps -a
             # docker exec puppetdb curl --retry 20 --retry-connrefused http://puppetdb:8080/pdb/query/v4/nodes?query=%5B%22%3D%22%2C%22certname%22%2C%22c826a077907a.us-east-2.compute.internal%22%5D
             docker run -it --name acceptancetests --volumes-from acceptance --network mynetwork -w /usr/src/mymaven maven:3.3-jdk-8 /bin/bash -c "mvn -Dmaven.test.skip=true install && cd acceptance && mvn clean install"
