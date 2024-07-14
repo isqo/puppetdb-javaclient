@@ -65,7 +65,7 @@ jobs:
             docker cp ./. acceptance:/usr/src/mymaven
             docker network create mynetwork
             docker run -d --expose 5432 -e POSTGRES_PASSWORD=puppetdb -e POSTGRES_USER=puppetdb --network mynetwork --volumes-from configs --name postgres postgres:9.6
-            docker run -d --expose 8081 --expose 8080 -e PUPPETDB_NODE_TTL=0s -e USE_PUPPETSERVER=false -e CONSUL_ENABLED=false --network mynetwork  --name puppetdb puppet/puppetdb
+            docker run -d --expose 8081 --expose 8080 -e PUPPETDB_NODE_TTL=0s -e USE_PUPPETSERVER=false -e CONSUL_ENABLED=false --network mynetwork  --name puppetdb puppet/puppetdb:6.13.1
             docker ps -a
             docker ps -a
             docker ps -a
