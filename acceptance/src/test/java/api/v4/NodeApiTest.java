@@ -2,6 +2,7 @@ package api.v4;
 
 import isqo.puppetdb.client.v4.api.Endpoints;
 import isqo.puppetdb.client.v4.api.models.NodeData;
+import isqo.puppetdb.client.v4.http.HttpClient;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,8 +18,10 @@ public class NodeApiTest {
   @DisplayName("puppetdb should responds correctly for c826a077907a.us-east-2.compute.internal node")
   void normalCase1() {
 
+    HttpClient client = new HttpClient("puppetdb", 8080);
+    
     List<NodeData> nodes = Endpoints
-            .node("puppetdb", 8080)
+            .node(client)
             .get(certname.equals("c826a077907a.us-east-2.compute.internal"));
 
     assertFalse(nodes.isEmpty(), "Nodes list data shouldn't be empty");

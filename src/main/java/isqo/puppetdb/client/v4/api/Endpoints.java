@@ -10,6 +10,10 @@ public class Endpoints {
   public static NodeApi node(String fqdn, int port) {
     return new NodeApi(fqdn, port);
   }
+  
+  public static NodeApi node(HttpClient client) {
+    return new NodeApi(client);
+  }
 
   static public class NodeApi extends AbstractEndPoint {
 
