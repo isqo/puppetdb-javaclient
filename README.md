@@ -8,8 +8,11 @@ Puppetdb api v4
 to query the node definition of an instance whose certname is "c826a077907a.us-east-2.compute.internal":
 
 ```
+
+    HttpClient client = new HttpClient("puppetdb", 8080);
+    
     List<NodeData> nodes = Endpoints
-                                .node("puppetdb", 8080)
+                                .node(client)
                                 .get(certname.equals("c826a077907a.us-east-2.compute.internal"));
 ```
 
