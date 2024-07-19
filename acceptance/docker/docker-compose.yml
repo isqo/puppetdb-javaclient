@@ -3,7 +3,10 @@ version: '2'
 networks:
  puppet:
   driver: bridge
-
+  
+volumes:
+  puppetdb-certs-dir: {}
+  
 services:
   puppetdb-postgres:
     container_name: postgres
@@ -20,7 +23,7 @@ services:
 
   puppetdb:
     hostname: puppetdb
-    image: puppet/puppetdb
+    image: puppet/puppetdb:7.10.0
     ports:
       - 8080:8080
       - 8081
@@ -30,3 +33,5 @@ services:
       - USE_PUPPETSERVER=false
       - CONSUL_ENABLED=false
       - PUPPETDB_NODE_TTL=0s
+    volumes:
+      - "puppetdb-certs-dir:/opt/puppetlabs/server/data/puppetdb/certs"
