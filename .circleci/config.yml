@@ -57,6 +57,7 @@ jobs:
             set -x
             # create a dummy container which will hold a volume with config
             docker create -v /docker-entrypoint-initdb.d --name configs alpine:3.4 /bin/true
+            docker create -v /opt/puppetlabs/server/data/puppetdb/certs --name puppetdb-certs-dir alpine:3.4 /bin/true
             # copy a config file into this volume
             docker cp acceptance/docker/initdb/puppetdb.sql configs:/docker-entrypoint-initdb.d
             # create a dummy container which will hold a volume with config
@@ -65,7 +66,7 @@ jobs:
             docker cp ./. acceptance:/usr/src/mymaven
             docker network create mynetwork
             docker run -d --expose 5432 -e POSTGRES_PASSWORD=puppetdb -e POSTGRES_USER=puppetdb --network mynetwork --volumes-from configs --name postgres postgres:9.6
-            docker run -d --expose 8081 --expose 8080 -e PUPPETDB_NODE_TTL=0s -e USE_PUPPETSERVER=false -e CONSUL_ENABLED=false --network mynetwork  --name puppetdb puppet/puppetdb:6.13.1
+            docker run -d --expose 8081 --expose 8080 -e USE_PUPPETSERVER=false -e PUPPETDB_NODE_TTL=0s --network mynetwork --volumes-from puppetdb-certs-dir --name puppetdb puppet/puppetdb:7.10.0
             docker exec puppetdb curl --retry 20 --retry-connrefused http://puppetdb:8080/pdb/query/v4/nodes?query=%5B%22%3D%22%2C%22certname%22%2C%22c826a077907a.us-east-2.compute.internal%22%5D
             docker run -it --name acceptancetests --volumes-from acceptance --network mynetwork -w /usr/src/mymaven maven:3.3-jdk-8 /bin/bash -c "mvn -Dmaven.test.skip=true install && cd acceptance && mvn clean install"
       - run:
