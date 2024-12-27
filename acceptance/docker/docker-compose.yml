@@ -17,7 +17,7 @@ services:
       - POSTGRES_PASSWORD=puppetdb
       - POSTGRES_USER=puppetdb
     ports:
-      - 5432
+      - 5432:5432
     volumes:
       - ./initdb/:/docker-entrypoint-initdb.d
 
@@ -26,7 +26,7 @@ services:
     image: puppet/puppetdb:7.10.0
     ports:
       - 8080:8080
-      - 8081
+      - 8081:8081
     networks:
       - puppet
     environment:
