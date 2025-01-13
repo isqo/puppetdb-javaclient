@@ -33,7 +33,7 @@ you could also start these containers locally by using docker-compose from ./acc
 once started successfully, check that puppetdb responds by calling the nodes puppetdb endpoint
 
 `
-curl -X GET http://{your-ip}:8080/pdb/query/v4/nodes
+curl -X GET http://localhost:8080/pdb/query/v4/nodes
 `
 
 you should receive
