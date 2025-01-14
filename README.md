@@ -5,9 +5,16 @@ Puppetdb api v4
 
 # usage examples
 ## Nodes endpoint
-To query the node definition of an instance whose certname is "c826a077907a.us-east-2.compute.internal": 
-**["=", "certname", "c826a077907a.us-east-2.compute.internal"]**
+To query the node definition of an instance whose certname is "c826a077907a.us-east-2.compute.internal":
 
+```json
+Query:
+[
+  "=",
+  "certname",
+  "c826a077907a.us-east-2.compute.internal"
+]
+```
 
 ```java
     List<NodeData> nodes = Endpoints
@@ -30,8 +37,29 @@ equivalent to
 ```
 
 To query the node definition of instances whose kernel is Linux and mtu_eth0 is superior to 1000 is: 
-**["and",["=",["fact","kernel"],"Linux"],[">",["fact","mtu_eth0"],1000]]**
+```json
+Query:
 
+[
+  "and",
+  [
+    "=",
+    [
+      "fact",
+      "kernel"
+    ],
+    "Linux"
+  ],
+  [
+    ">",
+    [
+      "fact",
+      "mtu_eth0"
+    ],
+    1000
+  ]
+]
+```
 ```java
                 List<NodeData> nodes = Endpoints
                                 .node(new HttpClient("localhost", 8080)) // .node("puppetdb", 8080) as well works.
