@@ -32,10 +32,11 @@ equivalent to
 To query the node definition of instances whose kernel is Linux and mtu_eth0 is superior to 1000 is: 
 **["and",["=",["fact","kernel"],"Linux"],[">",["fact","mtu_eth0"],1000]]**
 
+java
 ```
-    List<NodeData> nodes = Endpoints
-                                .node(new HttpClient("puppetdb", 8080)) //.node("puppetdb", 8080) as well works.
-                                .get(and(kernel.equals("Linux"), mtu_eth0.greaterThan(1000)).build()));
+                List<NodeData> nodes = Endpoints
+                                .node(new HttpClient("localhost", 8080)) // .node("puppetdb", 8080) as well works.
+                                .get(and(kernel.equals("Linux"), mtu_eth0.greaterThan(1000)));
 ```
 
 
