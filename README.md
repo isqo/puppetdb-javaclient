@@ -66,6 +66,28 @@ Query:
                                 .get(and(kernel.equals("Linux"), mtu_eth0.greaterThan(1000)));
 ```
 
+```json
+query:
+[
+  "extract",
+  [
+    [
+      "function",
+      "count"
+    ],
+    "facts_environment"
+  ],
+  [
+    "null?",
+    "deactivated",
+    true
+  ],
+  [
+    "group_by",
+    "facts_environment"
+  ]
+]
+```
 
 ## Contribution
 ### Standalone puppetdb for testing purposes
