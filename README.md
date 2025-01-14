@@ -28,6 +28,15 @@ equivalent to
  curl -G http://localhost:8080/pdb/query/v4/nodes --data-urlencode 'query=["=", "certname", "c826a077907a.us-east-2.compute.internal"]'
 ```
 
+To query the node definition of instances whose kernel is Linux and mtu_eth0 must be superior to 1000 is: **["and",["=",["fact","kernel"],"Linux"],[">",["fact","mtu_eth0"],1000]]**
+
+```
+    List<NodeData> nodes = Endpoints
+                                .node(new HttpClient("puppetdb", 8080)) //.node("puppetdb", 8080) as well works.
+                                .get(and(kernel.equals("Linux"),mtu_eth0.greaterThan(1000)).build()));
+```
+
+
 ## Contribution
 ### Standalone puppetdb for testing purposes
 For end-to-end tests, we use docker to launch a standalone prefilled puppetdb containing 4 nodes and their facts.
