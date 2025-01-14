@@ -5,7 +5,7 @@ Puppetdb api v4
 
 # usage examples
 
-To query the node definition of an instance whose certname is "c826a077907a.us-east-2.compute.internal":
+To query the node definition of an instance whose certname is "c826a077907a.us-east-2.compute.internal": **["=", "certname", "c826a077907a.us-east-2.compute.internal"]**
 
 
 ```java
