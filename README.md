@@ -7,13 +7,6 @@ Puppetdb api v4
 
 To query the node definition of an instance whose certname is "c826a077907a.us-east-2.compute.internal":
 
-```bash
-QUERY=["=", "certname", "c826a077907a.us-east-2.compute.internal"]
-curl http://localhost:8080/pdb/query/v4/nodes?query=$QUERY
-echo AST query is ["=", "certname", "c826a077907a.us-east-2.compute.internal"];
-```
-
-["=", "certname", "c826a077907a.us-east-2.compute.internal"]
 
 ```java
     List<NodeData> nodes = Endpoints
@@ -27,6 +20,12 @@ or
     HttpClient client = new HttpClient("puppetdb", 8080);
     NodeApi api = Endpoints.node(client);
     List<NodeData> nodes = api.get(certname.equals("c826a077907a.us-east-2.compute.internal"));
+```
+
+equivalent to
+
+```bash
+ curl -G http://localhost:8080/pdb/query/v4/nodes --data-urlencode 'query=["=", "certname", "c826a077907a.us-east-2.compute.internal"]'
 ```
 
 ## Contribution
