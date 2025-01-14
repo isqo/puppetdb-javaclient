@@ -35,7 +35,7 @@ To query the node definition of instances whose kernel is Linux and mtu_eth0 is 
 ```
     List<NodeData> nodes = Endpoints
                                 .node(new HttpClient("puppetdb", 8080)) //.node("puppetdb", 8080) as well works.
-                                .get(and(kernel.equals("Linux"),mtu_eth0.greaterThan(1000)).build()));
+                                .get(and(kernel.equals("Linux"), mtu_eth0.greaterThan(1000)).build()));
 ```
 
 
