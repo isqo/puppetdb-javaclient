@@ -1,4 +1,4 @@
-package api.v4;
+package isqo.puppetdb.client.v4.acceptance;
 
 import isqo.puppetdb.client.v4.api.Endpoints;
 import isqo.puppetdb.client.v4.api.models.NodeData;

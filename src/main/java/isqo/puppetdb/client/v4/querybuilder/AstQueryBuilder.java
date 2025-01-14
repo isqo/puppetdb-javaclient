@@ -12,18 +12,20 @@ public class AstQueryBuilder {
   /***
    * contains the fields that PuppetDB queries operate on
    */
-  public enum Fields {
-    certname,
-    rubyversion,
-    catalog_environment;
 
-    /*** construct the = operator query.
+   public enum Facts {
+    kernel,
+    mtu_eth0;
+
+    private String queryFormat = "[\"%s\",\"%s\"]";
+    
+        /*** constructs the > operator query.
      *
      * @param value the value of comparison
      * @return unmarshalled PuppetDB query
      */
-    public RawQuery equals(String value) {
-      return BinaryOperators.EQUAL.getRawQuery(this.toString(), value);
+    public RawQuery greaterThan(int value) {
+      return ArithmeticBinaryOperators.GREATER_THAN.getRawQuery(this.factToString(), String.valueOf(value),ValueType.INTEGER,true);
     }
 
     /*** constructs the > operator query.
@@ -32,7 +34,47 @@ public class AstQueryBuilder {
      * @return unmarshalled PuppetDB query
      */
     public RawQuery greaterThan(String value) {
-      return BinaryOperators.GREATER_THAN.getRawQuery(this.toString(), value);
+      return ArithmeticBinaryOperators.GREATER_THAN.getRawQuery(this.factToString(), value,ValueType.STRING,true);
+    }
+
+        /*** construct the = operator query.
+     *
+     * @param value the value of comparison
+     * @return unmarshalled PuppetDB query
+     */
+    public RawQuery equals(String value) {
+    
+      return ArithmeticBinaryOperators.EQUAL.getRawQuery(this.factToString(), value,ValueType.STRING ,true);
+    }
+
+    public String factToString() { 
+      return String.format(queryFormat, "fact", this.toString());
+    }
+
+   }
+  
+  public enum Fields {
+    certname,
+    rubyversion,
+    catalog_environment;
+
+
+    /*** construct the = operator query.
+     *
+     * @param value the value of comparison
+     * @return unmarshalled PuppetDB query
+     */
+    public RawQuery equals(String value) {
+      return ArithmeticBinaryOperators.EQUAL.getRawQuery(this.toString(), value);
+    }
+
+    /*** constructs the > operator query.
+     *
+     * @param value the value of comparison
+     * @return unmarshalled PuppetDB query
+     */
+    public RawQuery greaterThan(String value) {
+      return ArithmeticBinaryOperators.GREATER_THAN.getRawQuery(this.toString(), value);
     }
 
     /*** constructs the < operator query.
@@ -41,7 +83,7 @@ public class AstQueryBuilder {
      * @return unmarshalled PuppetDB query
      */
     public RawQuery lessThan(String value) {
-      return BinaryOperators.LESS_THAN.getRawQuery(this.toString(), value);
+      return ArithmeticBinaryOperators.LESS_THAN.getRawQuery(this.toString(), value);
     }
 
     /*** constructs the >= operator query.
@@ -50,7 +92,7 @@ public class AstQueryBuilder {
      * @return
      */
     public RawQuery greaterThanOrEq(String value) {
-      return BinaryOperators.GREATER_THAN_OR_EQUAL.getRawQuery(this.toString(), value);
+      return ArithmeticBinaryOperators.GREATER_THAN_OR_EQUAL.getRawQuery(this.toString(), value);
     }
 
     /*** constructs the <= operator query.
@@ -59,46 +101,82 @@ public class AstQueryBuilder {
      * @return
      */
     public RawQuery lessThanOrEq(String value) {
-      return BinaryOperators.LESS_THAN_OR_EQUAL.getRawQuery(this.toString(), value);
-    }
-
-    enum BinaryOperators {
-      EQUAL("="),
-      GREATER_THAN(">"),
-      LESS_THAN("<"),
-      GREATER_THAN_OR_EQUAL(">="),
-      LESS_THAN_OR_EQUAL("<="),;
-
-      private final String operator;
-
-      BinaryOperators(String operator) {
-        this.operator = operator;
-      }
-
-      public BinaryOperatorsRawQuery getRawQuery(String field, String value) {
-        return new BinaryOperatorsRawQuery(this.operator, field, value);
-      }
-
-      static class BinaryOperatorsRawQuery implements RawQuery {
-        private String queryFormat = "[\"%s\",\"%s\",\"%s\"]";
-        private String operator;
-        private String field;
-        private String value;
-
-        BinaryOperatorsRawQuery(String operator, String field, String value) {
-          this.operator = operator;
-          this.field = field;
-          this.value = value;
-        }
-
-        @Override
-        public String build() {
-          return String.format(queryFormat, operator, field, value);
-        }
-      }
+      return ArithmeticBinaryOperators.LESS_THAN_OR_EQUAL.getRawQuery(this.toString(), value);
     }
   }
 
+  enum ValueType {
+    STRING,
+    INTEGER,
+    BOOLEAN,
+    FLOAT
+  }
+
+  enum ArithmeticBinaryOperators {
+    EQUAL("="),
+    GREATER_THAN(">"),
+    LESS_THAN("<"),
+    GREATER_THAN_OR_EQUAL(">="),
+    LESS_THAN_OR_EQUAL("<="),;
+
+    private final String operator;
+
+
+    ArithmeticBinaryOperators(String operator) {
+      this.operator = operator;
+    }
+
+    public ArithmeticBinaryOperatorsRawQuery getRawQuery(String field, String value) {
+      return new ArithmeticBinaryOperatorsRawQuery(this.operator, field, value);
+    }
+
+    
+    public ArithmeticBinaryOperatorsRawQuery getRawQuery(String field, String value,ValueType valueType, boolean isFact) {
+      return new ArithmeticBinaryOperatorsRawQuery(this.operator, field, value,valueType ,isFact);
+    }
+
+
+    static class ArithmeticBinaryOperatorsRawQuery implements RawQuery {
+      private String operator;
+      private String field;
+      private String value;
+      private ValueType valueType;
+      private boolean isFact = false;
+
+      private String operatorFormat = "\"%s\"";
+      private String fieldFormat = "\"%s\"";
+      private String valueFormat = "\"%s\"";
+      private String queryFormat = "["+operatorFormat+","+fieldFormat+","+valueFormat+"]";
+
+      ArithmeticBinaryOperatorsRawQuery(String operator, String field, String value) {
+        this.operator = operator;
+        this.field = field;
+        this.value = value;
+      }
+
+      ArithmeticBinaryOperatorsRawQuery(String operator, String field, String value,ValueType valueType, boolean isFact) {
+        this.operator = operator;
+        this.field = field;
+        this.value = value;
+        this.valueType = valueType;
+        this.isFact = isFact;
+        if (this.isFact) {
+          this.fieldFormat = "%s";
+          queryFormat = "["+operatorFormat+","+fieldFormat+","+valueFormat+"]";
+        }
+
+        if (ValueType.INTEGER.equals(this.valueType)) {
+            this.valueFormat = "%s";
+            queryFormat = "["+operatorFormat+","+fieldFormat+","+valueFormat+"]";
+        }
+      }
+
+      @Override
+      public String build() {
+        return String.format(queryFormat, operator, field, value);
+      }
+    }
+  }
   public static class BooleanOperators {
     static final String AND = "and";
     static final String OR = "or";
