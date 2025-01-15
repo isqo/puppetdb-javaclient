@@ -87,6 +87,19 @@ query:
     "facts_environment"
   ]
 ]
+
+
+```java
+                List<NodeData> nodes = Endpoints
+                                .node(new HttpClient("localhost", 8080)) // .node("puppetdb", 8080) as well works.
+                                .get(
+                        combine(
+                          function.extract( function.COUNT, NodeDataEnum.facts_environment),
+                          status.deactivated.null_("true"),
+                          function.groupe_by(NodeDataEnum.facts_environment
+                      )
+                ););
+```
 ```
 
 ## Contribution
