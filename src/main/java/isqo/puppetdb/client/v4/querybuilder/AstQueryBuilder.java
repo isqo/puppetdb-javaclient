@@ -13,6 +13,85 @@ public class AstQueryBuilder {
    * contains the fields that PuppetDB queries operate on
    */
 
+  public enum NodeDataEnum  {
+  
+    deactivated,
+    latest_report_hash,
+    facts_environment,
+    cached_catalog_status,
+    report_environment,
+    latest_report_corrective_change,
+    catalog_environment,
+    facts_timestamp,
+    latest_report_noop,
+    expired,
+    latest_report_noop_pending,
+    report_timestamp,
+    certname,
+    catalog_timestamp,
+    latest_report_job_id,
+    latest_report_status,
+  }
+
+    
+  
+  public enum status{
+    deactivated;
+
+    public RawQuery null_(String value) {
+      return ArithmeticBinaryOperators.NULL.getRawQuery(this.toString(), value,ValueType.BOOLEAN,false);
+    }
+  }
+
+  public enum function
+  {
+    COUNT("count"),
+    EXTRACT("extract"),
+    GROUPBY("group_by");
+
+    private function(String function) {
+      this.function = function;
+    }
+    private String function;
+  
+    public static RawQuery extract(function function,NodeDataEnum nodeData) {
+     // String queryFormat="[\"extract\",[\"function\",\"%s\"],\"%s\"]";
+     String queryFormat="[\"extract\",[[\"function\",\"%s\"],\"%s\"]";
+      return new OperatorRawQuery(queryFormat, COUNT, nodeData);
+    }
+  
+    
+    public static RawQuery groupe_by(NodeDataEnum nodeData) {
+      String queryFormat="[\"%s\",\"%s\"]]";
+      return new OperatorRawQuery(queryFormat, GROUPBY, nodeData);
+    }
+
+    public static RawQuery groupe_by(String queryFormat,NodeDataEnum nodeData) {
+      return new OperatorRawQuery(queryFormat, GROUPBY, nodeData);
+    }
+
+    static class OperatorRawQuery implements RawQuery {
+      private String queryFormat; 
+      private function function;
+      private NodeDataEnum nodeData;
+  
+      OperatorRawQuery(String queryFormat, function function, NodeDataEnum nodeData) {
+        this.queryFormat = queryFormat;
+        this.function = function;
+        this.nodeData = nodeData;
+      }
+  
+      @Override
+      public String build() {
+        return String.format(queryFormat, function.function, nodeData);
+      }
+    }
+
+  }
+
+
+
+
    public enum Facts {
     kernel,
     mtu_eth0;
@@ -52,7 +131,7 @@ public class AstQueryBuilder {
     }
 
    }
-  
+
   public enum Fields {
     certname,
     rubyversion,
@@ -117,7 +196,8 @@ public class AstQueryBuilder {
     GREATER_THAN(">"),
     LESS_THAN("<"),
     GREATER_THAN_OR_EQUAL(">="),
-    LESS_THAN_OR_EQUAL("<="),;
+    LESS_THAN_OR_EQUAL("<="),
+    NULL("null?");
 
     private final String operator;
 
@@ -165,7 +245,7 @@ public class AstQueryBuilder {
           queryFormat = "["+operatorFormat+","+fieldFormat+","+valueFormat+"]";
         }
 
-        if (ValueType.INTEGER.equals(this.valueType)) {
+        if (! ValueType.STRING.equals(this.valueType)) {
             this.valueFormat = "%s";
             queryFormat = "["+operatorFormat+","+fieldFormat+","+valueFormat+"]";
         }
@@ -197,6 +277,11 @@ public class AstQueryBuilder {
      */
     public static RawQuery or(RawQuery... queries) {
       return new BooleanOperatorsRawQuery(OR, Arrays.asList(queries));
+    }
+
+    public static String combine(RawQuery... queries) {
+      List<RawQuery> queriesList = Arrays.asList(queries);
+      return queriesList.stream().map(RawQuery::build).collect(joining(","));
     }
 
      static class BooleanOperatorsRawQuery implements RawQuery {

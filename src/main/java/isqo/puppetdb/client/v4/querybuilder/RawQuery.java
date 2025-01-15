@@ -1,5 +1,7 @@
 package isqo.puppetdb.client.v4.querybuilder;
 
+import isqo.puppetdb.client.v4.querybuilder.AstQueryBuilder.ValueType;
+
 /***
  * the interface for all kinds of queries
  */
