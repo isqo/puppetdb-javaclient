@@ -119,33 +119,19 @@ class AstQueryBuilderTest {
         }
 
         @Test
-        @DisplayName("should return a valid binary operator query for facts: [\"fact\", \"kernel\"], compounded fields")
-        void test() {
+        @DisplayName("should return a compounded result that extract the count of facts_environment, group by facts_environment and filter deactivated")
+        void extractFactsEnvironment() {
 
                 
-                String result = function.extract(function.COUNT, NodeDataEnum.facts_environment).build();
-                System.out.println("result: " + result);
-
-                String result2 = status.deactivated.null_("true").build();                
-                System.out.println("result: " + result2);
-
-                String result3 = function.groupe_by(NodeDataEnum.facts_environment).build();                
-                System.out.println("result: " + result3);
-
-              //  String result4 = function.group_by(NodeDataEnum.facts_environment).build();
-              // z System.out.println("result: " + result4);
-              System.out.println(result+","+result2+","+result3);
-               String result4 = 
-               combine(
-                        function.extract(
-                                function.COUNT, NodeDataEnum.facts_environment),
-                                status.deactivated.null_("true"),
-                                function.groupe_by(NodeDataEnum.facts_environment
-                                )
-                );
-              
-
-              System.out.println("result is: " + result4);
+                Assertions.assertEquals(
+                        "[\"extract\",[[\"function\",\"count\"],\"facts_environment\"],[\"null?\",\"deactivated\",true],[\"group_by\",\"facts_environment\"]]",
+                        combine(
+                                function.extract(
+                                        function.COUNT, NodeDataEnum.facts_environment),
+                                        status.deactivated.null_("true"),
+                                        function.groupe_by(NodeDataEnum.facts_environment
+                                        )
+                        ));
       
         }               
 }
