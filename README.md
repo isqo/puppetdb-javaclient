@@ -89,6 +89,7 @@ query:
 ]
 
 
+```
 ```java
                 List<NodeData> nodes = Endpoints
                                 .node(new HttpClient("localhost", 8080)) // .node("puppetdb", 8080) as well works.
@@ -99,7 +100,7 @@ query:
                           function.groupe_by(NodeDataEnum.facts_environment
                       )
                 ););
-```
+
 ```
 
 ## Contribution
