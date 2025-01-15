@@ -38,6 +38,42 @@ To query the node definition of instances whose kernel is Linux and mtu_eth0 is 
                                 .get(and(kernel.equals("Linux"), mtu_eth0.greaterThan(1000)).build()));
 ```
 
+```json
+query:
+[
+  "extract",
+  [
+    [
+      "function",
+      "count"
+    ],
+    "facts_environment"
+  ],
+  [
+    "null?",
+    "deactivated",
+    true
+  ],
+  [
+    "group_by",
+    "facts_environment"
+  ]
+]
+
+
+```
+```java
+                List<NodeData> nodes = Endpoints
+                                .node(new HttpClient("localhost", 8080)) // .node("puppetdb", 8080) as well works.
+                                .get(
+                        combine(
+                          function.extract( function.COUNT, NodeDataEnum.facts_environment),
+                          status.deactivated.null_("true"),
+                          function.groupe_by(NodeDataEnum.facts_environment
+                      )
+                ););
+
+```
 
 ## Contribution
 ### Standalone puppetdb for testing purposes
