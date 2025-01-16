@@ -5,27 +5,23 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import isqo.puppetdb.client.v4.querybuilder.RawQuery;
+import isqo.puppetdb.client.v4.querybuilder.facts;
+import isqo.puppetdb.client.v4.querybuilder.fields;
 import isqo.puppetdb.client.v4.querybuilder.AstQueryBuilder.NodeDataEnum;
-import isqo.puppetdb.client.v4.querybuilder.AstQueryBuilder.function;
 import isqo.puppetdb.client.v4.querybuilder.AstQueryBuilder.status;
-
-import static isqo.puppetdb.client.v4.querybuilder.AstQueryBuilder.BooleanOperators.and;
-import static isqo.puppetdb.client.v4.querybuilder.AstQueryBuilder.BooleanOperators.combine;
-import static isqo.puppetdb.client.v4.querybuilder.AstQueryBuilder.BooleanOperators.or;
-import static isqo.puppetdb.client.v4.querybuilder.AstQueryBuilder.Fields.*;
+import isqo.puppetdb.client.v4.querybuilder.binaryoperators.BooleanOperators;
+import isqo.puppetdb.client.v4.querybuilder.binaryoperators.function;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static isqo.puppetdb.client.v4.querybuilder.AstQueryBuilder.Facts.*;
 
 class AstQueryBuilderTest {
         @Test
         @DisplayName("should return a valid binary operator query string for equal operator")
         void equalOperator() {
                 Assertions.assertEquals("[\"=\",\"certname\",\"c9d2ddc6b309.us-east-2.compute.internal\"]",
-                                certname.equals("c9d2ddc6b309.us-east-2.compute.internal").build());
+                                fields.certname.equals("c9d2ddc6b309.us-east-2.compute.internal").build());
 
         }
 
@@ -33,7 +29,7 @@ class AstQueryBuilderTest {
         @DisplayName("should return a valid binary operator query string for 'greater than' operator")
         void greaterThanOperator() {
                 Assertions.assertEquals("[\">\",\"rubyversion\",\"2.4.3\"]",
-                                rubyversion
+                fields.rubyversion
                                                 .greaterThan("2.4.3")
                                                 .build());
         }
@@ -42,7 +38,7 @@ class AstQueryBuilderTest {
         @DisplayName("should return a valid binary operator query string for 'less than' operator")
         void lessThanOperator() {
                 Assertions.assertEquals("[\"<\",\"rubyversion\",\"2.4.3\"]",
-                                rubyversion.lessThan("2.4.3")
+                fields.rubyversion.lessThan("2.4.3")
                                                 .build());
         }
 
@@ -50,7 +46,7 @@ class AstQueryBuilderTest {
         @DisplayName("should return a valid binary operator query string for 'greater than or equal to' operator")
         void greaterThanOrEqualOperator() {
                 Assertions.assertEquals("[\">=\",\"rubyversion\",\"2.4.3\"]",
-                                rubyversion
+                fields.rubyversion
                                                 .greaterThanOrEq("2.4.3")
                                                 .build());
         }
@@ -59,7 +55,7 @@ class AstQueryBuilderTest {
         @DisplayName("should return a valid binary operator query string for 'less than or equal to' operator")
         void lessThanOrEqualOperator() {
                 Assertions.assertEquals("[\"<=\",\"rubyversion\",\"2.4.3\"]",
-                                rubyversion
+                fields.rubyversion
                                                 .lessThanOrEq("2.4.3")
                                                 .build());
         }
@@ -68,8 +64,8 @@ class AstQueryBuilderTest {
         @DisplayName("null should be marshalled")
         void passingNullToEquals() {
                 Assertions.assertEquals("[\"=\",\"rubyversion\",\"null\"]",
-                                rubyversion
-                                                .equals(null)
+                fields.rubyversion
+                                                .equals("null")
                                                 .build());
         }
 
@@ -77,7 +73,7 @@ class AstQueryBuilderTest {
         @DisplayName("empty should be marshalled")
         void passingEmptyToEquals() {
                 Assertions.assertEquals("[\"=\",\"rubyversion\",\"\"]",
-                                rubyversion
+                fields.rubyversion
                                                 .equals("")
                                                 .build());
         }
@@ -87,9 +83,9 @@ class AstQueryBuilderTest {
         void AndBooleanOperator() {
                 Assertions.assertEquals(
                                 "[\"and\",[\"=\",\"certname\",\"foo.local\"],[\"=\",\"rubyversion\",\"2.4.3\"],[\"=\",\"catalog_environment\",\"staging\"]]",
-                                and(certname.equals("foo.local"),
-                                                rubyversion.equals("2.4.3"),
-                                                catalog_environment.equals("staging")).build());
+                                BooleanOperators .and(fields.certname.equals("foo.local"),
+                                                fields.rubyversion.equals("2.4.3"),
+                                                fields.catalog_environment.equals("staging")).build());
         }
 
         @Test
@@ -97,14 +93,14 @@ class AstQueryBuilderTest {
         void OrBooleanOperator() {
                 Assertions.assertEquals(
                                 "[\"or\",[\"and\",[\"=\",\"certname\",\"foo.local\"],[\"=\",\"certname\",\"bar.local\"],[\"or\",[\"=\",\"certname\",\"bar.local\"],[\"=\",\"certname\",\"baz.local\"]]],[\"=\",\"certname\",\"baz.local\"]]",
-                                or(
-                                                and(
-                                                                certname.equals("foo.local"),
-                                                                certname.equals("bar.local"),
-                                                                or(
-                                                                                certname.equals("bar.local"),
-                                                                                certname.equals("baz.local"))),
-                                                certname.equals("baz.local")).build());
+                                BooleanOperators.or(
+                                        BooleanOperators.and(
+                                                                fields.certname.equals("foo.local"),
+                                                                fields.certname.equals("bar.local"),
+                                                                BooleanOperators.or(
+                                                                                fields.certname.equals("bar.local"),
+                                                                                fields.certname.equals("baz.local"))),
+                                                fields.certname.equals("baz.local")).build());
         }
 
         @Test
@@ -113,9 +109,9 @@ class AstQueryBuilderTest {
 
                 Assertions.assertEquals(
                                 "[\"and\",[\"=\",[\"fact\",\"kernel\"],\"Linux\"],[\">\",[\"fact\",\"mtu_eth0\"],1000]]",
-                                and(
-                                                kernel.equals("Linux"),
-                                                mtu_eth0.greaterThan(1000)).build());
+                                BooleanOperators.and(
+                                                facts.kernel.equals("Linux"),
+                                                facts.mtu_eth0.greaterThan(1000)).build());
         }
 
         @Test
@@ -123,15 +119,34 @@ class AstQueryBuilderTest {
         void extractFactsEnvironment() {
 
                 
-                Assertions.assertEquals(
-                        "[\"extract\",[[\"function\",\"count\"],\"facts_environment\"],[\"null?\",\"deactivated\",true],[\"group_by\",\"facts_environment\"]]",
-                        combine(
-                                function.extract(
-                                        function.COUNT, NodeDataEnum.facts_environment),
-                                        status.deactivated.null_("true"),
-                                        function.groupe_by(NodeDataEnum.facts_environment
-                                        )
-                        ));
+        
+                  Assertions.assertEquals(
+                        "[\"extract\",[[\"function\",\"count\"],\"facts_environment\"],[\"null?\",\"deactivated\",true],[\"group_by\",\"facts_environment\"]]", 
+                        BooleanOperators.extract( 
+                        function.count(NodeDataEnum.facts_environment.toString()),               
+                        status.deactivated.null_("true"),
+                        function.groupe_by(NodeDataEnum.facts_environment)
+                       ));
+
+                       
+                        
       
-        }               
+        }  
+        
+        @Test
+        @DisplayName("should return a compounded result that extract the count of facts_environment, group by facts_environment and filter deactivated")
+        void test() {
+        
+         
+                Assertions.assertEquals(
+                        "[\"in\",\"certname\",[\"extract\",\"certname\",[\"select_fact_contents\",[\"and\",[\"=\",\"path\",[\"system_uptime\",\"days\"]],[\">=\",\"value\",\"10\"]]]]]", 
+                        fields.certname.in(function.extractNoFunc(NodeDataEnum.certname,
+                        function.select(function.SELECT_FACT_CONTENT,NodeDataEnum.certname,
+                                BooleanOperators.and(
+                                        fields.path.equals(facts.system_uptime.days()),
+                                        fields.value.greaterThanOrEq(10)).build()
+                                ).build()).build()).build());
+
+
+        }    
 }
