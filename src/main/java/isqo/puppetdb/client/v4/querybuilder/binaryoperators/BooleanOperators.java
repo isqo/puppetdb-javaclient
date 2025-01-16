@@ -10,7 +10,6 @@ import isqo.puppetdb.client.v4.querybuilder.RawQuery;
 public class BooleanOperators {
     static final String AND = "and";
     static final String OR = "or";
-
     /***
      *
      * @param queries nested queries of the and operator
@@ -27,11 +26,6 @@ public class BooleanOperators {
      */
     public static RawQuery or(RawQuery... queries) {
       return new BooleanOperatorsRawQuery(OR, Arrays.asList(queries));
-    }
-
-    public static String combine(RawQuery... queries) {
-      List<RawQuery> queriesList = Arrays.asList(queries);
-      return queriesList.stream().map(RawQuery::build).collect(joining(","));
     }
 
     public static String extract(RawQuery... queries) {

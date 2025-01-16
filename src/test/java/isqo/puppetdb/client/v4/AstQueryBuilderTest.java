@@ -138,6 +138,8 @@ class AstQueryBuilderTest {
          
                 Assertions.assertEquals(
                         "[\"in\",\"certname\",[\"extract\",\"certname\",[\"select_fact_contents\",[\"and\",[\"=\",\"path\",[\"system_uptime\",\"days\"]],[\">=\",\"value\",10]]]]]",
+
+
                         certname.in(extract(certname,
                         select(SELECT_FACT_CONTENT,certname,
                                 and(

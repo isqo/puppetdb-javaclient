@@ -31,25 +31,25 @@ public enum ArithmeticBinaryOperators {
       private String value;
       private ValueType valueType;
       private boolean isFact = false;
-      private boolean isFactToString;
+      private boolean isFactInBrackets;
       private String operatorFormat = "\"%s\"";
       private String fieldFormat = "\"%s\"";
       private String valueFormat = "\"%s\"";
       private String queryFormat = "["+operatorFormat+","+fieldFormat+","+valueFormat+"]";
 
 
-      ArithmeticBinaryOperatorsRawQuery(String operator, String field, String value,ValueType valueType, boolean isFact, boolean isFactToString) {
+      ArithmeticBinaryOperatorsRawQuery(String operator, String field, String value,ValueType valueType, boolean isFact, boolean isFactInBrackets) {
         this.operator = operator;
         this.field = field;
         this.value = value;
         this.valueType = valueType;
         this.isFact = isFact;
-        this.isFactToString = isFactToString;
+        this.isFactInBrackets = isFactInBrackets;
        if (this.isFact) {
           this.fieldFormat = "\"%s\"";
           queryFormat = "["+operatorFormat+","+fieldFormat+","+valueFormat+"]";
         }
-        if(this.isFactToString){
+        if(this.isFactInBrackets){
         this.fieldFormat = "%s";
         queryFormat = "["+operatorFormat+","+fieldFormat+","+valueFormat+"]";
         }

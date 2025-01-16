@@ -34,9 +34,9 @@ public enum Functions {
         return new OperatorRawQuery(queryFormat, function, nodeData, value);
     }
 
-    public static RawQuery group_by(Facts nodeData) {
+    public static RawQuery group_by(Facts fact) {
         String queryFormat = "[\"%s\",\"%s\"]";
-        return new OperatorRawQuery(queryFormat, GROUPBY, nodeData.toString());
+        return new OperatorRawQuery(queryFormat, GROUPBY, fact.toString());
     }
 
 
