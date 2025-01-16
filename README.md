@@ -71,6 +71,49 @@ query:
                        ));
 
 ```
+```json
+query:
+[
+  "in",
+  "certname",
+  [
+    "extract",
+    "certname",
+    [
+      "select_fact_contents",
+      [
+        "and",
+        [
+          "=",
+          "path",
+          [
+            "system_uptime",
+            "days"
+          ]
+        ],
+        [
+          ">=",
+          "value",
+          10
+        ]
+      ]
+    ]
+  ]
+]
+```
+```java
+                List<NodeData> nodes = Endpoints
+                                .node(new HttpClient("localhost", 8080)) // .node("puppetdb", 8080) as well works.
+                                .get(
+                        Facts.certname.in(extract(certname,
+                                select(SELECT_FACT_CONTENT,certname,
+                                        and(
+                                                Facts.path.equals(Facts.system_uptime.days()),
+                                                Facts.value.greaterThanOrEq("10")).build()
+                                ).build()).build()).build()
+);
+
+```
 
 ## Contribution
 ### Standalone puppetdb for testing purposes
