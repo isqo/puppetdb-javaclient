@@ -4,7 +4,7 @@ import isqo.puppetdb.client.v4.api.Endpoints;
 import isqo.puppetdb.client.v4.api.models.NodeData;
 import isqo.puppetdb.client.v4.http.HttpClient;
 import isqo.puppetdb.client.v4.querybuilder.RawQuery;
-import isqo.puppetdb.client.v4.querybuilder.fields;
+import isqo.puppetdb.client.v4.querybuilder.Facts;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,7 +28,7 @@ class NodeEndPointTest {
   @Test
   @DisplayName("unmarshalling node data should be done successfully when httpclient behaves normally")
   void everythingIsOk() {
-    RawQuery query = fields.certname.equals("mbp.local");
+    RawQuery query = Facts.certname.equals("mbp.local");
     String content = readFileFromFiles("mbp.local.json");
     HttpClient httpClient = mock(HttpClient.class);
     Endpoints.NodeApi nodeApi = new Endpoints.NodeApi(httpClient);

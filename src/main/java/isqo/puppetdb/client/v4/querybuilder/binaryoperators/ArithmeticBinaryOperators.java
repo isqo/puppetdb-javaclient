@@ -20,16 +20,8 @@ public enum ArithmeticBinaryOperators {
       this.operator = operator;
     }
 
-    public ArithmeticBinaryOperatorsRawQuery2 getRawQuery(String field, Integer value ) {
-      return new ArithmeticBinaryOperatorsRawQuery2(this.operator, field, value);
-    }
-    
-    public ArithmeticBinaryOperatorsRawQuery getRawQuery(String field, String value ) {
-      return new ArithmeticBinaryOperatorsRawQuery(this.operator, field, value);
-    }
-    
-    public ArithmeticBinaryOperatorsRawQuery getRawQuery(String field, String value,ValueType valueType, boolean isFact) {
-      return new ArithmeticBinaryOperatorsRawQuery(this.operator, field, value,valueType ,isFact);
+    public ArithmeticBinaryOperatorsRawQuery getRawQuery(String field, String value,ValueType valueType, boolean isFact, boolean isFactToString) {
+      return new ArithmeticBinaryOperatorsRawQuery(this.operator, field, value,valueType ,isFact, isFactToString);
     }
 
 
@@ -39,34 +31,28 @@ public enum ArithmeticBinaryOperators {
       private String value;
       private ValueType valueType;
       private boolean isFact = false;
+      private boolean isFactToString;
       private String operatorFormat = "\"%s\"";
       private String fieldFormat = "\"%s\"";
       private String valueFormat = "\"%s\"";
       private String queryFormat = "["+operatorFormat+","+fieldFormat+","+valueFormat+"]";
 
-      
-      ArithmeticBinaryOperatorsRawQuery(String operator, String field, String value) {
-        this.operator = operator;
-        this.field = field;
-        this.value= value;
-        if (this.value.startsWith("[") && this.value.endsWith("]") ) {
-            valueFormat = "%s";
-            queryFormat = "["+operatorFormat+","+fieldFormat+","+valueFormat+"]";
-        }
-      }
 
-      ArithmeticBinaryOperatorsRawQuery(String operator, String field, String value,ValueType valueType, boolean isFact) {
+      ArithmeticBinaryOperatorsRawQuery(String operator, String field, String value,ValueType valueType, boolean isFact, boolean isFactToString) {
         this.operator = operator;
         this.field = field;
         this.value = value;
         this.valueType = valueType;
         this.isFact = isFact;
-
-        if (this.isFact) {
-          this.fieldFormat = "%s";
+        this.isFactToString = isFactToString;
+       if (this.isFact) {
+          this.fieldFormat = "\"%s\"";
           queryFormat = "["+operatorFormat+","+fieldFormat+","+valueFormat+"]";
         }
-
+        if(this.isFactToString){
+        this.fieldFormat = "%s";
+        queryFormat = "["+operatorFormat+","+fieldFormat+","+valueFormat+"]";
+        }
         if (! ValueType.STRING.equals(this.valueType)) {
             this.valueFormat = "%s";
             queryFormat = "["+operatorFormat+","+fieldFormat+","+valueFormat+"]";
@@ -77,32 +63,6 @@ public enum ArithmeticBinaryOperators {
           queryFormat = "["+operatorFormat+","+fieldFormat+","+valueFormat+"]";
       }
       }
-
-      @Override
-      public String build() {
-        return String.format(queryFormat, operator, field, value);
-      }
-    }
-
-    
-    static class ArithmeticBinaryOperatorsRawQuery2 implements RawQuery {
-      private String operator;
-      private String field;
-      private Integer value;
-      private ValueType valueType;
-      private boolean isFact = false;
-      private String operatorFormat = "\"%s\"";
-      private String fieldFormat = "\"%s\"";
-      private String valueFormat = "\"%d\"";
-      private String queryFormat = "["+operatorFormat+","+fieldFormat+","+valueFormat+"]";
-
-      
-      ArithmeticBinaryOperatorsRawQuery2(String operator, String field, int value) {
-        this.operator = operator;
-        this.field = field;
-        this.value= value;
-      }
-      
 
       @Override
       public String build() {

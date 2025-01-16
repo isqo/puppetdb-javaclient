@@ -3,7 +3,7 @@ package isqo.puppetdb.client.v4.acceptance;
 import isqo.puppetdb.client.v4.api.Endpoints;
 import isqo.puppetdb.client.v4.api.models.NodeData;
 import isqo.puppetdb.client.v4.http.HttpClient;
-import isqo.puppetdb.client.v4.querybuilder.fields;
+import isqo.puppetdb.client.v4.querybuilder.Facts;
 
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -23,7 +23,7 @@ public class NodeApiTest {
     
     List<NodeData> nodes = Endpoints
             .node(client)
-            .get(fields.certname.equals("c826a077907a.us-east-2.compute.internal"));
+            .get(Facts.certname.equals("c826a077907a.us-east-2.compute.internal"));
 
     assertFalse(nodes.isEmpty(), "Nodes list data shouldn't be empty");
     NodeData node = nodes.get(0);

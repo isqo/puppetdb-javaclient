@@ -67,9 +67,9 @@ query:
                                 .node(new HttpClient("localhost", 8080)) // .node("puppetdb", 8080) as well works.
                                 .get(
                         combine(
-                          function.extract( function.COUNT, NodeDataEnum.facts_environment),
+                          function.extract( function.COUNT, Facts.facts_environment),
                           status.deactivated.null_("true"),
-                          function.groupe_by(NodeDataEnum.facts_environment
+                          function.groupe_by(Facts.facts_environment
                       )
                 ););
 
