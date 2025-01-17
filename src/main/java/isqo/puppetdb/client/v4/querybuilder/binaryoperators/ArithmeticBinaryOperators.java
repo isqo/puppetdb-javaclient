@@ -11,7 +11,7 @@ public enum ArithmeticBinaryOperators {
     LESS_THAN_OR_EQUAL("<="),
     NULL("null?"),
     IN("in"),
-    ;
+    FROM("from");
 
     private final String operator;
 

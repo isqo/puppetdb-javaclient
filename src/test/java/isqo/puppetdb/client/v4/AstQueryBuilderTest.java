@@ -14,9 +14,9 @@ import isqo.puppetdb.client.v4.querybuilder.binaryoperators.Functions;
 import java.util.List;
 import java.util.Map;
 
+import static isqo.puppetdb.client.v4.querybuilder.Facts.*;
 import static isqo.puppetdb.client.v4.querybuilder.binaryoperators.BooleanOperators.and;
 import static isqo.puppetdb.client.v4.querybuilder.binaryoperators.Functions.*;
-import static isqo.puppetdb.client.v4.querybuilder.Facts.certname;
 
 class AstQueryBuilderTest {
     @Test
@@ -144,6 +144,20 @@ class AstQueryBuilderTest {
                                         Facts.path.equals(Facts.system_uptime.days()),
                                         Facts.value.greaterThanOrEq("10"))
                         ))).build());
+
+    }
+
+
+    @Test
+    @DisplayName("should return reports of myserver limited at 10")
+    void from_reports_of_myserver_limit_10_and_desc (){
+        Assertions.assertEquals("[\"from\",\"reports\",[\"=\",\"certname\",\"myserver\"],[\"order_by\",[[\"producer_timestamp\",\"desc\"]]],[\"limit\",\"10\"]]",
+
+                reports.from(
+                        certname.equals("myserver"),
+                        order_by(producer_timestamp, "desc"),
+                        limit("10")
+                ).build());
 
     }
 }

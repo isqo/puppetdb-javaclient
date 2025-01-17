@@ -12,7 +12,11 @@ public enum Functions {
     COUNT("count"),
     EXTRACT("extract"),
     GROUPBY("group_by"),
-    SELECT_FACT_CONTENT("select_fact_contents");
+    FROM("from"),
+    SELECT_FACT_CONTENT("select_fact_contents"),
+    ORDER_BY("order_by"),
+    LIMIT("limit"),
+    ;
 
     private Functions(String function) {
         this.function = function;
@@ -47,6 +51,10 @@ public enum Functions {
         String queryFormat = "[\"%s\",%s]";
         return new OperatorRawQuery(queryFormat, function, value.build());
     }
+    public static RawQuery limit(String limit) {
+        String queryFormat = "[\"%s\",\"%s\"]";
+        return new OperatorRawQuery(queryFormat, LIMIT, limit);
+    }
 
     public static RawQuery group_by(Facts fact) {
         String queryFormat = "[\"%s\",\"%s\"]";
@@ -58,6 +66,12 @@ public enum Functions {
         List<RawQuery> queriesList = Arrays.asList(queries);
         String result = queriesList.stream().map(RawQuery::build).collect(joining(","));
         return new OperatorRawQuery(queryFormat, EXTRACT, result);
+    }
+
+
+    public static RawQuery order_by(Facts fact, String orderBy) {
+        String queryFormat = "[\"%s\",[[\"%s\",\"%s\"]]]";
+        return new OperatorRawQuery2(queryFormat, ORDER_BY, fact, orderBy);
     }
 
     static class OperatorRawQuery implements RawQuery {
