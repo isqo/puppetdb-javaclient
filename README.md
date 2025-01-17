@@ -112,7 +112,20 @@ query:
 );
 
 ```
+## Environments
+```java
 
+    List<Map<String, Object>> data = Endpoints.environments(client).get();
+);
+
+```
+ ```json
+[
+    {
+        "name": "production"
+    }
+]
+```
 ## Contribution
 ### Standalone puppetdb for testing purposes
 For end-to-end tests, we use docker to launch a standalone prefilled puppetdb containing 4 nodes and their facts.
