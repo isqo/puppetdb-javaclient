@@ -32,6 +32,8 @@ equivalent to
 To query the node definition of instances whose kernel is Linux and mtu_eth0 is superior to 1000 is: 
 **["and",["=",["fact","kernel"],"Linux"],[">",["fact","mtu_eth0"],1000]]**
 
+### Subqueries
+
 ```
     List<NodeData> nodes = Endpoints
                                 .node(new HttpClient("puppetdb", 8080)) //.node("puppetdb", 8080) as well works.
@@ -112,10 +114,10 @@ query:
 );
 
 ```
-## Environments
+## Environments endpoint
 ```java
 
-    List<Map<String, Object>> data = Endpoints.environments(client).get();
+    List<Map<String, Object>> data = Endpoints.environments((new HttpClient("puppetdb", 8080))).get();
 );
 
 ```
@@ -126,6 +128,23 @@ query:
     }
 ]
 ```
+
+## Producers endpoint
+```java
+
+List<Map<String, Object>> data = Endpoints.producers((new HttpClient("puppetdb", 8080))).get();
+
+);
+
+```
+ ```json
+[
+    {
+        "name": "puppet.us-east-2.compute.internal"
+    }
+]
+```
+
 ## Contribution
 ### Standalone puppetdb for testing purposes
 For end-to-end tests, we use docker to launch a standalone prefilled puppetdb containing 4 nodes and their facts.
