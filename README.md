@@ -32,8 +32,6 @@ equivalent to
 To query the node definition of instances whose kernel is Linux and mtu_eth0 is superior to 1000 is: 
 **["and",["=",["fact","kernel"],"Linux"],[">",["fact","mtu_eth0"],1000]]**
 
-### Subqueries
-
 ```
     List<NodeData> nodes = Endpoints
                                 .node(new HttpClient("puppetdb", 8080)) //.node("puppetdb", 8080) as well works.
@@ -114,6 +112,22 @@ query:
 );
 
 ```
+
+### Subqueries
+
+```Json
+["from", "reports",
+  ["=", "certname", "myserver"],
+  ["order_by", [["producer_timestamp", "desc"]]],
+  ["limit", 10]]
+```
+```Java
+reports.from(certname.equals("myserver"),
+            order_by(producer_timestamp, "desc"),
+            limit("10")).build()
+```
+
+            
 ## Environments endpoint
 ```java
 
