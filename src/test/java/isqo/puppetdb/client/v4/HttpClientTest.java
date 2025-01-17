@@ -42,7 +42,7 @@ class HttpClientTest {
                     .withBodyFile("mbp.local.json")));
 
     HttpClient httpClient = new HttpClient(
-            "localhost",8080);
+            "puppetdb",8080);
     String data = httpClient.get("/pdb/query/v4/nodes/mbp.local");
     assertThat(data, containsString("facts_environment"));
     assertThat(data, containsString("2625d1b601e98ed1e281ccd79ca8d16b9f74fea6"));
@@ -56,7 +56,7 @@ class HttpClientTest {
             .willReturn(aResponse().withStatus(500).withBody(serverMessage)));
 
     HttpClient httpClient = new HttpClient(
-            "localhost",8080);
+            "puppetdb",8080);
 
     PuppetdbHttpException exception = assertThrows(PuppetdbHttpException.class,
             () -> httpClient.get("/pdb/query/v4/nodes/mbp.local"));
@@ -77,7 +77,7 @@ class HttpClientTest {
     when(httpResponse.getEntity()).thenReturn(null);
 
     PuppetdbHttpException exception = assertThrows(PuppetdbHttpException.class,
-            () -> new HttpClient("localhost",8080, httpClient).get("/pdb/query/v4/nodes/mbp.local"));
+            () -> new HttpClient("puppetdb",8080, httpClient).get("/pdb/query/v4/nodes/mbp.local"));
     assertThat(exception.getMessage(), containsString("null"));
   }
 
@@ -87,7 +87,7 @@ class HttpClientTest {
     stubFor(get(urlPathEqualTo("/pdb/query/v4/nodes"))
             .willReturn(status(200)));
 
-    new HttpClient("localhost",8080).get("/pdb/query/v4/nodes", "[\"=\", \"certname\", \"example.local\"]");
+    new HttpClient("puppetdb",8080).get("/pdb/query/v4/nodes", "[\"=\", \"certname\", \"example.local\"]");
 
     verify(getRequestedFor(urlPathEqualTo("/pdb/query/v4/nodes"))
             .withQueryParam("query", containing("[\"=\", \"certname\", \"example.local\"]")));

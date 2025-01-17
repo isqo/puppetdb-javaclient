@@ -26,7 +26,7 @@ or
 equivalent to
 
 ```bash
- curl -G http://localhost:8080/pdb/query/v4/nodes --data-urlencode 'query=["=", "certname", "c826a077907a.us-east-2.compute.internal"]'
+ curl -G http://puppetdb:8080/pdb/query/v4/nodes --data-urlencode 'query=["=", "certname", "c826a077907a.us-east-2.compute.internal"]'
 ```
 
 To query the node definition of instances whose kernel is Linux and mtu_eth0 is superior to 1000 is: 
@@ -62,7 +62,7 @@ query:
 ```
 ```java
        List<Map<String,Object>> data = Endpoints
-                .node(new HttpClient("localhost", 8080)) // .node("puppetdb", 8080) as well works.
+                .node(new HttpClient("puppetdb", 8080)) // .node("puppetdb", 8080) as well works.
                 .getListMap(
                         extract(
                                 Functions.count(Facts.facts_environment),
@@ -102,7 +102,7 @@ query:
 ```
 ```java
         List<NodeData> nodes = Endpoints
-                .node(new HttpClient("localhost", 8080)) // .node("puppetdb", 8080) as well works.
+                .node(new HttpClient("puppetdb", 8080)) // .node("puppetdb", 8080) as well works.
                 .get(certname.in(extract(certname,
                         select(SELECT_FACT_CONTENT,
                                 and(
@@ -138,7 +138,7 @@ you could also start these containers locally by using docker-compose from ./acc
 once started successfully, check that puppetdb responds by calling the nodes puppetdb endpoint
 
 `
-curl -X GET http://localhost:8080/pdb/query/v4/nodes
+curl -X GET http://puppetdb:8080/pdb/query/v4/nodes
 `
 
 you should receive

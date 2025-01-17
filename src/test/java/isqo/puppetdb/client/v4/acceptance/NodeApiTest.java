@@ -39,16 +39,28 @@ public class NodeApiTest {
   }
 
   @Test
-  @DisplayName("puppetdb should responds correctly for c826a077907a.us-east-2.compute.internal node")
+  @DisplayName("puppetdb should responds with production")
   void normalCase2() {
 
-    HttpClient client = new HttpClient("localhost", 8080);
+    HttpClient client = new HttpClient("puppetdb", 8080);
 
     List<Map<String, Object>> data = Endpoints
             .environments(client).get();
 
     System.out.println(data);
     assertEquals("production", data.get(0).get("name"));
+
+  }
+
+  @Test
+  @DisplayName("puppetdb should responds with production puppet.us-east-2.compute.internal")
+  void normalCase3() {
+
+    HttpClient client = new HttpClient("puppetdb", 8080);
+
+    List<Map<String, Object>> data = Endpoints.producers(client).get();
+
+    assertEquals("puppet.us-east-2.compute.internal", data.get(0).get("name"));
 
   }
 }

@@ -20,6 +20,11 @@ public class Endpoints {
     return new EnvironmentsApi(client);
   }
 
+  public static ProducersApi producers(HttpClient client) {
+    return new ProducersApi(client);
+  }
+
+
   static public class NodeApi extends AbstractEndPoint {
 
     public NodeApi(HttpClient client) {
@@ -59,6 +64,26 @@ public class Endpoints {
     @Override
     public String getEndpoint() {
       return "/pdb/query/v4/environments";
+    }
+
+    public List<Map<String, Object>> get() {
+      return super.get(null);
+    }
+  }
+
+  static public class ProducersApi extends AbstractEndPoint {
+
+    public ProducersApi(HttpClient client) {
+      super(client);
+    }
+
+    ProducersApi(String fqdn, int port) {
+      super(fqdn, port);
+    }
+
+    @Override
+    public String getEndpoint() {
+      return "/pdb/query/v4/producers";
     }
 
     public List<Map<String, Object>> get() {
