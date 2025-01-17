@@ -115,7 +115,7 @@ query:
 ## Environments endpoint
 ```java
 
-    List<Map<String, Object>> data = Endpoints.environments(client).get();
+    List<Map<String, Object>> data = Endpoints.environments((new HttpClient("puppetdb", 8080))).get();
 );
 
 ```
@@ -126,6 +126,23 @@ query:
     }
 ]
 ```
+
+## Producers endpoint
+```java
+
+List<Map<String, Object>> data = Endpoints.producers((new HttpClient("puppetdb", 8080))).get();
+
+);
+
+```
+ ```json
+[
+    {
+        "name": "puppet.us-east-2.compute.internal"
+    }
+]
+```
+
 ## Contribution
 ### Standalone puppetdb for testing purposes
 For end-to-end tests, we use docker to launch a standalone prefilled puppetdb containing 4 nodes and their facts.
