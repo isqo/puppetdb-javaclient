@@ -59,19 +59,57 @@ query:
     "facts_environment"
   ]
 ]
-
-
 ```
 ```java
-                List<NodeData> nodes = Endpoints
-                                .node(new HttpClient("localhost", 8080)) // .node("puppetdb", 8080) as well works.
-                                .get(
-                        combine(
-                          function.extract( function.COUNT, Facts.facts_environment),
-                          status.deactivated.null_("true"),
-                          function.groupe_by(Facts.facts_environment
-                      )
-                ););
+       List<Map<String,Object>> data = Endpoints
+                .node(new HttpClient("localhost", 8080)) // .node("puppetdb", 8080) as well works.
+                .getListMap(
+                        extract(
+                                Functions.count(Facts.facts_environment),
+                                status.deactivated.null_("true"),
+                                Functions.group_by(Facts.facts_environment)
+                        ));
+```
+```json
+query:
+[
+  "in",
+  "certname",
+  [
+    "extract",
+    "certname",
+    [
+      "select_fact_contents",
+      [
+        "and",
+        [
+          "=",
+          "path",
+          [
+            "system_uptime",
+            "days"
+          ]
+        ],
+        [
+          ">=",
+          "value",
+          10
+        ]
+      ]
+    ]
+  ]
+]
+```
+```java
+        List<NodeData> nodes = Endpoints
+                .node(new HttpClient("localhost", 8080)) // .node("puppetdb", 8080) as well works.
+                .get(certname.in(extract(certname,
+                        select(SELECT_FACT_CONTENT,
+                                and(
+                                        Facts.path.equals(Facts.system_uptime.days()),
+                                        Facts.value.greaterThanOrEq("0"))
+                        ))));
+);
 
 ```
 
