@@ -16,6 +16,10 @@ public class Endpoints {
     return new NodeApi(client);
   }
 
+  public static EnvironmentsApi environments(HttpClient client) {
+    return new EnvironmentsApi(client);
+  }
+
   static public class NodeApi extends AbstractEndPoint {
 
     public NodeApi(HttpClient client) {
@@ -41,4 +45,25 @@ public class Endpoints {
      return map;
     }
   }
+
+  static public class EnvironmentsApi extends AbstractEndPoint {
+
+    public EnvironmentsApi(HttpClient client) {
+      super(client);
+    }
+
+    EnvironmentsApi(String fqdn, int port) {
+      super(fqdn, port);
+    }
+
+    @Override
+    public String getEndpoint() {
+      return "/pdb/query/v4/environments";
+    }
+
+    public List<Map<String, Object>> get() {
+      return super.get(null);
+    }
+  }
+
 }

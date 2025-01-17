@@ -39,5 +39,4 @@ public abstract class AbstractEndPoint {
       throw new PuppetdbClientException(e);
     }
   }
-
 }
