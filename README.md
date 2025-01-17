@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/isqo/puppetdb-javaclient.svg?style=svg)](https://circleci.com/gh/isqo/puppetdb-javaclient)
+[![CircleCI](https://dl.circleci.com/status-badge/img/circleci/WVtEsixqvHqqrASTSGk2X/YJU3w6EtVH5c8CSgSQF8Kd/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/circleci/WVtEsixqvHqqrASTSGk2X/YJU3w6EtVH5c8CSgSQF8Kd/tree/main)
 
 # puppetdb-javaclient
 Puppetdb api v4
