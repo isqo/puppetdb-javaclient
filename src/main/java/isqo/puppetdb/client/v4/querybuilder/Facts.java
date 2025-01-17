@@ -5,37 +5,17 @@ import isqo.puppetdb.client.v4.querybuilder.binaryoperators.ArithmeticBinaryOper
 
 
 public enum Facts {
-    kernel,
-    system_uptime,
-    mtu_eth0,
-    certname,
-    latest_report_hash,
-    facts_environment,
-    cached_catalog_status,
-    report_environment,
-    latest_report_corrective_change,
-    catalog_environment,
-    facts_timestamp,
-    latest_report_noop,
-    expired,
-    latest_report_noop_pending,
-    report_timestamp,
-    catalog_timestamp,
-    latest_report_job_id,
-    latest_report_status,
-    path,
-    value,
-    rubyversion,
+    kernel, system_uptime, mtu_eth0, certname, latest_report_hash, facts_environment, cached_catalog_status, report_environment, latest_report_corrective_change, catalog_environment, facts_timestamp, latest_report_noop, expired, latest_report_noop_pending, report_timestamp, catalog_timestamp, latest_report_job_id, latest_report_status, path, value, rubyversion,
     ;
 
     private String queryFormat = "[\"%s\",\"%s\"]";
 
     public RawQuery greaterThanOrEq(String value) {
-        return ArithmeticBinaryOperators.GREATER_THAN_OR_EQUAL.getRawQuery(this.toString(), String.valueOf(value), ValueType.INTEGER, true,false);
+        return ArithmeticBinaryOperators.GREATER_THAN_OR_EQUAL.getRawQuery(this.toString(), String.valueOf(value), ValueType.INTEGER, true, false);
     }
 
     public RawQuery greaterThanFact(int value) {
-        return ArithmeticBinaryOperators.GREATER_THAN.getRawQuery(this.factToString(), String.valueOf(value), ValueType.INTEGER, true,true);
+        return ArithmeticBinaryOperators.GREATER_THAN.getRawQuery(this.factToString(), String.valueOf(value), ValueType.INTEGER, true, true);
     }
 
     /*** constructs the > operator query.
@@ -44,15 +24,15 @@ public enum Facts {
      * @return unmarshalled PuppetDB query
      */
     public RawQuery greaterThan(String value) {
-        return ArithmeticBinaryOperators.GREATER_THAN.getRawQuery(this.toString(), value, ValueType.STRING, true,false);
+        return ArithmeticBinaryOperators.GREATER_THAN.getRawQuery(this.toString(), value, ValueType.STRING, true, false);
     }
 
     public RawQuery lessThanOrEq(String value) {
-        return ArithmeticBinaryOperators.LESS_THAN_OR_EQUAL.getRawQuery(this.toString(), value, ValueType.STRING, true,false);
+        return ArithmeticBinaryOperators.LESS_THAN_OR_EQUAL.getRawQuery(this.toString(), value, ValueType.STRING, true, false);
     }
 
     public RawQuery lessThan(String value) {
-        return ArithmeticBinaryOperators.LESS_THAN.getRawQuery(this.toString(), value, ValueType.STRING, true,false);
+        return ArithmeticBinaryOperators.LESS_THAN.getRawQuery(this.toString(), value, ValueType.STRING, true, false);
     }
 
     /*** construct the = operator query.
@@ -63,17 +43,23 @@ public enum Facts {
 
     public RawQuery equalsFact(String value) {
 
-        return ArithmeticBinaryOperators.EQUAL.getRawQuery(this.factToString(), value, ValueType.STRING, true,true);
+        return ArithmeticBinaryOperators.EQUAL.getRawQuery(this.factToString(), value, ValueType.STRING, true, true);
     }
 
     public RawQuery equals(String value) {
 
-        return ArithmeticBinaryOperators.EQUAL.getRawQuery(this.toString(), value, ValueType.STRING, true,false);
+        return ArithmeticBinaryOperators.EQUAL.getRawQuery(this.toString(), value, ValueType.STRING, true, false);
+    }
+
+    public RawQuery in(RawQuery value) {
+
+        return in(value.build());
+
     }
 
     public RawQuery in(String value) {
 
-        return ArithmeticBinaryOperators.IN.getRawQuery(this.toString(), value, ValueType.STRING, true,false);
+        return ArithmeticBinaryOperators.IN.getRawQuery(this.toString(), value, ValueType.STRING, true, false);
     }
 
 

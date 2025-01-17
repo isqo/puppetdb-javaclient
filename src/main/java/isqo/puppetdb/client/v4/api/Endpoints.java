@@ -5,6 +5,7 @@ import isqo.puppetdb.client.v4.http.HttpClient;
 import isqo.puppetdb.client.v4.querybuilder.RawQuery;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class Endpoints {
   public static NodeApi node(String fqdn, int port) {
@@ -32,6 +33,12 @@ public class Endpoints {
 
     public List<NodeData> get(RawQuery query) {
       return Arrays.asList(super.get(query.build(), NodeData[].class));
+    }
+
+    public List<Map<String, Object>> getListMap(RawQuery query) {
+      List<Map<String, Object>> map = super.get(query.build());
+
+     return map;
     }
   }
 }

@@ -3,6 +3,11 @@ package isqo.puppetdb.client.v4.querybuilder.binaryoperators;
 import isqo.puppetdb.client.v4.querybuilder.Facts;
 import isqo.puppetdb.client.v4.querybuilder.RawQuery;
 
+import java.util.Arrays;
+import java.util.List;
+
+import static java.util.stream.Collectors.joining;
+
 public enum Functions {
     COUNT("count"),
     EXTRACT("extract"),
@@ -16,9 +21,13 @@ public enum Functions {
     private final String function;
 
 
-    public static RawQuery count(String value) {
+    public static RawQuery count(Facts value) {
         String queryFormat = "[[\"function\",\"%s\"],\"%s\"]";
-        return new OperatorRawQuery(queryFormat, COUNT, value);
+        return new OperatorRawQuery(queryFormat, COUNT, value.toString());
+    }
+
+    public static RawQuery extract(Facts nodeData, RawQuery value) {
+        return extract(nodeData, value.build());
     }
 
     public static RawQuery extract(Facts nodeData, String value) {
@@ -29,9 +38,14 @@ public enum Functions {
         return new OperatorRawQuery2(queryFormat, EXTRACT, nodeData, value);
     }
 
-    public static RawQuery select(Functions function, Facts nodeData, String value) {
+    public static RawQuery select(Functions function, String value) {
         String queryFormat = "[\"%s\",%s]";
-        return new OperatorRawQuery(queryFormat, function, nodeData, value);
+        return new OperatorRawQuery(queryFormat, function, value);
+    }
+
+    public static RawQuery select(Functions function, RawQuery value) {
+        String queryFormat = "[\"%s\",%s]";
+        return new OperatorRawQuery(queryFormat, function, value.build());
     }
 
     public static RawQuery group_by(Facts fact) {
@@ -39,6 +53,12 @@ public enum Functions {
         return new OperatorRawQuery(queryFormat, GROUPBY, fact.toString());
     }
 
+    public static RawQuery extract(RawQuery... queries) {
+        String queryFormat = "[\"%s\",%s]";
+        List<RawQuery> queriesList = Arrays.asList(queries);
+        String result = queriesList.stream().map(RawQuery::build).collect(joining(","));
+        return new OperatorRawQuery(queryFormat, EXTRACT, result);
+    }
 
     static class OperatorRawQuery implements RawQuery {
         private String queryFormat;

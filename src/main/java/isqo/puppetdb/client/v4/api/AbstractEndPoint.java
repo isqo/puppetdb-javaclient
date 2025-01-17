@@ -1,9 +1,13 @@
 package isqo.puppetdb.client.v4.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import isqo.puppetdb.client.v4.PuppetdbClientException;
 import isqo.puppetdb.client.v4.http.HttpClient;
+
+import java.util.List;
+import java.util.Map;
 
 public abstract class AbstractEndPoint {
   private final ObjectMapper mapper = new ObjectMapper();
@@ -22,6 +26,15 @@ public abstract class AbstractEndPoint {
   public <T> T get(String query, Class<T> clazz) {
     try {
       return mapper.readValue(this.httpClient.get(getEndpoint(), query), clazz);
+    } catch (JsonProcessingException e) {
+      throw new PuppetdbClientException(e);
+    }
+  }
+
+  public List<Map<String,Object>> get(String query) {
+    try {
+
+      return mapper.readValue(this.httpClient.get(getEndpoint(), query), new TypeReference<List<Map<String,Object>>>(){});
     } catch (JsonProcessingException e) {
       throw new PuppetdbClientException(e);
     }

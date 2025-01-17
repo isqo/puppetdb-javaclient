@@ -28,13 +28,6 @@ public class BooleanOperators {
       return new BooleanOperatorsRawQuery(OR, Arrays.asList(queries));
     }
 
-    public static String extract(RawQuery... queries) {
-      String queryFormat = "[\"%s\",%s]";
-      List<RawQuery> queriesList = Arrays.asList(queries);
-      String result = queriesList.stream().map(RawQuery::build).collect(joining(","));
-      return String.format(queryFormat,"extract", result);
-    }
-
      static class BooleanOperatorsRawQuery implements RawQuery {
       private String queryFormat = "[\"%s\",%s]";
       private List<RawQuery> nestedQueryies;
