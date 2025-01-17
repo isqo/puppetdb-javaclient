@@ -112,7 +112,7 @@ query:
 );
 
 ```
-## Environments
+## Environments endpoint
 ```java
 
     List<Map<String, Object>> data = Endpoints.environments(client).get();
