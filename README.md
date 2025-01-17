@@ -29,10 +29,10 @@ equivalent to
  curl -G http://localhost:8080/pdb/query/v4/nodes --data-urlencode 'query=["=", "certname", "c826a077907a.us-east-2.compute.internal"]'
 ```
 
-### Subqueries
-
 To query the node definition of instances whose kernel is Linux and mtu_eth0 is superior to 1000 is: 
 **["and",["=",["fact","kernel"],"Linux"],[">",["fact","mtu_eth0"],1000]]**
+
+### Subqueries
 
 ```
     List<NodeData> nodes = Endpoints
