@@ -61,15 +61,14 @@ query:
 ]
 ```
 ```java
-                List<NodeData> nodes = Endpoints
-                                .node(new HttpClient("localhost", 8080)) // .node("puppetdb", 8080) as well works.
-                                .get(
-                      extract(
-                        Functions.count(Facts.facts_environment),
-                        status.deactivated.null_("true"),
-                        Functions.group_by(Facts.facts_environment)
-                       ));
-
+       List<Map<String,Object>> data = Endpoints
+                .node(new HttpClient("localhost", 8080)) // .node("puppetdb", 8080) as well works.
+                .getListMap(
+                        extract(
+                                Functions.count(Facts.facts_environment),
+                                status.deactivated.null_("true"),
+                                Functions.group_by(Facts.facts_environment)
+                        ));
 ```
 ```json
 query:
