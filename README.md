@@ -102,15 +102,14 @@ query:
 ]
 ```
 ```java
-                List<NodeData> nodes = Endpoints
-                                .node(new HttpClient("localhost", 8080)) // .node("puppetdb", 8080) as well works.
-                                .get(
-                            certname.in(extract(certname,
-                                select(SELECT_FACT_CONTENT,
-                                        and(
-                                                Facts.path.equals(Facts.system_uptime.days()),
-                                                Facts.value.greaterThanOrEq("10")).build()
-                                ).build()).build()).build());
+        List<NodeData> nodes = Endpoints
+                .node(new HttpClient("localhost", 8080)) // .node("puppetdb", 8080) as well works.
+                .get(certname.in(extract(certname,
+                        select(SELECT_FACT_CONTENT,
+                                and(
+                                        Facts.path.equals(Facts.system_uptime.days()),
+                                        Facts.value.greaterThanOrEq("0"))
+                        ))));
 );
 
 ```
