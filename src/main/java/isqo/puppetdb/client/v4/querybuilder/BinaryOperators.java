@@ -8,7 +8,9 @@ public enum BinaryOperators {
     LESS_THAN_OR_EQUAL("<="),
     NULL("null?"),
     IN("in"),
-    FROM("from");
+    FROM("from"),
+    TIELD("~")
+    ;
 
     private final String operator;
 
