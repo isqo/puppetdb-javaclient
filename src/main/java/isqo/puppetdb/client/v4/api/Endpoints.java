@@ -2,7 +2,7 @@ package isqo.puppetdb.client.v4.api;
 
 import isqo.puppetdb.client.v4.api.models.NodeData;
 import isqo.puppetdb.client.v4.http.HttpClient;
-import isqo.puppetdb.client.v4.querybuilder.RawQuery;
+import isqo.puppetdb.client.v4.querybuilder.QueryBuilder;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -40,11 +40,11 @@ public class Endpoints {
       return "/pdb/query/v4/nodes";
     }
 
-    public List<NodeData> get(RawQuery query) {
+    public List<NodeData> get(QueryBuilder query) {
       return Arrays.asList(super.get(query.build(), NodeData[].class));
     }
 
-    public List<Map<String, Object>> getListMap(RawQuery query) {
+    public List<Map<String, Object>> getListMap(QueryBuilder query) {
       List<Map<String, Object>> map = super.get(query.build());
 
      return map;

@@ -1,7 +1,5 @@
 package isqo.puppetdb.client.v4.querybuilder;
 
-import isqo.puppetdb.client.v4.querybuilder.binaryoperators.ArithmeticBinaryOperators;
-
 import java.util.Arrays;
 
 import static java.util.stream.Collectors.joining;
@@ -11,66 +9,65 @@ public enum Facts {
     kernel, system_uptime, mtu_eth0, producer_timestamp, certname, reports, latest_report_hash, facts_environment, cached_catalog_status, report_environment, latest_report_corrective_change, catalog_environment, facts_timestamp, latest_report_noop, expired, latest_report_noop_pending, report_timestamp, catalog_timestamp, latest_report_job_id, latest_report_status, path, value, rubyversion,
     ;
 
-    private String queryFormat = "[\"%s\",\"%s\"]";
+    private final String queryFormat = "[\"%s\",\"%s\"]";
 
-    public RawQuery greaterThanOrEq(String value) {
-        return ArithmeticBinaryOperators.GREATER_THAN_OR_EQUAL.getRawQuery(this.toString(), String.valueOf(value));
+    public QueryBuilder greaterThanOrEq(String value) {
+        return BinaryOperators.GREATER_THAN_OR_EQUAL.getQueryBuilder(this.toString(), String.valueOf(value));
     }
 
-    public RawQuery greaterThanFact(int value) {
+    public QueryBuilder greaterThanFact(int value) {
         String queryFormat = "[\"%s\",%s,\"%s\"]";
-        return ArithmeticBinaryOperators.GREATER_THAN.getRawQuery(queryFormat,this.factToString(), String.valueOf(value));
+        return BinaryOperators.GREATER_THAN.getQueryBuilder(queryFormat, this.factToString(), String.valueOf(value));
     }
 
-
-    public RawQuery greaterThan(String value) {
-        return ArithmeticBinaryOperators.GREATER_THAN.getRawQuery(this.toString(), value);
+    public QueryBuilder greaterThan(String value) {
+        return BinaryOperators.GREATER_THAN.getQueryBuilder(this.toString(), value);
     }
 
-    public RawQuery lessThanOrEq(String value) {
-        return ArithmeticBinaryOperators.LESS_THAN_OR_EQUAL.getRawQuery(this.toString(), value);
+    public QueryBuilder lessThanOrEq(String value) {
+        return BinaryOperators.LESS_THAN_OR_EQUAL.getQueryBuilder(this.toString(), value);
     }
 
-    public RawQuery lessThan(String value) {
-        return ArithmeticBinaryOperators.LESS_THAN.getRawQuery(this.toString(), value);
+    public QueryBuilder lessThan(String value) {
+        return BinaryOperators.LESS_THAN.getQueryBuilder(this.toString(), value);
     }
 
-    public RawQuery equalsFact(String value) {
+    public QueryBuilder equalsFact(String value) {
         String queryFormat = "[\"%s\",%s,\"%s\"]";
-        return ArithmeticBinaryOperators.EQUAL.getRawQuery(queryFormat,this.factToString(), value);
+        return BinaryOperators.EQUAL.getQueryBuilder(queryFormat, this.factToString(), value);
     }
 
-    public RawQuery equals(String value) {
+    public QueryBuilder equals(String value) {
 
-        return ArithmeticBinaryOperators.EQUAL.getRawQuery(this.toString(), value);
+        return BinaryOperators.EQUAL.getQueryBuilder(this.toString(), value);
     }
 
-    public RawQuery in(RawQuery value) {
+    public QueryBuilder in(QueryBuilder value) {
         String queryFormat = "[\"%s\",\"%s\",%s]";
-        return in(queryFormat,value.build());
+        return in(queryFormat, value.build());
 
     }
 
-    public RawQuery in(String queryFormat, String value) {
+    public QueryBuilder in(String queryFormat, String value) {
 
         String field = this.toString();
-        return ArithmeticBinaryOperators.IN.getRawQuery(queryFormat,field, value);
+        return BinaryOperators.IN.getQueryBuilder(queryFormat, field, value);
     }
 
-    public RawQuery from(RawQuery... queries) {
-        String queries_ = Arrays.asList(queries).stream().map(RawQuery::build).collect(joining(","));
+    public QueryBuilder from(QueryBuilder... queries) {
+        String queries_ = Arrays.asList(queries).stream().map(QueryBuilder::build).collect(joining(","));
         String queryFormat = "[\"%s\",\"%s\",%s]";
-        return ArithmeticBinaryOperators.FROM.getRawQuery(queryFormat,this.toString(), queries_);
+        return BinaryOperators.FROM.getQueryBuilder(queryFormat, this.toString(), queries_);
 
     }
 
 
     public String factToString() {
-        return String.format(queryFormat, "fact", this.toString());
+        return String.format(queryFormat, "fact", this);
     }
 
     public String days() {
-        String[] arr = {"\"" + this.toString() + "\"", "\"days\""};
+        String[] arr = {"\"" + this + "\"", "\"days\""};
         return "[" + String.join(",", arr) + "]";
     }
 }

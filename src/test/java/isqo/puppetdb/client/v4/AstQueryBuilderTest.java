@@ -2,15 +2,15 @@ package isqo.puppetdb.client.v4;
 
 import isqo.puppetdb.client.v4.querybuilder.AstQueryBuilder.status;
 import isqo.puppetdb.client.v4.querybuilder.Facts;
-import isqo.puppetdb.client.v4.querybuilder.binaryoperators.BooleanOperators;
-import isqo.puppetdb.client.v4.querybuilder.binaryoperators.Functions;
+import isqo.puppetdb.client.v4.querybuilder.BooleanOperators;
+import isqo.puppetdb.client.v4.querybuilder.Operators;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static isqo.puppetdb.client.v4.querybuilder.Facts.*;
-import static isqo.puppetdb.client.v4.querybuilder.binaryoperators.BooleanOperators.and;
-import static isqo.puppetdb.client.v4.querybuilder.binaryoperators.Functions.*;
+import static isqo.puppetdb.client.v4.querybuilder.BooleanOperators.and;
+import static isqo.puppetdb.client.v4.querybuilder.Operators.*;
 
 class AstQueryBuilderTest {
     @Test
@@ -80,7 +80,7 @@ class AstQueryBuilderTest {
     void extractFactsEnvironment() {
 
 
-        Assertions.assertEquals("[\"extract\",[[\"function\",\"count\"],\"facts_environment\"],[\"null?\",\"deactivated\",\"true\"],[\"group_by\",\"facts_environment\"]]", extract(Functions.count(Facts.facts_environment), status.deactivated.null_("true"), Functions.group_by(Facts.facts_environment)).build());
+        Assertions.assertEquals("[\"extract\",[[\"function\",\"count\"],\"facts_environment\"],[\"null?\",\"deactivated\",\"true\"],[\"group_by\",\"facts_environment\"]]", extract(Operators.count(Facts.facts_environment), status.deactivated.null_("true"), Operators.group_by(Facts.facts_environment)).build());
     }
 
     @Test
