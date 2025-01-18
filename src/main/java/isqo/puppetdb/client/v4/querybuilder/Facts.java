@@ -6,7 +6,7 @@ import static java.util.stream.Collectors.joining;
 
 
 public enum Facts {
-    kernel, system_uptime, mtu_eth0, producer_timestamp, certname, reports, latest_report_hash, facts_environment, cached_catalog_status, report_environment, latest_report_corrective_change, catalog_environment, facts_timestamp, latest_report_noop, expired, latest_report_noop_pending, report_timestamp, catalog_timestamp, latest_report_job_id, latest_report_status, path, value, rubyversion,
+    kernel, system_uptime, mtu_eth0, producer_timestamp, certname, reports, latest_report_hash, facts_environment, cached_catalog_status, report_environment, latest_report_corrective_change, catalog_environment, facts_timestamp, latest_report_noop, expired, latest_report_noop_pending, report_timestamp, catalog_timestamp,uptime_seconds, latest_report_job_id, latest_report_status, path, value, rubyversion, name;
     ;
 
     private final String queryFormat = "[\"%s\",\"%s\"]";
@@ -40,6 +40,9 @@ public enum Facts {
     public QueryBuilder equals(String value) {
 
         return BinaryOperators.EQUAL.getQueryBuilder(this.toString(), value);
+    }
+    public QueryBuilder equals(Facts value) {
+        return BinaryOperators.EQUAL.getQueryBuilder(this.toString(), value.toString());
     }
 
     public QueryBuilder in(QueryBuilder value) {

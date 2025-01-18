@@ -1,15 +1,15 @@
 package isqo.puppetdb.client.v4;
 
 import isqo.puppetdb.client.v4.querybuilder.AstQueryBuilder.status;
-import isqo.puppetdb.client.v4.querybuilder.Facts;
 import isqo.puppetdb.client.v4.querybuilder.BooleanOperators;
+import isqo.puppetdb.client.v4.querybuilder.Facts;
 import isqo.puppetdb.client.v4.querybuilder.Operators;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static isqo.puppetdb.client.v4.querybuilder.Facts.*;
 import static isqo.puppetdb.client.v4.querybuilder.BooleanOperators.and;
+import static isqo.puppetdb.client.v4.querybuilder.Facts.*;
 import static isqo.puppetdb.client.v4.querybuilder.Operators.*;
 
 class AstQueryBuilderTest {
@@ -103,4 +103,16 @@ class AstQueryBuilderTest {
                 reports.from(certname.equals("myserver"), order_by(producer_timestamp, "desc"), limit("10")).build());
 
     }
+
+
+    @Test
+    @DisplayName("should return a valid query that requests the average of a certain value based on uptime_seconds")
+        //["extract", [["function", "avg", "value"]], ["=", "name", "uptime_seconds"]]
+    void extract_average_uptime_seconds() {
+        Assertions.assertEquals("[\"extract\", [[\"function\",\"avg\",\"value\"]],[\"=\",\"name\",\"uptime_seconds\"]]",
+
+                extract(Operators.avg("value"), name.equals(uptime_seconds)).build());
+    }
+
+
 }

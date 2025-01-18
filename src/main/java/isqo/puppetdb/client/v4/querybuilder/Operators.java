@@ -6,7 +6,7 @@ import java.util.List;
 import static java.util.stream.Collectors.joining;
 
 public enum Operators {
-    COUNT("count"), EXTRACT("extract"), GROUPBY("group_by"), FROM("from"), SELECT_FACT_CONTENT("select_fact_contents"), ORDER_BY("order_by"), LIMIT("limit"),
+    COUNT("count"),AVG("avg"), EXTRACT("extract"), GROUPBY("group_by"), FROM("from"), SELECT_FACT_CONTENT("select_fact_contents"), ORDER_BY("order_by"), LIMIT("limit"),
     ;
 
     Operators(String function) {
@@ -17,6 +17,12 @@ public enum Operators {
 
     public String getValue() {
         return value;
+    }
+
+
+    public static QueryBuilder avg(String value) {
+        String queryFormat = " [[\"function\",\"%s\",\"%s\"]]";
+        return new AstQueryBuilder.OperatorQueryBuilderForTwoQueryFormat(queryFormat, AVG, value);
     }
 
 
