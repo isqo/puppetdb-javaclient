@@ -9,7 +9,8 @@ public enum BinaryOperators {
     NULL("null?"),
     IN("in"),
     FROM("from"),
-    TIELD("~")
+    TIELD("~"),
+    REGEX_ARRAY_MATCH("~>")
     ;
 
     private final String operator;

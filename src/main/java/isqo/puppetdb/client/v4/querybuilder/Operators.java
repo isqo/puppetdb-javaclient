@@ -6,8 +6,7 @@ import java.util.List;
 import static java.util.stream.Collectors.joining;
 
 public enum Operators {
-    COUNT("count"),AVG("avg"), EXTRACT("extract"), GROUPBY("group_by"), FROM("from"), SELECT_FACT_CONTENT("select_fact_contents"), ORDER_BY("order_by"), LIMIT("limit"),
-    ;
+    COUNT("count"), AVG("avg"), EXTRACT("extract"), GROUPBY("group_by"), FROM("from"), SELECT_FACT_CONTENT("select_fact_contents"), ORDER_BY("order_by"), LIMIT("limit"), SUBQUERY("subquery");
 
     Operators(String function) {
         this.value = function;
@@ -61,6 +60,15 @@ public enum Operators {
     public static QueryBuilder extract(Facts fact, String value) {
         String queryFormat = "[\"%s\",\"%s\",%s]";
         return new AstQueryBuilder.OperatorQueryBuilderForThreeQueryFormat(queryFormat, EXTRACT, fact, value);
+    }
+
+    public static QueryBuilder subquery(String entity, String value) {
+        String queryFormat = "[\"%s\",\"%s\",%s]";
+        return new AstQueryBuilder.OperatorQueryBuilderForThreeQueryFormatResourceField(queryFormat, SUBQUERY, entity, value);
+    }
+
+    public static QueryBuilder subquery(String entity, QueryBuilder query) {
+        return subquery(entity, query.build());
     }
 
     public static QueryBuilder extract(Facts nodeData, QueryBuilder value) {

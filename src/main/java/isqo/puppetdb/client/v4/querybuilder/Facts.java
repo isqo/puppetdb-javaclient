@@ -1,6 +1,9 @@
 package isqo.puppetdb.client.v4.querybuilder;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.joining;
 
@@ -61,7 +64,13 @@ public enum Facts {
         String queries_ = Arrays.asList(queries).stream().map(QueryBuilder::build).collect(joining(","));
         String queryFormat = "[\"%s\",\"%s\",%s]";
         return BinaryOperators.FROM.getQueryBuilder(queryFormat, this.toString(), queries_);
+    }
 
+    public QueryBuilder arrayRegexMatch(String... values){
+        String queryFormat = "[\"%s\",\"%s\",%s]";
+        List<String> valuesAsList = new ArrayList<>(Arrays.asList(values));
+        String value = "["+valuesAsList.stream().collect(Collectors.joining("\",\"", "\"", "\""))+ "]";
+        return BinaryOperators.REGEX_ARRAY_MATCH.getQueryBuilder(queryFormat,this.toString(),value);
     }
 
 

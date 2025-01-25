@@ -159,6 +159,52 @@ List<Map<String, Object>> data = Endpoints.producers((new HttpClient("puppetdb",
 ]
 ```
 
+## Facts endpoint
+ ```json
+[
+  [
+    "and",
+    [
+      "=",
+      "name",
+      "networking"
+    ],
+    [
+      "subquery",
+      "fact_contents",
+      [
+        "and",
+        [
+          "~>",
+          "path",
+          [
+            "networking",
+            ".*",
+            "macaddress",
+            ".*"
+          ]
+        ],
+        [
+          "=",
+          "value",
+          "aa:bb:cc:dd:ee:00"
+        ]
+      ]
+    ]
+  ]
+]
+```
+
+ ```java
+
+and(name.equals("networking"),
+    subquery("fact_contents",
+             and(
+                     path.arrayRegexMatch("networking", ".*", "macaddress", ".*"),
+                    value.equals("aa:bb:cc:dd:ee:00")))).build()
+```
+
+
 ## Contribution
 ### Standalone puppetdb for testing purposes
 For end-to-end tests, we use docker to launch a standalone prefilled puppetdb containing 4 nodes and their facts.

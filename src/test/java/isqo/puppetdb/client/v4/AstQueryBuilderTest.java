@@ -115,4 +115,21 @@ class AstQueryBuilderTest {
     }
 
 
+    @Test
+    @DisplayName("should return a valid implicit subquery")
+        //["extract", [["function", "avg", "value"]], ["=", "name", "uptime_seconds"]]
+    void implicit_subquery() {
+        /**/
+
+
+        Assertions.assertEquals("[\"and\",[\"=\",\"name\",\"networking\"],[\"subquery\",\"fact_contents\",[\"and\",[\"~>\",\"path\",[\"networking\",\".*\",\"macaddress\",\".*\"]],[\"=\",\"value\",\"aa:bb:cc:dd:ee:00\"]]]]",
+                    and(name.equals("networking"),
+                            subquery("fact_contents",
+                                    and(path.arrayRegexMatch("networking", ".*", "macaddress", ".*"),
+                                            value.equals("aa:bb:cc:dd:ee:00")))).build());
+
+
+    }
+
+
 }

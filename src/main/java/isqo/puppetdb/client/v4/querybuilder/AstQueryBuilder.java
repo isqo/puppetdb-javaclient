@@ -58,6 +58,26 @@ public class AstQueryBuilder {
         }
     }
 
+    public static class OperatorQueryBuilderForThreeQueryFormatResourceField implements QueryBuilder {
+        private String queryFormat;
+        private Operators function;
+        private String field;
+        private String value;
+
+
+        public OperatorQueryBuilderForThreeQueryFormatResourceField(String queryFormat, Operators function, String field, String value) {
+            this.queryFormat = queryFormat;
+            this.function = function;
+            this.field = field;
+            this.value = value;
+        }
+
+        @Override
+        public String build() {
+            return String.format(queryFormat, function.getValue(), field, value);
+        }
+    }
+
     public static class BooleanOperatorsQueryBuilder implements QueryBuilder {
         private String queryFormat = "[\"%s\",%s]";
         private List<QueryBuilder> nestedQueryies;
