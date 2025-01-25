@@ -204,6 +204,48 @@ and(name.equals("networking"),
                 value.equals("aa:bb:cc:dd:ee:00")))).build()
 ```
 
+ ```json
+[
+  "and",
+  [
+    "=",
+    "name",
+    "ipaddress"
+  ],
+  [
+    "in",
+    "certname",
+    [
+      "from",
+      "resources",
+      [
+        "extract",
+        "certname",
+        [
+          "and",
+          [
+            "=",
+            "type",
+            "Class"
+          ],
+          [
+            "=",
+            "title",
+            "Apache"
+          ]
+        ]
+      ]
+    ]
+  ]
+]
+```
+
+ ```java
+            and(name.equals("ipaddress"),
+            certname.in(resources.from(extract(certname, and(
+                    type.equals("Class"),
+                    title.equals("Apache")))))).build()
+```
 
 ## Contribution
 ### Standalone puppetdb for testing purposes
