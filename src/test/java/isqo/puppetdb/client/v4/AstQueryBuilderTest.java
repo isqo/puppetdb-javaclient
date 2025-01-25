@@ -140,7 +140,6 @@ class AstQueryBuilderTest {
         Assertions.assertEquals("[\"and\",[\"=\",\"name\",\"ipaddress\"],[\"in\",\"certname\",[\"from\",\"resources\",[\"extract\",\"certname\",[\"and\",[\"=\",\"type\",\"Class\"],[\"=\",\"title\",\"Apache\"]]]]]]",
                 and(name.equals("ipaddress"),
                         certname.in(resources.from(extract(certname, and(
-
                                 type.equals("Class"),
                                 title.equals("Apache")
 
