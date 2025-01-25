@@ -131,5 +131,19 @@ class AstQueryBuilderTest {
 
     }
 
+    @Test
+    @DisplayName("should return a valid explicit subquery")
+        //["extract", [["function", "avg", "value"]], ["=", "name", "uptime_seconds"]]
+    void explicit_subquery_with_from() {
 
-}
+
+        Assertions.assertEquals("[\"and\",[\"=\",\"name\",\"ipaddress\"],[\"in\",\"certname\",[\"from\",\"resources\",[\"extract\",\"certname\",[\"and\",[\"=\",\"type\",\"Class\"],[\"=\",\"title\",\"Apache\"]]]]]]",
+                and(name.equals("ipaddress"),
+                        certname.in(resources.from(extract(certname, and(
+
+                                type.equals("Class"),
+                                title.equals("Apache")
+
+                        ))))).build()
+                );
+    }}
