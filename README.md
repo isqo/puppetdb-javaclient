@@ -200,8 +200,8 @@ List<Map<String, Object>> data = Endpoints.producers((new HttpClient("puppetdb",
 and(name.equals("networking"),
     subquery("fact_contents",
              and(
-                     path.arrayRegexMatch("networking", ".*", "macaddress", ".*"),
-                    value.equals("aa:bb:cc:dd:ee:00")))).build()
+                path.arrayRegexMatch("networking", ".*", "macaddress", ".*"),
+                value.equals("aa:bb:cc:dd:ee:00")))).build()
 ```
 
 
