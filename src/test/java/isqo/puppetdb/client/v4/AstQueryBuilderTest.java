@@ -4,6 +4,7 @@ import isqo.puppetdb.client.v4.querybuilder.AstQueryBuilder.status;
 import isqo.puppetdb.client.v4.querybuilder.BooleanOperators;
 import isqo.puppetdb.client.v4.querybuilder.Facts;
 import isqo.puppetdb.client.v4.querybuilder.Operators;
+import isqo.puppetdb.client.v4.querybuilder.Selectors;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -123,10 +124,10 @@ class AstQueryBuilderTest {
 
 
         Assertions.assertEquals("[\"and\",[\"=\",\"name\",\"networking\"],[\"subquery\",\"fact_contents\",[\"and\",[\"~>\",\"path\",[\"networking\",\".*\",\"macaddress\",\".*\"]],[\"=\",\"value\",\"aa:bb:cc:dd:ee:00\"]]]]",
-                    and(name.equals("networking"),
-                            subquery("fact_contents",
-                                    and(path.arrayRegexMatch("networking", ".*", "macaddress", ".*"),
-                                            value.equals("aa:bb:cc:dd:ee:00")))).build());
+                and(name.equals("networking"),
+                        subquery("fact_contents",
+                                and(path.arrayRegexMatch("networking", ".*", "macaddress", ".*"),
+                                        value.equals("aa:bb:cc:dd:ee:00")))).build());
 
 
     }
@@ -144,5 +145,23 @@ class AstQueryBuilderTest {
                                 title.equals("Apache")
 
                         ))))).build()
-                );
-    }}
+        );
+    }
+
+    @Test
+    @DisplayName("should return a valid explicit subquery select_resources")
+    void explicit_subquery_select_resources() {
+
+
+        Assertions.assertEquals("[\"and\",[\"=\",\"name\",\"ipaddress\"],[\"in\",\"certname\",[\"extract\",\"certname\",[\"select_resources\",[\"and\",[\"=\",\"type\",\"Class\"],[\"=\",\"title\",\"Apache\"]]]]]]",
+                and(name.equals("ipaddress"),
+                        certname.in(extract(certname, Selectors.select_resources(
+                                and(
+                                        type.equals("Class"),
+                                        title.equals("Apache")
+                                )
+                        )))).build()
+        );
+
+    }
+}
