@@ -39,7 +39,6 @@ To query the node definition of instances whose kernel is Linux and mtu_eth0 is 
 ```
 
 ```json
-query:
 [
   "extract",
   [
