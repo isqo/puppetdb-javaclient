@@ -9,7 +9,7 @@ import static java.util.stream.Collectors.joining;
 
 
 public enum Facts {
-    kernel, system_uptime, mtu_eth0, producer_timestamp, certname, reports, resources, type, title, latest_report_hash, facts_environment, cached_catalog_status, report_environment, latest_report_corrective_change, catalog_environment, facts_timestamp, latest_report_noop, expired, latest_report_noop_pending, report_timestamp, catalog_timestamp, uptime_seconds, latest_report_job_id, latest_report_status, path, rubyversion,osfamily;;
+    kernel, system_uptime, mtu_eth0, producer_timestamp, certname, reports, resources, type, title, latest_report_hash, facts_environment, cached_catalog_status, report_environment, latest_report_corrective_change, catalog_environment, facts_timestamp, latest_report_noop, expired, latest_report_noop_pending, report_timestamp, catalog_timestamp, uptime_seconds, latest_report_job_id, latest_report_status, path, rubyversion, osfamily, operatingsystem;
 
     private final String queryFormat = "[\"%s\",\"%s\"]";
 
@@ -82,4 +82,4 @@ public enum Facts {
         String[] arr = {"\"" + this + "\"", "\"days\""};
         return "[" + String.join(",", arr) + "]";
     }
-}
+    }
