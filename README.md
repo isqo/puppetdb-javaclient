@@ -211,45 +211,13 @@ and(Property.name.equals("networking"),
                     title.equals("Apache")))))).build()
 ```
 
-## Environments endpoint
-```java
-
-    List<Map<String, Object>> data = Endpoints.environments((new HttpClient("puppetdb", 8080))).get();
-);
-
-```
- ```json
-[
-    {
-        "name": "production"
-    }
-]
-```
-
-## Producers endpoint
-```java
-
-List<Map<String, Object>> data = Endpoints.producers((new HttpClient("puppetdb", 8080))).get();
-
-);
-
-```
- ```json
-[
-    {
-        "name": "puppet.us-east-2.compute.internal"
-    }
-]
-```
-
-## Facts endpoint
 ```java
 
 List<Map<String, Object>> data = Endpoints.facts(new HttpClient("puppetdb", 8080)).getListMap(Property.name.equals(Facts.operatingsystem));
 
 );
-
 ```
+
  ```json
 [
     {
@@ -307,6 +275,37 @@ List<Map<String, Object>> data = Endpoints.facts(client).get(query);
     "count": 1,
     "value": "CentOS"
   }
+]
+```
+
+## Environments endpoint
+```java
+
+    List<Map<String, Object>> data = Endpoints.environments((new HttpClient("puppetdb", 8080))).get();
+);
+
+```
+ ```json
+[
+    {
+        "name": "production"
+    }
+]
+```
+
+## Producers endpoint
+```java
+
+List<Map<String, Object>> data = Endpoints.producers((new HttpClient("puppetdb", 8080))).get();
+
+);
+
+```
+ ```json
+[
+    {
+        "name": "puppet.us-east-2.compute.internal"
+    }
 ]
 ```
 
