@@ -29,35 +29,20 @@ equivalent to
  curl -G http://puppetdb:8080/pdb/query/v4/nodes --data-urlencode 'query=["=", "certname", "c826a077907a.us-east-2.compute.internal"]'
 ```
 
-To query the node definition of instances whose kernel is Linux and mtu_eth0 is superior to 1000 is: 
-**["and",["=",["fact","kernel"],"Linux"],[">",["fact","mtu_eth0"],1000]]**
+### To query the instances with kernel and mtu_eth0 is superior to 1000 is: 
 
+```json
+["and",["=",["fact","kernel"],"Linux"],[">",["fact","mtu_eth0"],1000]]
 ```
+
+```java
     List<NodeData> nodes = Endpoints
                                 .node(new HttpClient("puppetdb", 8080)) //.node("puppetdb", 8080) as well works.
                                 .get(and(kernel.equals("Linux"), mtu_eth0.greaterThan(1000)).build()));
 ```
 
 ```json
-[
-  "extract",
-  [
-    [
-      "function",
-      "count"
-    ],
-    "facts_environment"
-  ],
-  [
-    "null?",
-    "deactivated",
-    true
-  ],
-  [
-    "group_by",
-    "facts_environment"
-  ]
-]
+["extract",[["function","count"],"facts_environment"],["null?","deactivated",true],["group_by","facts_environment"]]
 ```
 ```java
        List<Map<String,Object>> data = Endpoints
@@ -70,33 +55,7 @@ To query the node definition of instances whose kernel is Linux and mtu_eth0 is 
                         ));
 ```
 ```json
-[
-  "in",
-  "certname",
-  [
-    "extract",
-    "certname",
-    [
-      "select_fact_contents",
-      [
-        "and",
-        [
-          "=",
-          "path",
-          [
-            "system_uptime",
-            "days"
-          ]
-        ],
-        [
-          ">=",
-          "value",
-          10
-        ]
-      ]
-    ]
-  ]
-]
+["in","certname",["extract","certname",["select_fact_contents",["and",["=","path",["system_uptime","days"]],[">=","value",10]]]]]
 ```
 ```java
         List<NodeData> nodes = Endpoints
@@ -112,53 +71,19 @@ To query the node definition of instances whose kernel is Linux and mtu_eth0 is 
 ```
 
 ```Json
-["from", "reports",
-  ["=", "certname", "myserver"],
-  ["order_by", [["producer_timestamp", "desc"]]],
-  ["limit", 10]]
+["from","reports",["=","certname","myserver"],["order_by",[["producer_timestamp","desc"]]],["limit",10]]
 ```
 ```Java
 reports.from(certname.equals("myserver"),
-            order_by(producer_timestamp, "desc"),
-            limit("10")).build()
+ order_by(producer_timestamp, "desc"),
+    limit("10")).build()
 ```
 
 ## Facts endpoint
+### AST queries into java 
  ```json
-[
-  [
-    "and",
-    [
-      "=",
-      "name",
-      "networking"
-    ],
-    [
-      "subquery",
-      "fact_contents",
-      [
-        "and",
-        [
-          "~>",
-          "path",
-          [
-            "networking",
-            ".*",
-            "macaddress",
-            ".*"
-          ]
-        ],
-        [
-          "=",
-          "value",
-          "aa:bb:cc:dd:ee:00"
-        ]
-      ]
-    ]
-  ]
-]
+[["and",["=","name","networking"],["subquery","fact_contents",["and",["~>","path",["networking",".*","macaddress",".*"]],["=","value","aa:bb:cc:dd:ee:00"]]]]]
 ```
-
  ```java
 
 and(Property.name.equals("networking"),
@@ -167,57 +92,25 @@ and(Property.name.equals("networking"),
                 Property.path.arrayRegexMatch("networking", ".*", "macaddress", ".*"),
                 Property.value.equals("aa:bb:cc:dd:ee:00")))).build()
 ```
-
  ```json
-[
-  "and",
-  [
-    "=",
-    "name",
-    "ipaddress"
-  ],
-  [
-    "in",
-    "certname",
-    [
-      "from",
-      "resources",
-      [
-        "extract",
-        "certname",
-        [
-          "and",
-          [
-            "=",
-            "type",
-            "Class"
-          ],
-          [
-            "=",
-            "title",
-            "Apache"
-          ]
-        ]
-      ]
-    ]
-  ]
-]
+["and",["=","name","ipaddress"],["in","certname",["from","resources",["extract","certname",["and",["=","type","Class"],["=","title","Apache"]]]]]]
 ```
-
  ```java
             and(Property.name.equals("ipaddress"),
             certname.in(resources.from(extract(certname, and(
-        type.equals("Class"),
-                    title.equals("Apache")))))).build()
+            type.equals("Class"),
+                        title.equals("Apache")))))).build()
 ```
+
+### Fetches all the VMs with their OS
 
 ```java
 
 List<Map<String, Object>> data = Endpoints.facts(new HttpClient("puppetdb", 8080)).getListMap(Property.name.equals(Facts.operatingsystem));
 
-);
 ```
 
+### Results
  ```json
 [
     {
@@ -247,6 +140,7 @@ List<Map<String, Object>> data = Endpoints.facts(new HttpClient("puppetdb", 8080
 ]
 ```
 
+### Count how many instances per operatingsystem
 ```java
 
 HttpClient client = new HttpClient("puppetdb", 8080);
@@ -257,10 +151,9 @@ String query = Operators.extract(Operators.count(Property.value),
 
 List<Map<String, Object>> data = Endpoints.facts(client).get(query);
 
-
-
-
 ```
+
+### Results
  ```json
 [
   {
