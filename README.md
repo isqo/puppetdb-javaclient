@@ -161,7 +161,7 @@ reports.from(certname.equals("myserver"),
 
  ```java
 
-and(name.equals("networking"),
+and(Property.name.equals("networking"),
     subquery("fact_contents",
              and(
                 Property.path.arrayRegexMatch("networking", ".*", "macaddress", ".*"),
