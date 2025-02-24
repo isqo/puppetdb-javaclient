@@ -104,8 +104,8 @@ To query the node definition of instances whose kernel is Linux and mtu_eth0 is 
                 .get(certname.in(extract(certname,
                         select(SELECT_FACT_CONTENT,
                                 and(
-                                        Facts.path.equals(Facts.system_uptime.days()),
-                                        Facts.value.greaterThanOrEq("0"))
+                                        Property.path.equals(Facts.system_uptime.days()),
+                                        Property.value.greaterThanOrEq("0"))
                         ))));
 );
 
@@ -164,8 +164,8 @@ reports.from(certname.equals("myserver"),
 and(name.equals("networking"),
     subquery("fact_contents",
              and(
-                path.arrayRegexMatch("networking", ".*", "macaddress", ".*"),
-                value.equals("aa:bb:cc:dd:ee:00")))).build()
+                Property.path.arrayRegexMatch("networking", ".*", "macaddress", ".*"),
+                Property.value.equals("aa:bb:cc:dd:ee:00")))).build()
 ```
 
  ```json
@@ -205,7 +205,7 @@ and(name.equals("networking"),
 ```
 
  ```java
-            and(name.equals("ipaddress"),
+            and(Property.name.equals("ipaddress"),
             certname.in(resources.from(extract(certname, and(
         type.equals("Class"),
                     title.equals("Apache")))))).build()
