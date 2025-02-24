@@ -3,11 +3,9 @@
 # puppetdb-javaclient
 Puppetdb api v4
 
-# usage examples
-## Nodes endpoint
-To query the node definition of an instance whose certname is "c826a077907a.us-east-2.compute.internal": 
-**["=", "certname", "c826a077907a.us-east-2.compute.internal"]**
+## Simple usage example
 
+To query the instance whose certname is "c826a077907a.us-east-2.compute.internal": 
 
 ```java
     List<NodeData> nodes = Endpoints
@@ -29,7 +27,8 @@ equivalent to
  curl -G http://puppetdb:8080/pdb/query/v4/nodes --data-urlencode 'query=["=", "certname", "c826a077907a.us-east-2.compute.internal"]'
 ```
 
-### To query the instances with kernel and mtu_eth0 is superior to 1000 is: 
+## Nodes endpoint
+#### To query the instances with kernel as linux and mtu_eth0 is superior to 1000 is: 
 
 ```json
 ["and",["=",["fact","kernel"],"Linux"],[">",["fact","mtu_eth0"],1000]]
@@ -40,7 +39,84 @@ equivalent to
                                 .node(new HttpClient("puppetdb", 8080)) //.node("puppetdb", 8080) as well works.
                                 .get(and(kernel.equals("Linux"), mtu_eth0.greaterThan(1000)).build()));
 ```
-
+**Results**
+```json
+[
+    {
+        "deactivated": null,
+        "latest_report_hash": null,
+        "facts_environment": "production",
+        "cached_catalog_status": null,
+        "report_environment": null,
+        "latest_report_corrective_change": null,
+        "catalog_environment": "production",
+        "facts_timestamp": "2020-02-15T22:25:53.219Z",
+        "latest_report_noop": null,
+        "expired": null,
+        "latest_report_noop_pending": null,
+        "report_timestamp": null,
+        "certname": "c826a077907a.us-east-2.compute.internal",
+        "catalog_timestamp": "2020-02-15T22:25:53.744Z",
+        "latest_report_job_id": null,
+        "latest_report_status": null
+    },
+    {
+        "deactivated": null,
+        "latest_report_hash": null,
+        "facts_environment": "production",
+        "cached_catalog_status": null,
+        "report_environment": null,
+        "latest_report_corrective_change": null,
+        "catalog_environment": "production",
+        "facts_timestamp": "2020-02-15T22:30:15.551Z",
+        "latest_report_noop": null,
+        "expired": null,
+        "latest_report_noop_pending": null,
+        "report_timestamp": null,
+        "certname": "1c886b50728b.us-east-2.compute.internal",
+        "catalog_timestamp": "2020-02-15T22:30:15.729Z",
+        "latest_report_job_id": null,
+        "latest_report_status": null
+    },
+    {
+        "deactivated": null,
+        "latest_report_hash": null,
+        "facts_environment": "production",
+        "cached_catalog_status": null,
+        "report_environment": null,
+        "latest_report_corrective_change": null,
+        "catalog_environment": "production",
+        "facts_timestamp": "2020-02-15T22:35:45.584Z",
+        "latest_report_noop": null,
+        "expired": null,
+        "latest_report_noop_pending": null,
+        "report_timestamp": null,
+        "certname": "9c8048877524.us-east-2.compute.internal",
+        "catalog_timestamp": "2020-02-15T22:35:45.851Z",
+        "latest_report_job_id": null,
+        "latest_report_status": null
+    },
+    {
+        "deactivated": null,
+        "latest_report_hash": null,
+        "facts_environment": "production",
+        "cached_catalog_status": null,
+        "report_environment": null,
+        "latest_report_corrective_change": null,
+        "catalog_environment": "production",
+        "facts_timestamp": "2020-02-15T23:02:52.843Z",
+        "latest_report_noop": null,
+        "expired": null,
+        "latest_report_noop_pending": null,
+        "report_timestamp": null,
+        "certname": "edbe0bdb0c1e.us-east-2.compute.internal",
+        "catalog_timestamp": "2020-02-15T23:02:53.376Z",
+        "latest_report_job_id": null,
+        "latest_report_status": null
+    }
+]
+```
+#### To query the count of active nodes per environment:
 ```json
 ["extract",[["function","count"],"facts_environment"],["null?","deactivated",true],["group_by","facts_environment"]]
 ```
@@ -54,8 +130,18 @@ equivalent to
                                 Functions.group_by(Facts.facts_environment)
                         ));
 ```
+**Results**
 ```json
-["in","certname",["extract","certname",["select_fact_contents",["and",["=","path",["system_uptime","days"]],[">=","value",10]]]]]
+[
+    {
+        "count": 4,
+        "facts_environment": "production"
+    }
+]
+```
+ #### To retrieve nodes that have at least 2200 of system_uptime
+```json
+["in","certname",["extract","certname",["select_fact_contents",["and",["=","path",["system_uptime","seconds"]],[">=","value",2200]]]]]
 ```
 ```java
         List<NodeData> nodes = Endpoints
@@ -70,13 +156,47 @@ equivalent to
 
 ```
 
-```Json
-["from","reports",["=","certname","myserver"],["order_by",[["producer_timestamp","desc"]]],["limit",10]]
+**results**
 ```
-```Java
-reports.from(certname.equals("myserver"),
- order_by(producer_timestamp, "desc"),
-    limit("10")).build()
+[
+    {
+        "deactivated": null,
+        "latest_report_hash": null,
+        "facts_environment": "production",
+        "cached_catalog_status": null,
+        "report_environment": null,
+        "latest_report_corrective_change": null,
+        "catalog_environment": "production",
+        "facts_timestamp": "2020-02-15T22:30:15.551Z",
+        "latest_report_noop": null,
+        "expired": null,
+        "latest_report_noop_pending": null,
+        "report_timestamp": null,
+        "certname": "1c886b50728b.us-east-2.compute.internal",
+        "catalog_timestamp": "2020-02-15T22:30:15.729Z",
+        "latest_report_job_id": null,
+        "latest_report_status": null
+    },
+    {
+        "deactivated": null,
+        "latest_report_hash": null,
+        "facts_environment": "production",
+        "cached_catalog_status": null,
+        "report_environment": null,
+        "latest_report_corrective_change": null,
+        "catalog_environment": "production",
+        "facts_timestamp": "2020-02-15T22:35:45.584Z",
+        "latest_report_noop": null,
+        "expired": null,
+        "latest_report_noop_pending": null,
+        "report_timestamp": null,
+        "certname": "9c8048877524.us-east-2.compute.internal",
+        "catalog_timestamp": "2020-02-15T22:35:45.851Z",
+        "latest_report_job_id": null,
+        "latest_report_status": null
+    }
+]
+
 ```
 
 ## Facts endpoint
