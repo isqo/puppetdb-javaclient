@@ -1,10 +1,7 @@
 package isqo.puppetdb.client.v4;
 
+import isqo.puppetdb.client.v4.querybuilder.*;
 import isqo.puppetdb.client.v4.querybuilder.AstQueryBuilder.status;
-import isqo.puppetdb.client.v4.querybuilder.BooleanOperators;
-import isqo.puppetdb.client.v4.querybuilder.Facts;
-import isqo.puppetdb.client.v4.querybuilder.Operators;
-import isqo.puppetdb.client.v4.querybuilder.Selectors;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -91,7 +88,7 @@ class AstQueryBuilderTest {
 
         Assertions.assertEquals("[\"in\",\"certname\",[\"extract\",\"certname\",[\"select_fact_contents\",[\"and\",[\"=\",\"path\",[\"system_uptime\",\"days\"]],[\">=\",\"value\",\"10\"]]]]]",
 
-                certname.in(extract(certname, select(SELECT_FACT_CONTENT, and(Facts.path.equals(Facts.system_uptime.days()), Facts.value.greaterThanOrEq("10"))))).build());
+                certname.in(extract(certname, select(SELECT_FACT_CONTENT, and(Property.path.equals(Facts.system_uptime.days()), Property.value.greaterThanOrEq("10"))))).build());
 
     }
 
@@ -112,7 +109,7 @@ class AstQueryBuilderTest {
     void extract_average_uptime_seconds() {
         Assertions.assertEquals("[\"extract\", [[\"function\",\"avg\",\"value\"]],[\"=\",\"name\",\"uptime_seconds\"]]",
 
-                extract(Operators.avg("value"), name.equals(uptime_seconds)).build());
+                extract(Operators.avg("value"), Property.name.equals(uptime_seconds)).build());
     }
 
 
@@ -124,10 +121,10 @@ class AstQueryBuilderTest {
 
 
         Assertions.assertEquals("[\"and\",[\"=\",\"name\",\"networking\"],[\"subquery\",\"fact_contents\",[\"and\",[\"~>\",\"path\",[\"networking\",\".*\",\"macaddress\",\".*\"]],[\"=\",\"value\",\"aa:bb:cc:dd:ee:00\"]]]]",
-                and(name.equals("networking"),
+                and(Property.name.equals("networking"),
                         subquery("fact_contents",
-                                and(path.arrayRegexMatch("networking", ".*", "macaddress", ".*"),
-                                        value.equals("aa:bb:cc:dd:ee:00")))).build());
+                                and(Property.path.arrayRegexMatch("networking", ".*", "macaddress", ".*"),
+                                        Property.value.equals("aa:bb:cc:dd:ee:00")))).build());
 
 
     }
@@ -139,7 +136,7 @@ class AstQueryBuilderTest {
 
 
         Assertions.assertEquals("[\"and\",[\"=\",\"name\",\"ipaddress\"],[\"in\",\"certname\",[\"from\",\"resources\",[\"extract\",\"certname\",[\"and\",[\"=\",\"type\",\"Class\"],[\"=\",\"title\",\"Apache\"]]]]]]",
-                and(name.equals("ipaddress"),
+                and(Property.name.equals("ipaddress"),
                         certname.in(resources.from(extract(certname, and(
                                 type.equals("Class"),
                                 title.equals("Apache")
@@ -154,7 +151,7 @@ class AstQueryBuilderTest {
 
 
         Assertions.assertEquals("[\"and\",[\"=\",\"name\",\"ipaddress\"],[\"in\",\"certname\",[\"extract\",\"certname\",[\"select_resources\",[\"and\",[\"=\",\"type\",\"Class\"],[\"=\",\"title\",\"Apache\"]]]]]]",
-                and(name.equals("ipaddress"),
+                and(Property.name.equals("ipaddress"),
                         certname.in(extract(certname, Selectors.select_resources(
                                 and(
                                         type.equals("Class"),
