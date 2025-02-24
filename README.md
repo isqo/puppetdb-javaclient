@@ -279,6 +279,37 @@ List<Map<String, Object>> data = Endpoints.facts(new HttpClient("puppetdb", 8080
 ]
 ```
 
+```java
+
+HttpClient client = new HttpClient("puppetdb", 8080);
+
+String query = Operators.extract(Operators.count(Property.value), 
+                            Property.name.equals(operatingsystem), 
+                                group_by(Property.value)).build();
+
+List<Map<String, Object>> data = Endpoints.facts(client).get(query);
+
+
+
+
+```
+ ```json
+[
+  {
+    "count": 2,
+    "value": "Ubuntu"
+  },
+  {
+    "count": 1,
+    "value": "Alpine"
+  },
+  {
+    "count": 1,
+    "value": "CentOS"
+  }
+]
+```
+
 ## Contribution
 ### Standalone puppetdb for testing purposes
 For end-to-end tests, we use docker to launch a standalone prefilled puppetdb containing 4 nodes and their facts.

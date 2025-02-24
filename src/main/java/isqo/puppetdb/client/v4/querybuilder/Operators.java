@@ -24,6 +24,10 @@ public enum Operators {
         return new AstQueryBuilder.OperatorQueryBuilderForTwoQueryFormat(queryFormat, AVG, value);
     }
 
+    public static QueryBuilder count(Property value) {
+        String queryFormat = "[[\"function\",\"%s\"],\"%s\"]";
+        return new AstQueryBuilder.OperatorQueryBuilderForTwoQueryFormat(queryFormat, COUNT, value.toString());
+    }
 
     public static QueryBuilder count(Facts value) {
         String queryFormat = "[[\"function\",\"%s\"],\"%s\"]";
@@ -38,6 +42,11 @@ public enum Operators {
     public static QueryBuilder limit(String limit) {
         String queryFormat = "[\"%s\",\"%s\"]";
         return new AstQueryBuilder.OperatorQueryBuilderForTwoQueryFormat(queryFormat, LIMIT, limit);
+    }
+
+    public static QueryBuilder group_by(Property value) {
+        String queryFormat = "[\"%s\",\"%s\"]";
+        return new AstQueryBuilder.OperatorQueryBuilderForTwoQueryFormat(queryFormat, GROUPBY, value.toString());
     }
 
     public static QueryBuilder group_by(Facts fact) {

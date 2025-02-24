@@ -4,6 +4,7 @@ import isqo.puppetdb.client.v4.api.Endpoints;
 import isqo.puppetdb.client.v4.api.models.NodeData;
 import isqo.puppetdb.client.v4.http.HttpClient;
 import isqo.puppetdb.client.v4.querybuilder.Facts;
+import isqo.puppetdb.client.v4.querybuilder.Operators;
 import isqo.puppetdb.client.v4.querybuilder.Property;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,6 +12,8 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Map;
 
+import static isqo.puppetdb.client.v4.querybuilder.Facts.operatingsystem;
+import static isqo.puppetdb.client.v4.querybuilder.Operators.group_by;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Testing /pdb/query/v4/nodes")
@@ -65,7 +68,7 @@ public class NodeApiTest {
 
         HttpClient client = new HttpClient("puppetdb", 8080);
 
-        List<Map<String, Object>> data = Endpoints.facts(client).getListMap(Property.name.equals(Facts.operatingsystem));
+        List<Map<String, Object>> data = Endpoints.facts(client).getListMap(Property.name.equals(operatingsystem));
 
         Map<String, Object> element = searchFact(data, "certname", "c826a077907a.us-east-2.compute.internal");
         if (element != null) {
@@ -94,6 +97,27 @@ public class NodeApiTest {
         } else {
             fail("No element found edbe0bdb0c1e.us-east-2.compute.internal");
         }
+
+    }
+
+    @Test
+    @DisplayName("puppetdb should return the count of each OS")
+    void normalCase5() {
+
+        HttpClient client = new HttpClient("localhost", 8080);
+
+        String query = Operators.extract(Operators.count(Property.value), Property.name.equals(operatingsystem), group_by(Property.value)).build();
+
+        List<Map<String, Object>> data = Endpoints.facts(client).get(query);
+
+        for (Map<String, Object> element : data) {
+            if (element.containsKey("value") && element.containsKey("count")) {
+                if (element.get("value").equals("Ubuntu")) assertEquals(2, element.get("count"));
+                if (element.get("value").equals("Alpine")) assertEquals(1, element.get("count"));
+                if (element.get("value").equals("CentOS")) assertEquals(1, element.get("count"));
+            }
+        }
+
 
     }
 
