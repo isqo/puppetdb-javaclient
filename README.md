@@ -242,6 +242,43 @@ List<Map<String, Object>> data = Endpoints.producers((new HttpClient("puppetdb",
 ]
 ```
 
+## Facts endpoint
+```java
+
+List<Map<String, Object>> data = Endpoints.facts(new HttpClient("puppetdb", 8080)).getListMap(Property.name.equals(Facts.operatingsystem));
+
+);
+
+```
+ ```json
+[
+    {
+        "certname": "c826a077907a.us-east-2.compute.internal",
+        "environment": "production",
+        "name": "operatingsystem",
+        "value": "Ubuntu"
+    },
+    {
+        "certname": "1c886b50728b.us-east-2.compute.internal",
+        "environment": "production",
+        "name": "operatingsystem",
+        "value": "Ubuntu"
+    },
+    {
+        "certname": "9c8048877524.us-east-2.compute.internal",
+        "environment": "production",
+        "name": "operatingsystem",
+        "value": "Alpine"
+    },
+    {
+        "certname": "edbe0bdb0c1e.us-east-2.compute.internal",
+        "environment": "production",
+        "name": "operatingsystem",
+        "value": "CentOS"
+    }
+]
+```
+
 ## Contribution
 ### Standalone puppetdb for testing purposes
 For end-to-end tests, we use docker to launch a standalone prefilled puppetdb containing 4 nodes and their facts.
