@@ -6,7 +6,6 @@ import isqo.puppetdb.client.v4.querybuilder.QueryBuilder;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 public class Endpoints {
     public static NodesApi nodes(String fqdn, int port) {
@@ -47,12 +46,6 @@ public class Endpoints {
         public List<NodeData> get(QueryBuilder query) {
             return Arrays.asList(super.get(query.build(), NodeData[].class));
         }
-
-        public List<Map<String, Object>> getListMap(QueryBuilder query) {
-            List<Map<String, Object>> map = super.get(query.build());
-
-            return map;
-        }
     }
 
     static public class EnvironmentsApi extends AbstractEndPoint {
@@ -70,9 +63,6 @@ public class Endpoints {
             return "/pdb/query/v4/environments";
         }
 
-        public List<Map<String, Object>> get() {
-            return super.get(null);
-        }
     }
 
     static public class ProducersApi extends AbstractEndPoint {
@@ -90,9 +80,6 @@ public class Endpoints {
             return "/pdb/query/v4/producers";
         }
 
-        public List<Map<String, Object>> get() {
-            return super.get(null);
-        }
     }
 
     static public class FactsApi extends AbstractEndPoint {
@@ -110,11 +97,6 @@ public class Endpoints {
             return "/pdb/query/v4/facts";
         }
 
-        public List<Map<String, Object>> getListMap(QueryBuilder query) {
-            List<Map<String, Object>> map = super.get(query.build());
-
-            return map;
-        }
     }
 
 }
