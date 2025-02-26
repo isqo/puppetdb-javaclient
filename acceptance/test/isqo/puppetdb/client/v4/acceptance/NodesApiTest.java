@@ -42,7 +42,7 @@ public class NodesApiTest {
     @DisplayName("puppetdb should responds with production")
     void normalCase2() {
 
-        HttpClient client = new HttpClient("localhost", 8080);
+        HttpClient client = new HttpClient("puppetdb", 8080);
 
         List<Map<String, Object>> data = Endpoints.environments(client).getListMap();
 
@@ -55,7 +55,7 @@ public class NodesApiTest {
     @DisplayName("puppetdb should respond with production puppet.us-east-2.compute.internal")
     void normalCase3() {
 
-        HttpClient client = new HttpClient("localhost", 8080);
+        HttpClient client = new HttpClient("puppetdb", 8080);
 
         List<Map<String, Object>> data = Endpoints.producers(client).getListMap();
 
