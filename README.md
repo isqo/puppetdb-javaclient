@@ -295,7 +295,7 @@ List<Map<String, Object>> data = Endpoints.facts(client).getListMap(query);
 ## Environments endpoint
 ```java
 
-    List<Map<String, Object>> data = Endpoints.environments((new HttpClient("puppetdb", 8080))).get();
+    List<Map<String, Object>> data = Endpoints.environments((new HttpClient("puppetdb", 8080))).getListMap();
 );
 
 ```
@@ -310,7 +310,7 @@ List<Map<String, Object>> data = Endpoints.facts(client).getListMap(query);
 ## Producers endpoint
 ```java
 
-List<Map<String, Object>> data = Endpoints.producers((new HttpClient("puppetdb", 8080))).get();
+List<Map<String, Object>> data = Endpoints.producers((new HttpClient("puppetdb", 8080))).getListMap();
 
 );
 
@@ -322,6 +322,13 @@ List<Map<String, Object>> data = Endpoints.producers((new HttpClient("puppetdb",
     }
 ]
 ```
+
+## GetListMap vs get
+
+There are two kind of objects unmarshalled to: List<Map<String,Object>> and List<NodeData>
+The first one needs exploration and more check tests, because we don't know the nature of the Object, is a list? is it a dictionary or is it a String?.
+For List<NodeData> results, everything is known, predictible and consistent.
+We'll work on having more of the second type and letting List<Map<String,Object>> as a backdoor for the future.
 
 ## Contribution
 ### Standalone puppetdb for testing purposes
