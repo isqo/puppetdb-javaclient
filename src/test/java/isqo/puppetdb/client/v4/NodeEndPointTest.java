@@ -31,8 +31,8 @@ class NodeEndPointTest {
     QueryBuilder query = Facts.certname.equals("mbp.local");
     String content = readFileFromFiles("mbp.local.json");
     HttpClient httpClient = mock(HttpClient.class);
-    Endpoints.NodeApi nodeApi = new Endpoints.NodeApi(httpClient);
-    when(httpClient.get(nodeApi.getEndpoint(), query.build())).thenReturn(content);
+    Endpoints.NodesApi nodesApi = new Endpoints.NodesApi(httpClient);
+    when(httpClient.get(nodesApi.getEndpoint(), query.build())).thenReturn(content);
 
     NodeData expected = new NodeData();
     expected.setDeactivated(null);
@@ -50,7 +50,7 @@ class NodeEndPointTest {
     expected.setLatestReportHash("2625d1b601e98ed1e281ccd79ca8d16b9f74fea6");
     expected.setLatestReportJobId(null);
 
-    List<NodeData> data = nodeApi.get(query);
+    List<NodeData> data = nodesApi.get(query);
     assertFalse(data.isEmpty(), "nodes list data isn't empty");
     assertThat(data.get(0), samePropertyValuesAs(expected));
 

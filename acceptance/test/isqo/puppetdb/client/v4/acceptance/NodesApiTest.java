@@ -17,14 +17,14 @@ import static isqo.puppetdb.client.v4.querybuilder.Operators.group_by;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Testing /pdb/query/v4/nodes")
-public class NodeApiTest {
+public class NodesApiTest {
     @Test
     @DisplayName("puppetdb should responds correctly for c826a077907a.us-east-2.compute.internal node")
     void normalCase1() {
 
         HttpClient client = new HttpClient("puppetdb", 8080);
 
-        List<NodeData> nodes = Endpoints.node(client).get(Facts.certname.equals("c826a077907a.us-east-2.compute.internal"));
+        List<NodeData> nodes = Endpoints.nodes(client).get(Facts.certname.equals("c826a077907a.us-east-2.compute.internal"));
 
         assertFalse(nodes.isEmpty(), "Nodes list data shouldn't be empty");
         NodeData node = nodes.get(0);
@@ -104,7 +104,7 @@ public class NodeApiTest {
     @DisplayName("puppetdb should return the count of each OS")
     void normalCase5() {
 
-        HttpClient client = new HttpClient("localhost", 8080);
+        HttpClient client = new HttpClient("puppetdb", 8080);
 
         String query = Operators.extract(Operators.count(Property.value), Property.name.equals(operatingsystem), group_by(Property.value)).build();
 

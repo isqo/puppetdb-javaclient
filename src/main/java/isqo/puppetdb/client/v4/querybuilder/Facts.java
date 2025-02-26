@@ -66,6 +66,15 @@ public enum Facts {
         return BinaryOperators.FROM.getQueryBuilder(queryFormat, this.toString(), queries_);
     }
 
+    public String days() {
+        String[] arr = {"\"" + this + "\"", "\"days\""};
+        return "[" + String.join(",", arr) + "]";
+    }
+    public String seconds() {
+        String[] arr = {"\"" + this + "\"", "\"seconds\""};
+        return "[" + String.join(",", arr) + "]";
+    }
+
     public QueryBuilder arrayRegexMatch(String... values) {
         String queryFormat = "[\"%s\",\"%s\",%s]";
         List<String> valuesAsList = new ArrayList<>(Arrays.asList(values));
@@ -73,13 +82,8 @@ public enum Facts {
         return BinaryOperators.REGEX_ARRAY_MATCH.getQueryBuilder(queryFormat, this.toString(), value);
     }
 
-
     public String factToString() {
         return String.format(queryFormat, "fact", this);
     }
 
-    public String days() {
-        String[] arr = {"\"" + this + "\"", "\"days\""};
-        return "[" + String.join(",", arr) + "]";
-    }
     }

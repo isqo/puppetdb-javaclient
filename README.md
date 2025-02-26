@@ -9,7 +9,7 @@ To query the instance whose certname is "c826a077907a.us-east-2.compute.internal
 
 ```java
     List<NodeData> nodes = Endpoints
-                                .node(new HttpClient("puppetdb", 8080)) //.node("puppetdb", 8080) as well works.
+                                .nodes(new HttpClient("puppetdb", 8080)) //.node("puppetdb", 8080) as well works.
                                 .get(certname.equals("c826a077907a.us-east-2.compute.internal"));
 ```
 
@@ -17,7 +17,7 @@ or
 
 ```java
     HttpClient client = new HttpClient("puppetdb", 8080);
-    NodeApi api = Endpoints.node(client);
+    NodeApi api = Endpoints.nodes(client);
     List<NodeData> nodes = api.get(certname.equals("c826a077907a.us-east-2.compute.internal"));
 ```
 
@@ -122,7 +122,7 @@ equivalent to
 ```
 ```java
        List<Map<String,Object>> data = Endpoints
-                .node(new HttpClient("puppetdb", 8080)) // .node("puppetdb", 8080) as well works.
+                .nodes(new HttpClient("puppetdb", 8080)) // .node("puppetdb", 8080) as well works.
                 .getListMap(
                         extract(
                                 Functions.count(Facts.facts_environment),
@@ -145,7 +145,7 @@ equivalent to
 ```
 ```java
         List<NodeData> nodes = Endpoints
-                .node(new HttpClient("puppetdb", 8080)) // .node("puppetdb", 8080) as well works.
+                .nodes(new HttpClient("puppetdb", 8080)) // .node("puppetdb", 8080) as well works.
                 .get(certname.in(extract(certname,
                         select(SELECT_FACT_CONTENT,
                                 and(

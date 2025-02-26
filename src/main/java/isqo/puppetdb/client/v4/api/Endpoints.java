@@ -9,12 +9,12 @@ import java.util.List;
 import java.util.Map;
 
 public class Endpoints {
-    public static NodeApi node(String fqdn, int port) {
-        return new NodeApi(fqdn, port);
+    public static NodesApi nodes(String fqdn, int port) {
+        return new NodesApi(fqdn, port);
     }
 
-    public static NodeApi node(HttpClient client) {
-        return new NodeApi(client);
+    public static NodesApi nodes(HttpClient client) {
+        return new NodesApi(client);
     }
 
     public static EnvironmentsApi environments(HttpClient client) {
@@ -29,13 +29,13 @@ public class Endpoints {
         return new FactsApi(client);
     }
 
-    static public class NodeApi extends AbstractEndPoint {
+    static public class NodesApi extends AbstractEndPoint {
 
-        public NodeApi(HttpClient client) {
+        public NodesApi(HttpClient client) {
             super(client);
         }
 
-        NodeApi(String fqdn, int port) {
+        NodesApi(String fqdn, int port) {
             super(fqdn, port);
         }
 

@@ -86,9 +86,9 @@ class AstQueryBuilderTest {
     void select_fact_content_path_system_uptime_days() {
 
 
-        Assertions.assertEquals("[\"in\",\"certname\",[\"extract\",\"certname\",[\"select_fact_contents\",[\"and\",[\"=\",\"path\",[\"system_uptime\",\"days\"]],[\">=\",\"value\",\"10\"]]]]]",
+        Assertions.assertEquals("[\"in\",\"certname\",[\"extract\",\"certname\",[\"select_fact_contents\",[\"and\",[\"=\",\"path\",[\"system_uptime\",\"seconds\"]],[\">=\",\"value\",\"2200\"]]]]]",
 
-                certname.in(extract(certname, select(SELECT_FACT_CONTENT, and(Property.path.equals(Facts.system_uptime.days()), Property.value.greaterThanOrEq("10"))))).build());
+                certname.in(extract(certname, select(SELECT_FACT_CONTENT, and(Property.path.equals(Facts.system_uptime.seconds()), Property.value.greaterThanOrEq("2200"))))).build());
 
     }
 
