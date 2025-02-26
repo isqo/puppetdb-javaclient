@@ -24,7 +24,7 @@ public abstract class AbstractEndPoint {
 
   abstract String getEndpoint();
 
-  public <T> T getListMap(String query, Class<T> clazz) {
+  public <T> T get(String query, Class<T> clazz) {
     try {
       return mapper.readValue(this.httpClient.get(getEndpoint(), query), clazz);
     } catch (JsonProcessingException e) {

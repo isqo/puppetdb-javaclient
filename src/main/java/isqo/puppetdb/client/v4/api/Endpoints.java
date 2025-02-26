@@ -6,7 +6,6 @@ import isqo.puppetdb.client.v4.querybuilder.QueryBuilder;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 public class Endpoints {
     public static NodesApi nodes(String fqdn, int port) {
@@ -45,7 +44,7 @@ public class Endpoints {
         }
 
         public List<NodeData> get(QueryBuilder query) {
-            return Arrays.asList(super.getListMap(query.build(), NodeData[].class));
+            return Arrays.asList(super.get(query.build(), NodeData[].class));
         }
     }
 
