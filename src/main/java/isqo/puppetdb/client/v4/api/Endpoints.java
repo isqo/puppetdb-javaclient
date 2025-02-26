@@ -45,13 +45,7 @@ public class Endpoints {
         }
 
         public List<NodeData> get(QueryBuilder query) {
-            return Arrays.asList(super.get(query.build(), NodeData[].class));
-        }
-
-        public List<Map<String, Object>> getListMap(QueryBuilder query) {
-            List<Map<String, Object>> map = super.get(query.build());
-
-            return map;
+            return Arrays.asList(super.getListMap(query.build(), NodeData[].class));
         }
     }
 
@@ -70,9 +64,6 @@ public class Endpoints {
             return "/pdb/query/v4/environments";
         }
 
-        public List<Map<String, Object>> get() {
-            return super.get(null);
-        }
     }
 
     static public class ProducersApi extends AbstractEndPoint {
@@ -90,9 +81,6 @@ public class Endpoints {
             return "/pdb/query/v4/producers";
         }
 
-        public List<Map<String, Object>> get() {
-            return super.get(null);
-        }
     }
 
     static public class FactsApi extends AbstractEndPoint {
@@ -110,11 +98,6 @@ public class Endpoints {
             return "/pdb/query/v4/facts";
         }
 
-        public List<Map<String, Object>> getListMap(QueryBuilder query) {
-            List<Map<String, Object>> map = super.get(query.build());
-
-            return map;
-        }
     }
 
 }

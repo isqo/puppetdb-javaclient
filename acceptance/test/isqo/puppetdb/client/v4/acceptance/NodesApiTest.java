@@ -6,6 +6,7 @@ import isqo.puppetdb.client.v4.http.HttpClient;
 import isqo.puppetdb.client.v4.querybuilder.Facts;
 import isqo.puppetdb.client.v4.querybuilder.Operators;
 import isqo.puppetdb.client.v4.querybuilder.Property;
+import isqo.puppetdb.client.v4.querybuilder.QueryBuilder;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -41,9 +42,9 @@ public class NodesApiTest {
     @DisplayName("puppetdb should responds with production")
     void normalCase2() {
 
-        HttpClient client = new HttpClient("puppetdb", 8080);
+        HttpClient client = new HttpClient("localhost", 8080);
 
-        List<Map<String, Object>> data = Endpoints.environments(client).get();
+        List<Map<String, Object>> data = Endpoints.environments(client).getListMap();
 
         System.out.println(data);
         assertEquals("production", data.get(0).get("name"));
@@ -54,9 +55,9 @@ public class NodesApiTest {
     @DisplayName("puppetdb should respond with production puppet.us-east-2.compute.internal")
     void normalCase3() {
 
-        HttpClient client = new HttpClient("puppetdb", 8080);
+        HttpClient client = new HttpClient("localhost", 8080);
 
-        List<Map<String, Object>> data = Endpoints.producers(client).get();
+        List<Map<String, Object>> data = Endpoints.producers(client).getListMap();
 
         assertEquals("puppet.us-east-2.compute.internal", data.get(0).get("name"));
 
@@ -106,9 +107,9 @@ public class NodesApiTest {
 
         HttpClient client = new HttpClient("puppetdb", 8080);
 
-        String query = Operators.extract(Operators.count(Property.value), Property.name.equals(operatingsystem), group_by(Property.value)).build();
+        QueryBuilder query = Operators.extract(Operators.count(Property.value), Property.name.equals(operatingsystem), group_by(Property.value));
 
-        List<Map<String, Object>> data = Endpoints.facts(client).get(query);
+        List<Map<String, Object>> data = Endpoints.facts(client).getListMap(query);
 
         for (Map<String, Object> element : data) {
             if (element.containsKey("value") && element.containsKey("count")) {

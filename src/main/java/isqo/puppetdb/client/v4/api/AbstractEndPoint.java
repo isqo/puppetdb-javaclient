@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import isqo.puppetdb.client.v4.PuppetdbClientException;
 import isqo.puppetdb.client.v4.http.HttpClient;
+import isqo.puppetdb.client.v4.querybuilder.QueryBuilder;
 
 import java.util.List;
 import java.util.Map;
@@ -23,7 +24,7 @@ public abstract class AbstractEndPoint {
 
   abstract String getEndpoint();
 
-  public <T> T get(String query, Class<T> clazz) {
+  public <T> T getListMap(String query, Class<T> clazz) {
     try {
       return mapper.readValue(this.httpClient.get(getEndpoint(), query), clazz);
     } catch (JsonProcessingException e) {
@@ -31,10 +32,19 @@ public abstract class AbstractEndPoint {
     }
   }
 
-  public List<Map<String,Object>> get(String query) {
+  public List<Map<String,Object>> getListMap(QueryBuilder query) {
     try {
 
-      return mapper.readValue(this.httpClient.get(getEndpoint(), query), new TypeReference<List<Map<String,Object>>>(){});
+      return mapper.readValue(this.httpClient.get(getEndpoint(), query.build()), new TypeReference<List<Map<String,Object>>>(){});
+    } catch (JsonProcessingException e) {
+      throw new PuppetdbClientException(e);
+    }
+  }
+
+  public List<Map<String,Object>> getListMap() {
+    try {
+
+      return mapper.readValue(this.httpClient.get(getEndpoint()), new TypeReference<List<Map<String,Object>>>(){});
     } catch (JsonProcessingException e) {
       throw new PuppetdbClientException(e);
     }
