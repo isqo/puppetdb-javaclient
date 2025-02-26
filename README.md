@@ -9,7 +9,7 @@ To query the instance whose certname is "c826a077907a.us-east-2.compute.internal
 
 ```java
     List<NodeData> nodes = Endpoints
-                                .nodes(new HttpClient("puppetdb", 8080)) //.node("puppetdb", 8080) as well works.
+                                .nodes(new HttpClient("puppetdb", 8080)) //.nodes("puppetdb", 8080) as well works.
                                 .get(certname.equals("c826a077907a.us-east-2.compute.internal"));
 ```
 
@@ -36,8 +36,8 @@ equivalent to
 
 ```java
     List<NodeData> nodes = Endpoints
-                                .node(new HttpClient("puppetdb", 8080)) //.node("puppetdb", 8080) as well works.
-                                .get(and(kernel.equals("Linux"), mtu_eth0.greaterThan(1000)).build()));
+                                .nodes(new HttpClient("puppetdb", 8080)) //.nodes("puppetdb", 8080) as well works.
+                                .get(and(kernel.equals("Linux"), mtu_eth0.greaterThan(1000)));
 ```
 **Results**
 ```json
@@ -122,7 +122,7 @@ equivalent to
 ```
 ```java
        List<Map<String,Object>> data = Endpoints
-                .nodes(new HttpClient("puppetdb", 8080)) // .node("puppetdb", 8080) as well works.
+                .nodes(new HttpClient("puppetdb", 8080)) // .nodes("puppetdb", 8080) as well works.
                 .getListMap(
                         extract(
                                 Functions.count(Facts.facts_environment),
@@ -145,12 +145,12 @@ equivalent to
 ```
 ```java
         List<NodeData> nodes = Endpoints
-                .nodes(new HttpClient("puppetdb", 8080)) // .node("puppetdb", 8080) as well works.
+                .nodes(new HttpClient("puppetdb", 8080)) // .nodes("puppetdb", 8080) as well works.
                 .get(certname.in(extract(certname,
                         select(SELECT_FACT_CONTENT,
                                 and(
-                                        Property.path.equals(Facts.system_uptime.days()),
-                                        Property.value.greaterThanOrEq("0"))
+                                        Property.path.equals(Facts.system_uptime.seconds()),
+                                        Property.value.greaterThanOrEq("2200"))
                         ))));
 );
 
@@ -210,8 +210,9 @@ and(Property.name.equals("networking"),
     subquery("fact_contents",
              and(
                 Property.path.arrayRegexMatch("networking", ".*", "macaddress", ".*"),
-                Property.value.equals("aa:bb:cc:dd:ee:00")))).build()
+                Property.value.equals("aa:bb:cc:dd:ee:00"))))
 ```
+
  ```json
 ["and",["=","name","ipaddress"],["in","certname",["from","resources",["extract","certname",["and",["=","type","Class"],["=","title","Apache"]]]]]]
 ```
@@ -219,14 +220,14 @@ and(Property.name.equals("networking"),
             and(Property.name.equals("ipaddress"),
             certname.in(resources.from(extract(certname, and(
             type.equals("Class"),
-                        title.equals("Apache")))))).build()
+                        title.equals("Apache"))))))
 ```
 
 ### Fetches all the VMs with their OS
 
 ```java
-
-List<Map<String, Object>> data = Endpoints.facts(new HttpClient("puppetdb", 8080)).getListMap(Property.name.equals(Facts.operatingsystem));
+QueryBuilder query = Property.name.equals(Facts.operatingsystem)
+List<Map<String, Object>> data = Endpoints.facts(new HttpClient("puppetdb", 8080)).getListMap(query);
 
 ```
 
@@ -265,11 +266,11 @@ List<Map<String, Object>> data = Endpoints.facts(new HttpClient("puppetdb", 8080
 
 HttpClient client = new HttpClient("puppetdb", 8080);
 
-String query = Operators.extract(Operators.count(Property.value), 
+QueryBuilder query = Operators.extract(Operators.count(Property.value), 
                             Property.name.equals(operatingsystem), 
-                                group_by(Property.value)).build();
+                                group_by(Property.value));
 
-List<Map<String, Object>> data = Endpoints.facts(client).get(query);
+List<Map<String, Object>> data = Endpoints.facts(client).getListMap(query);
 
 ```
 
