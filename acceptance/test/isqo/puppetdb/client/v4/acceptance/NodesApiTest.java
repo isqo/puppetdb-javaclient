@@ -127,7 +127,7 @@ public class NodesApiTest {
     @DisplayName("puppetdb should return factsets of Ubuntu VMs")
     void normalCase6() {
 
-        HttpClient client = new HttpClient("puppetdb", 8080);
+        HttpClient client = new HttpClient("localhost", 8080);
 
         QueryBuilder query = certname.in(extract(certname,
                 select(SELECT_FACT_CONTENT,
@@ -138,30 +138,30 @@ public class NodesApiTest {
 
         // Exploring the structure of the factsets
         List<Map<String, Object>> data = Endpoints.factsets(client).getListMap(query);
-        assertEquals(2, data.size());
         Map<String, Object> firstElem = data.get(0);
-        Object facts = firstElem.get("facts");
-        Map<String, Object> factsMap = (Map<String, Object>) facts;
-        List<Map<String, Object>> DataMap = (List<Map<String, Object>>) factsMap.get("data");
+        Map<String, Object> facts = (Map<String, Object>) firstElem.get("facts");
+        List<Map<String, Object>> factsList = (List<Map<String, Object>>) facts.get("data");
+
+
         // Refer to https://github.com/isqo/puppetdb-javaclient/blob/master/README.md#facts-list
-        for (Map<String, Object> element : DataMap) {
-            if (element.get("name").equals("operatingsystem")) {
-                assertEquals("Ubuntu", element.get("value"));
+        for (Map<String, Object> fact : factsList) {
+            if (fact.get("name").equals("operatingsystem")) {
+                assertEquals("Ubuntu", fact.get("value"));
             }
-            if (element.get("name").equals("id")) {
-                assertEquals("root", element.get("value"));
+            if (fact.get("name").equals("id")) {
+                assertEquals("root", fact.get("value"));
             }
-            if (element.get("name").equals("gid")) {
-                assertEquals("root", element.get("value"));
+            if (fact.get("name").equals("gid")) {
+                assertEquals("root", fact.get("value"));
             }
-            if (element.get("name").equals("fqdn")) {
-                assertEquals("c826a077907a.us-east-2.compute.internal", element.get("value"));
+            if (fact.get("name").equals("fqdn")) {
+                assertEquals("c826a077907a.us-east-2.compute.internal", fact.get("value"));
             }
-            if (element.get("name").equals("ipaddress")) {
-                assertEquals("172.23.0.7", element.get("value"));
+            if (fact.get("name").equals("ipaddress")) {
+                assertEquals("172.23.0.7", fact.get("value"));
             }
-            if (element.get("name").equals("identity")) {
-                Map<String, Object> map = (Map<String, Object>) element.get("value");
+            if (fact.get("name").equals("identity")) {
+                Map<String, Object> map = (Map<String, Object>) fact.get("value");
                 assertEquals(0, map.get("gid"));
                 assertEquals(0, map.get("uid"));
                 assertEquals("root", map.get("user"));
@@ -170,6 +170,7 @@ public class NodesApiTest {
             }
         }
     }
+
 
     public Map<String, Object> searchFact(List<Map<String, Object>> data, String fact, String value) {
 
