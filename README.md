@@ -291,6 +291,41 @@ List<Map<String, Object>> data = Endpoints.facts(client).getListMap(query);
   }
 ]
 ```
+## Factsets endpoint
+
+```java
+
+  QueryBuilder query = certname.in(extract(certname,
+                select(SELECT_FACT_CONTENT,
+                        and(
+                                Property.name.equals(operatingsystem),
+                                Property.value.equals("Ubuntu"))
+                )));
+
+  List<Map<String, Object>> data = Endpoints.factsets(client).getListMap(query);
+
+  // Exploring the structure of the factsets
+  List<Map<String, Object>> data = Endpoints.factsets(client).getListMap(query);
+  Map<String, Object> firstElem = data.get(0);
+  Map<String, Object> facts = (Map<String, Object>) firstElem.get("facts");
+  List<Map<String, Object>> factsList = (List<Map<String, Object>>) facts.get("data");
+
+  // ...
+  // ...
+  Map<String, Object> OS_fact = factsList.stream()
+          .filter(fact -> fact.get("name").equals("operatingsystem"))
+          .findFirst().get();
+  assertEquals("Ubuntu", OS_fact.get("value"));
+  
+  //...
+  //...
+  fact.get("name").equals("fqdn");
+  assertEquals("c826a077907a.us-east-2.compute.internal", fact.get("value"));
+  fact.get("name").equals("ipaddress");
+  assertEquals("172.23.0.7", fact.get("value"));
+  
+  
+```
 
 ## Environments endpoint
 ```java
