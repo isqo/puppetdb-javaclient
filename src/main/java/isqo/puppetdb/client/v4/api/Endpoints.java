@@ -28,6 +28,10 @@ public class Endpoints {
         return new FactsApi(client);
     }
 
+    public static FactsSetsApi factsets(HttpClient client) {
+        return new FactsSetsApi(client);
+    }
+
     static public class NodesApi extends AbstractEndPoint {
 
         public NodesApi(HttpClient client) {
@@ -95,6 +99,23 @@ public class Endpoints {
         @Override
         public String getEndpoint() {
             return "/pdb/query/v4/facts";
+        }
+
+    }
+
+    static public class FactsSetsApi extends AbstractEndPoint {
+
+        public FactsSetsApi(HttpClient client) {
+            super(client);
+        }
+
+        FactsSetsApi(String fqdn, int port) {
+            super(fqdn, port);
+        }
+
+        @Override
+        public String getEndpoint() {
+            return "/pdb/query/v4/factsets";
         }
 
     }

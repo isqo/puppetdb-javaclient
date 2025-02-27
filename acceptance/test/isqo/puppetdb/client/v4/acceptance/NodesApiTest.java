@@ -3,7 +3,6 @@ package isqo.puppetdb.client.v4.acceptance;
 import isqo.puppetdb.client.v4.api.Endpoints;
 import isqo.puppetdb.client.v4.api.models.NodeData;
 import isqo.puppetdb.client.v4.http.HttpClient;
-import isqo.puppetdb.client.v4.querybuilder.Facts;
 import isqo.puppetdb.client.v4.querybuilder.Operators;
 import isqo.puppetdb.client.v4.querybuilder.Property;
 import isqo.puppetdb.client.v4.querybuilder.QueryBuilder;
@@ -13,8 +12,10 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Map;
 
+import static isqo.puppetdb.client.v4.querybuilder.BooleanOperators.and;
+import static isqo.puppetdb.client.v4.querybuilder.Facts.certname;
 import static isqo.puppetdb.client.v4.querybuilder.Facts.operatingsystem;
-import static isqo.puppetdb.client.v4.querybuilder.Operators.group_by;
+import static isqo.puppetdb.client.v4.querybuilder.Operators.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Testing /pdb/query/v4/nodes")
@@ -25,7 +26,7 @@ public class NodesApiTest {
 
         HttpClient client = new HttpClient("puppetdb", 8080);
 
-        List<NodeData> nodes = Endpoints.nodes(client).get(Facts.certname.equals("c826a077907a.us-east-2.compute.internal"));
+        List<NodeData> nodes = Endpoints.nodes(client).get(certname.equals("c826a077907a.us-east-2.compute.internal"));
 
         assertFalse(nodes.isEmpty(), "Nodes list data shouldn't be empty");
         NodeData node = nodes.get(0);
@@ -64,7 +65,7 @@ public class NodesApiTest {
     }
 
     @Test
-    @DisplayName("Puppetdb should respond with the operatingsystem of each vm")
+    @DisplayName("Puppetdb should respond with the OS of each vm")
     void normalCase4() {
 
         HttpClient client = new HttpClient("puppetdb", 8080);
@@ -119,7 +120,55 @@ public class NodesApiTest {
             }
         }
 
+    }
 
+
+    @Test
+    @DisplayName("puppetdb should return factsets of Ubuntu VMs")
+    void normalCase6() {
+
+        HttpClient client = new HttpClient("puppetdb", 8080);
+
+        QueryBuilder query = certname.in(extract(certname,
+                select(SELECT_FACT_CONTENT,
+                        and(
+                                Property.name.equals(operatingsystem),
+                                Property.value.equals("Ubuntu"))
+                )));
+
+        // Exploring the structure of the factsets
+        List<Map<String, Object>> data = Endpoints.factsets(client).getListMap(query);
+        assertEquals(2, data.size());
+        Map<String, Object> firstElem = data.get(0);
+        Object facts = firstElem.get("facts");
+        Map<String, Object> factsMap = (Map<String, Object>) facts;
+        List<Map<String, Object>> DataMap = (List<Map<String, Object>>) factsMap.get("data");
+        // Refer to https://github.com/isqo/puppetdb-javaclient/blob/master/README.md#facts-list
+        for (Map<String, Object> element : DataMap) {
+            if (element.get("name").equals("operatingsystem")) {
+                assertEquals("Ubuntu", element.get("value"));
+            }
+            if (element.get("name").equals("id")) {
+                assertEquals("root", element.get("value"));
+            }
+            if (element.get("name").equals("gid")) {
+                assertEquals("root", element.get("value"));
+            }
+            if (element.get("name").equals("fqdn")) {
+                assertEquals("c826a077907a.us-east-2.compute.internal", element.get("value"));
+            }
+            if (element.get("name").equals("ipaddress")) {
+                assertEquals("172.23.0.7", element.get("value"));
+            }
+            if (element.get("name").equals("identity")) {
+                Map<String, Object> map = (Map<String, Object>) element.get("value");
+                assertEquals(0, map.get("gid"));
+                assertEquals(0, map.get("uid"));
+                assertEquals("root", map.get("user"));
+                assertEquals("root", map.get("group"));
+                assertEquals(true, map.get("privileged"));
+            }
+        }
     }
 
     public Map<String, Object> searchFact(List<Map<String, Object>> data, String fact, String value) {
