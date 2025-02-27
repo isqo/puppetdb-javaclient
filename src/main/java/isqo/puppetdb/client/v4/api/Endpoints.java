@@ -113,6 +113,7 @@ public class Endpoints {
             super(fqdn, port);
         }
 
+
         @Override
         public String getEndpoint() {
             return "/pdb/query/v4/factsets";
@@ -120,6 +121,11 @@ public class Endpoints {
 
         public List<FactSetData> get(QueryBuilder query) {
             return Arrays.asList(super.get(query.build(), FactSetData[].class));
+
+
+        @Override
+        public String getEndpoint() {
+            return "/pdb/query/v4/factsets";
         }
 
     }
