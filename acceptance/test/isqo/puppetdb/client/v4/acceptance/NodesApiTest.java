@@ -1,8 +1,11 @@
 package isqo.puppetdb.client.v4.acceptance;
 
 import isqo.puppetdb.client.v4.api.Endpoints;
+import isqo.puppetdb.client.v4.api.models.Fact;
+import isqo.puppetdb.client.v4.api.models.FactSetData;
 import isqo.puppetdb.client.v4.api.models.NodeData;
 import isqo.puppetdb.client.v4.http.HttpClient;
+import isqo.puppetdb.client.v4.querybuilder.Facts;
 import isqo.puppetdb.client.v4.querybuilder.Operators;
 import isqo.puppetdb.client.v4.querybuilder.Property;
 import isqo.puppetdb.client.v4.querybuilder.QueryBuilder;
@@ -21,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("Testing /pdb/query/v4/nodes")
 public class NodesApiTest {
     @Test
-    @DisplayName("puppetdb should responds correctly for c826a077907a.us-east-2.compute.internal node")
+    @DisplayName("puppetdb API  should responds correctly for c826a077907a.us-east-2.compute.internal node")
     void normalCase1() {
 
         HttpClient client = new HttpClient("puppetdb", 8080);
@@ -40,7 +43,7 @@ public class NodesApiTest {
     }
 
     @Test
-    @DisplayName("puppetdb should responds with production")
+    @DisplayName("puppetdb API  should responds with production")
     void normalCase2() {
 
         HttpClient client = new HttpClient("puppetdb", 8080);
@@ -53,7 +56,7 @@ public class NodesApiTest {
     }
 
     @Test
-    @DisplayName("puppetdb should respond with production puppet.us-east-2.compute.internal")
+    @DisplayName("puppetdb API  should respond with production puppet.us-east-2.compute.internal")
     void normalCase3() {
 
         HttpClient client = new HttpClient("puppetdb", 8080);
@@ -65,7 +68,8 @@ public class NodesApiTest {
     }
 
     @Test
-    @DisplayName("Puppetdb should respond with the OS of each vm")
+
+    @DisplayName("puppetdb API  should respond with the OS of each vm")
     void normalCase4() {
 
         HttpClient client = new HttpClient("puppetdb", 8080);
@@ -103,7 +107,7 @@ public class NodesApiTest {
     }
 
     @Test
-    @DisplayName("puppetdb should return the count of each OS")
+    @DisplayName("puppetdb API  should return the count of each OS")
     void normalCase5() {
 
         HttpClient client = new HttpClient("puppetdb", 8080);
@@ -124,7 +128,7 @@ public class NodesApiTest {
 
 
     @Test
-    @DisplayName("puppetdb should return factsets of Ubuntu VMs")
+    @DisplayName("puppetdb API should return factsets of Ubuntu VMs")
     void normalCase6() {
 
         HttpClient client = new HttpClient("localhost", 8080);
@@ -169,6 +173,50 @@ public class NodesApiTest {
                 assertEquals(true, map.get("privileged"));
             }
         }
+    }
+
+    @Test
+    @DisplayName("puppetdb API should return factsets of Ubuntu VMs while unmarshalling made easy ")
+    void normalCase7() {
+
+        HttpClient client = new HttpClient("localhost", 8080);
+
+        QueryBuilder query = certname.in(extract(certname,
+                select(SELECT_FACT_CONTENT,
+                        and(
+                                Property.name.equals(operatingsystem),
+                                Property.value.equals("Ubuntu"))
+                )));
+
+        List<FactSetData> data = Endpoints.factsets(client).get(query);
+        List<Fact> facts = data.get(0).getFacts().getData();
+
+        for (Fact fact : facts) {
+            if (fact.getName().equals(Facts.operatingsystem)) {
+                assertEquals("Ubuntu", fact.getValue());
+            }
+            if (fact.getName().equals(Facts.id)) {
+                assertEquals("root", fact.getValue());
+            }
+            if (fact.getName().equals(Facts.gid)) {
+                assertEquals("root", fact.getValue());
+            }
+            if (fact.getName().equals(Facts.fqdn)) {
+                assertEquals("c826a077907a.us-east-2.compute.internal", fact.getValue());
+            }
+            if (fact.getName().equals(Facts.ipaddress)) {
+                assertEquals("172.23.0.7", fact.getValue());
+            }
+            if (fact.getName().equals(Facts.identity)) {
+                Map<String, Object> map = (Map<String, Object>) fact.getValue();
+                assertEquals(0, map.get("gid"));
+                assertEquals(0, map.get("uid"));
+                assertEquals("root", map.get("user"));
+                assertEquals("root", map.get("group"));
+                assertEquals(true, map.get("privileged"));
+            }
+        }
+
     }
 
 
