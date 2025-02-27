@@ -5,6 +5,7 @@ import isqo.puppetdb.client.v4.api.models.Fact;
 import isqo.puppetdb.client.v4.api.models.FactSetData;
 import isqo.puppetdb.client.v4.api.models.NodeData;
 import isqo.puppetdb.client.v4.http.HttpClient;
+import isqo.puppetdb.client.v4.querybuilder.Facts;
 import isqo.puppetdb.client.v4.querybuilder.Operators;
 import isqo.puppetdb.client.v4.querybuilder.Property;
 import isqo.puppetdb.client.v4.querybuilder.QueryBuilder;
