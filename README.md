@@ -327,6 +327,35 @@ List<Map<String, Object>> data = Endpoints.facts(client).getListMap(query);
   
 ```
 
+or
+
+```java
+
+  QueryBuilder query = certname.in(extract(certname,
+                select(SELECT_FACT_CONTENT,
+                        and(
+                                Property.name.equals(operatingsystem),
+                                Property.value.equals("Ubuntu"))
+                )));
+
+
+    List<FactSetData> data = Endpoints.factsets(client).get(query);
+    List<Fact> facts = data.get(0).getFacts().getData();
+
+    if (fact.getName().equals(Facts.ipaddress)) {
+        assertEquals("172.23.0.7", fact.getValue());
+    }
+    if (fact.getName().equals(Facts.identity)) {
+        FactIdentity identity = new FactIdentity((Map<String, Object>) fact.getValue());
+        assertEquals(0, identity.getGid());
+        assertEquals(0, identity.getUid());
+        assertEquals("root", identity.getUser());
+        assertEquals("root", identity.getGroup());
+        assertEquals(true, identity.isPrivileged());
+    }  
+  
+```
+
 ## Environments endpoint
 ```java
 
