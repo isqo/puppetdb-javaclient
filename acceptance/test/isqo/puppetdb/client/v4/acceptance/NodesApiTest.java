@@ -2,6 +2,7 @@ package isqo.puppetdb.client.v4.acceptance;
 
 import isqo.puppetdb.client.v4.api.Endpoints;
 import isqo.puppetdb.client.v4.api.models.Fact;
+import isqo.puppetdb.client.v4.api.models.FactIdentity;
 import isqo.puppetdb.client.v4.api.models.FactSetData;
 import isqo.puppetdb.client.v4.api.models.NodeData;
 import isqo.puppetdb.client.v4.http.HttpClient;
@@ -133,12 +134,7 @@ public class NodesApiTest {
 
         HttpClient client = new HttpClient("localhost", 8080);
 
-        QueryBuilder query = certname.in(extract(certname,
-                select(SELECT_FACT_CONTENT,
-                        and(
-                                Property.name.equals(operatingsystem),
-                                Property.value.equals("Ubuntu"))
-                )));
+        QueryBuilder query = certname.in(extract(certname, select(SELECT_FACT_CONTENT, and(Property.name.equals(operatingsystem), Property.value.equals("Ubuntu")))));
 
         // Exploring the structure of the factsets
         List<Map<String, Object>> data = Endpoints.factsets(client).getListMap(query);
@@ -181,12 +177,7 @@ public class NodesApiTest {
 
         HttpClient client = new HttpClient("localhost", 8080);
 
-        QueryBuilder query = certname.in(extract(certname,
-                select(SELECT_FACT_CONTENT,
-                        and(
-                                Property.name.equals(operatingsystem),
-                                Property.value.equals("Ubuntu"))
-                )));
+        QueryBuilder query = certname.in(extract(certname, select(SELECT_FACT_CONTENT, and(Property.name.equals(operatingsystem), Property.value.equals("Ubuntu")))));
 
         List<FactSetData> data = Endpoints.factsets(client).get(query);
         List<Fact> facts = data.get(0).getFacts().getData();
@@ -208,12 +199,12 @@ public class NodesApiTest {
                 assertEquals("172.23.0.7", fact.getValue());
             }
             if (fact.getName().equals(Facts.identity)) {
-                Map<String, Object> map = (Map<String, Object>) fact.getValue();
-                assertEquals(0, map.get("gid"));
-                assertEquals(0, map.get("uid"));
-                assertEquals("root", map.get("user"));
-                assertEquals("root", map.get("group"));
-                assertEquals(true, map.get("privileged"));
+                FactIdentity identity = new FactIdentity((Map<String, Object>) fact.getValue());
+                assertEquals(0, identity.getGid());
+                assertEquals(0, identity.getUid());
+                assertEquals("root", identity.getUser());
+                assertEquals("root", identity.getGroup());
+                assertEquals(true, identity.isPrivileged());
             }
         }
 
