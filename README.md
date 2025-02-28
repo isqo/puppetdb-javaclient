@@ -353,7 +353,24 @@ or
         assertEquals("root", identity.getGroup());
         assertEquals(true, identity.isPrivileged());
     }  
-  
+```
+#### Retrieving mountpoints fact Data:
+
+```java
+    if (fact.getName().equals(Facts.mountpoints)) {
+        Map<String,FactMountpoint> mountpoints = new HashMap<>();
+
+        for (Map.Entry<String, Object> entry : ((Map<String, Object>) fact.getValue()).entrySet()) {
+            mountpoints.put(entry.getKey(),new FactMountpoint((Map<String, Object>)entry.getValue()));
+        }
+
+        assertEquals("5.99 GiB",mountpoints.get("/etc/hostname").getSize());
+        assertEquals("/dev/xvda2",mountpoints.get("/etc/hostname").getDevice());
+        assertEquals("64.00 MiB",mountpoints.get("/proc/timer_list").getAvailable());
+        assertEquals(Arrays.asList("rw", "seclabel", "nosuid","size=65536k", "mode=755"),
+                mountpoints.get("/proc/timer_list").getOptions());
+
+    }
 ```
 
 ## Environments endpoint
