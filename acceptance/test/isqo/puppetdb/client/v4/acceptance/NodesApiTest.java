@@ -1,11 +1,7 @@
 package isqo.puppetdb.client.v4.acceptance;
 
 import isqo.puppetdb.client.v4.api.Endpoints;
-import isqo.puppetdb.client.v4.api.models.Fact;
-import isqo.puppetdb.client.v4.api.models.FactIdentity;
-
-import isqo.puppetdb.client.v4.api.models.FactSetData;
-import isqo.puppetdb.client.v4.api.models.NodeData;
+import isqo.puppetdb.client.v4.api.models.*;
 import isqo.puppetdb.client.v4.http.HttpClient;
 import isqo.puppetdb.client.v4.querybuilder.Facts;
 import isqo.puppetdb.client.v4.querybuilder.Operators;
@@ -14,12 +10,13 @@ import isqo.puppetdb.client.v4.querybuilder.QueryBuilder;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static isqo.puppetdb.client.v4.querybuilder.BooleanOperators.and;
-import static isqo.puppetdb.client.v4.querybuilder.Facts.certname;
-import static isqo.puppetdb.client.v4.querybuilder.Facts.operatingsystem;
+import static isqo.puppetdb.client.v4.querybuilder.Facts.*;
 import static isqo.puppetdb.client.v4.querybuilder.Operators.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -178,14 +175,7 @@ public class NodesApiTest {
 
         HttpClient client = new HttpClient("localhost", 8080);
 
-
-        QueryBuilder query = certname.in(extract(certname,
-                select(SELECT_FACT_CONTENT,
-                        and(
-                                Property.name.equals(operatingsystem),
-                                Property.value.equals("Ubuntu"))
-                )));
-
+        QueryBuilder query = certname.in(extract(certname, select(SELECT_FACT_CONTENT, and(Property.name.equals(operatingsystem), Property.value.equals("Ubuntu")))));
 
         List<FactSetData> data = Endpoints.factsets(client).get(query);
         List<Fact> facts = data.get(0).getFacts().getData();
@@ -207,7 +197,7 @@ public class NodesApiTest {
                 assertEquals("172.23.0.7", fact.getValue());
             }
             if (fact.getName().equals(Facts.identity)) {
-              
+
                 FactIdentity identity = new FactIdentity((Map<String, Object>) fact.getValue());
                 assertEquals(0, identity.getGid());
                 assertEquals(0, identity.getUid());
@@ -215,6 +205,22 @@ public class NodesApiTest {
                 assertEquals("root", identity.getGroup());
                 assertEquals(true, identity.isPrivileged());
             }
+
+            if (fact.getName().equals(Facts.mountpoints)) {
+                Map<String,FactMountpoint> mountpoints = new HashMap<>();
+
+                for (Map.Entry<String, Object> entry : ((Map<String, Object>) fact.getValue()).entrySet()) {
+                    mountpoints.put(entry.getKey(),new FactMountpoint((Map<String, Object>)entry.getValue()));
+                }
+
+                assertEquals("5.99 GiB",mountpoints.get("/etc/hostname").getSize());
+                assertEquals("/dev/xvda2",mountpoints.get("/etc/hostname").getDevice());
+                assertEquals("64.00 MiB",mountpoints.get("/proc/timer_list").getAvailable());
+                assertEquals(Arrays.asList("rw", "seclabel", "nosuid","size=65536k", "mode=755"),
+                        mountpoints.get("/proc/timer_list").getOptions());
+
+            }
+
         }
 
     }

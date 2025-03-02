@@ -1,11 +1,8 @@
 package isqo.puppetdb.client.v4.api.models;
 
-import isqo.puppetdb.client.v4.querybuilder.Facts;
-
 import java.util.Map;
 
-public class FactIdentity extends Fact {
-    private String name = Facts.identity.toString();
+public class FactIdentity {
     private int gid;
     private int uid;
     private String user;
