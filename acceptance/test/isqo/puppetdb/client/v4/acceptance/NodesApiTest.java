@@ -207,18 +207,29 @@ public class NodesApiTest {
             }
 
             if (fact.getName().equals(Facts.mountpoints)) {
-                Map<String,FactMountpoint> mountpoints = new HashMap<>();
+                Map<String, FactMountpoint> mountpoints = new HashMap<>();
 
                 for (Map.Entry<String, Object> entry : ((Map<String, Object>) fact.getValue()).entrySet()) {
-                    mountpoints.put(entry.getKey(),new FactMountpoint((Map<String, Object>)entry.getValue()));
+                    mountpoints.put(entry.getKey(), new FactMountpoint((Map<String, Object>) entry.getValue()));
                 }
 
-                assertEquals("5.99 GiB",mountpoints.get("/etc/hostname").getSize());
-                assertEquals("/dev/xvda2",mountpoints.get("/etc/hostname").getDevice());
-                assertEquals("64.00 MiB",mountpoints.get("/proc/timer_list").getAvailable());
-                assertEquals(Arrays.asList("rw", "seclabel", "nosuid","size=65536k", "mode=755"),
-                        mountpoints.get("/proc/timer_list").getOptions());
+                assertEquals("5.99 GiB", mountpoints.get("/etc/hostname").getSize());
+                assertEquals("/dev/xvda2", mountpoints.get("/etc/hostname").getDevice());
+                assertEquals("64.00 MiB", mountpoints.get("/proc/timer_list").getAvailable());
+                assertEquals(Arrays.asList("rw", "seclabel", "nosuid", "size=65536k", "mode=755"), mountpoints.get("/proc/timer_list").getOptions());
 
+            }
+
+            if (fact.getName().equals(partitions)) {
+                Map<String, FactPartition> partitions = new HashMap<>();
+
+                for (Map.Entry<String, Object> entry : ((Map<String, Object>) fact.getValue()).entrySet()) {
+                    partitions.put(entry.getKey(), new FactPartition((Map<String, Object>) entry.getValue()));
+                }
+                assertEquals("100.00 GiB", partitions.get("/dev/mapper/docker-202:2-2838824-pool").getSize());
+                assertEquals(107374182400L, partitions.get("/dev/mapper/docker-202:2-2838824-pool").getSize_bytes());
+                assertEquals("/var/lib/docker/devicemapper/devicemapper/metadata",partitions.get("/dev/loop1").getBacking_file());
+                assertEquals("/",partitions.get("/dev/mapper/docker-202:2-2838824-219e0e6826125c45a2b084e42258dc07a3c503c5d8cbe3ba2d4a0d796f762d28").getMount());
             }
 
         }
