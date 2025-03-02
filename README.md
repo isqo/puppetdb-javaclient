@@ -346,7 +346,7 @@ or
         assertEquals("172.23.0.7", fact.getValue());
     }
     if (fact.getName().equals(Facts.identity)) {
-        FactIdentity identity = new FactIdentity((Map<String, Object>) fact.getValue());
+        IdentityFact identity = new IdentityFact((Map<String, Object>) fact.getValue());
         assertEquals(0, identity.getGid());
         assertEquals(0, identity.getUid());
         assertEquals("root", identity.getUser());
@@ -358,10 +358,10 @@ or
 
 ```java
     if (fact.getName().equals(Facts.mountpoints)) {
-        Map<String,FactMountpoint> mountpoints = new HashMap<>();
+        Map<String,MountpointFact> mountpoints = new HashMap<>();
 
         for (Map.Entry<String, Object> entry : ((Map<String, Object>) fact.getValue()).entrySet()) {
-            mountpoints.put(entry.getKey(),new FactMountpoint((Map<String, Object>)entry.getValue()));
+            mountpoints.put(entry.getKey(),new MountpointFact((Map<String, Object>)entry.getValue()));
         }
 
         assertEquals("5.99 GiB",mountpoints.get("/etc/hostname").getSize());

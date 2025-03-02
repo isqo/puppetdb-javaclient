@@ -2,19 +2,19 @@ package isqo.puppetdb.client.v4.api.models;
 
 import java.util.Map;
 
-public class FactIdentity {
+public class IdentityFact {
     private int gid;
     private int uid;
     private String user;
     private String group;
     private boolean privileged;
 
-    public FactIdentity(Map<String, Object> map) {
-        setGid((int) map.get("gid"));
-        setUid((int) map.get("uid"));
-        setUser((String) map.get("user"));
-        setGroup((String) map.get("group"));
-        setPrivileged((Boolean) map.get("privileged"));
+    public IdentityFact(Map<String, Object> map) {
+        if (map.containsKey("gid")) setGid((int) map.get("gid"));
+        if (map.containsKey("uid")) setUid((int) map.get("uid"));
+        if (map.containsKey("user")) setUser((String) map.get("user"));
+        if (map.containsKey("group")) setGroup((String) map.get("group"));
+        if (map.containsKey("privileged")) setPrivileged((Boolean) map.get("privileged"));
     }
 
     public int getGid() {

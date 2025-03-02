@@ -2,21 +2,21 @@ package isqo.puppetdb.client.v4.api.models;
 
 import java.util.Map;
 
-public class FactPartition {
+public class PartitionFact {
     private String size;
     private long size_bytes;
     private String backing_file;
     private String mount;
 
-    public FactPartition(Map<String, Object> map) {
-        setSize(map.get("size").toString());
-        setSize_bytes(Long.parseLong(map.get("size_bytes").toString()));
+    public PartitionFact(Map<String, Object> map) {
+        if (map.containsKey("size")) setSize(map.get("size").toString());
+        if (map.containsKey("size_bytes")) setSize_bytes(((Number) map.get("size_bytes")).longValue());
         if (map.containsKey("backing_file")) setBacking_file(map.get("backing_file").toString());
         if (map.containsKey("mount")) setMount(map.get("mount").toString());
     }
 
 
-    public FactPartition(String size, long size_bytes, String backing_file, String mount) {
+    public PartitionFact(String size, long size_bytes, String backing_file, String mount) {
         this.size = size;
         this.size_bytes = size_bytes;
         this.backing_file = backing_file;

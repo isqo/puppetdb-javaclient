@@ -198,7 +198,7 @@ public class NodesApiTest {
             }
             if (fact.getName().equals(Facts.identity)) {
 
-                FactIdentity identity = new FactIdentity((Map<String, Object>) fact.getValue());
+                IdentityFact identity = new IdentityFact((Map<String, Object>) fact.getValue());
                 assertEquals(0, identity.getGid());
                 assertEquals(0, identity.getUid());
                 assertEquals("root", identity.getUser());
@@ -207,10 +207,10 @@ public class NodesApiTest {
             }
 
             if (fact.getName().equals(Facts.mountpoints)) {
-                Map<String, FactMountpoint> mountpoints = new HashMap<>();
+                Map<String, MountpointFact> mountpoints = new HashMap<>();
 
                 for (Map.Entry<String, Object> entry : ((Map<String, Object>) fact.getValue()).entrySet()) {
-                    mountpoints.put(entry.getKey(), new FactMountpoint((Map<String, Object>) entry.getValue()));
+                    mountpoints.put(entry.getKey(), new MountpointFact((Map<String, Object>) entry.getValue()));
                 }
 
                 assertEquals("5.99 GiB", mountpoints.get("/etc/hostname").getSize());
@@ -221,10 +221,10 @@ public class NodesApiTest {
             }
 
             if (fact.getName().equals(partitions)) {
-                Map<String, FactPartition> partitions = new HashMap<>();
+                Map<String, PartitionFact> partitions = new HashMap<>();
 
                 for (Map.Entry<String, Object> entry : ((Map<String, Object>) fact.getValue()).entrySet()) {
-                    partitions.put(entry.getKey(), new FactPartition((Map<String, Object>) entry.getValue()));
+                    partitions.put(entry.getKey(), new PartitionFact((Map<String, Object>) entry.getValue()));
                 }
                 assertEquals("100.00 GiB", partitions.get("/dev/mapper/docker-202:2-2838824-pool").getSize());
                 assertEquals(107374182400L, partitions.get("/dev/mapper/docker-202:2-2838824-pool").getSize_bytes());

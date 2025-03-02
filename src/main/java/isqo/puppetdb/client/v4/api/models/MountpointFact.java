@@ -3,7 +3,7 @@ package isqo.puppetdb.client.v4.api.models;
 import java.util.List;
 import java.util.Map;
 
-public class FactMountpoint {
+public class MountpointFact {
 
     private String size;
     private String used;
@@ -16,17 +16,17 @@ public class FactMountpoint {
     private long size_bytes;
     private long available_bytes;
 
-    public FactMountpoint(Map<String, Object> map) {
-        setSize((String) map.get("size"));
-        setUsed((String) map.get("used"));
-        setDevice((String) map.get("device"));
-        setOptions((List<String>) map.get("options"));
-        setCapacity((String) map.get("capacity"));
-        setAvailable((String) map.get("available"));
-        setFilesystem((String) map.get("filesystem"));
-        setUsed_bytes(((Number) map.get("size_bytes")).longValue());
-        setSize_bytes(((Number) map.get("size_bytes")).longValue());
-        setAvailable_bytes(((Number) map.get("available_bytes")).longValue());
+    public MountpointFact(Map<String, Object> map) {
+        if (map.containsKey("size")) setSize((String) map.get("size"));
+        if (map.containsKey("used"))setUsed((String) map.get("used"));
+        if (map.containsKey("device")) setDevice((String) map.get("device"));
+        if (map.containsKey("options")) setOptions((List<String>) map.get("options"));
+        if (map.containsKey("capacity")) setCapacity((String) map.get("capacity"));
+        if (map.containsKey("available"))  setAvailable((String) map.get("available"));
+        if (map.containsKey("filesystem")) setFilesystem((String) map.get("filesystem"));
+        if (map.containsKey("used_bytes")) setUsed_bytes(((Number) map.get("used_bytes")).longValue());
+        if (map.containsKey("size_bytes")) setSize_bytes(((Number) map.get("size_bytes")).longValue());
+        if (map.containsKey("available_bytes")) setAvailable_bytes(((Number) map.get("available_bytes")).longValue());
     }
 
     public String getSize() {
