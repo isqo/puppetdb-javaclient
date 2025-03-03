@@ -2,6 +2,7 @@ package isqo.puppetdb.client.v4.acceptance;
 
 import isqo.puppetdb.client.v4.api.Endpoints;
 import isqo.puppetdb.client.v4.api.models.*;
+import isqo.puppetdb.client.v4.api.models.networking.NetworkingFact;
 import isqo.puppetdb.client.v4.http.HttpClient;
 import isqo.puppetdb.client.v4.querybuilder.Facts;
 import isqo.puppetdb.client.v4.querybuilder.Operators;
@@ -217,7 +218,6 @@ public class NodesApiTest {
                 assertEquals("/dev/xvda2", mountpoints.get("/etc/hostname").getDevice());
                 assertEquals("64.00 MiB", mountpoints.get("/proc/timer_list").getAvailable());
                 assertEquals(Arrays.asList("rw", "seclabel", "nosuid", "size=65536k", "mode=755"), mountpoints.get("/proc/timer_list").getOptions());
-
             }
 
             if (fact.getName().equals(partitions)) {
@@ -228,10 +228,16 @@ public class NodesApiTest {
                 }
                 assertEquals("100.00 GiB", partitions.get("/dev/mapper/docker-202:2-2838824-pool").getSize());
                 assertEquals(107374182400L, partitions.get("/dev/mapper/docker-202:2-2838824-pool").getSize_bytes());
-                assertEquals("/var/lib/docker/devicemapper/devicemapper/metadata",partitions.get("/dev/loop1").getBacking_file());
-                assertEquals("/",partitions.get("/dev/mapper/docker-202:2-2838824-219e0e6826125c45a2b084e42258dc07a3c503c5d8cbe3ba2d4a0d796f762d28").getMount());
+                assertEquals("/var/lib/docker/devicemapper/devicemapper/metadata", partitions.get("/dev/loop1").getBacking_file());
+                assertEquals("/", partitions.get("/dev/mapper/docker-202:2-2838824-219e0e6826125c45a2b084e42258dc07a3c503c5d8cbe3ba2d4a0d796f762d28").getMount());
             }
 
+            if (fact.getName().equals(networking)) {
+                NetworkingFact networkingFact = new NetworkingFact((Map<String, Object>) fact.getValue());
+                assertEquals("172.23.0.7", networkingFact.getInterfaces().get("eth0").getBindings().get(0).getAddress());
+                assertEquals("02:42:ac:17:00:07", networkingFact.getInterfaces().get("eth0").getMac());
+                assertEquals(65536, networkingFact.getInterfaces().get("lo").getMtu());
+            }
         }
 
     }
