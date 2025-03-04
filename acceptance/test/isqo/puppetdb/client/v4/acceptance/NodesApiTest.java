@@ -2,6 +2,7 @@ package isqo.puppetdb.client.v4.acceptance;
 
 import isqo.puppetdb.client.v4.api.Endpoints;
 import isqo.puppetdb.client.v4.api.models.*;
+import isqo.puppetdb.client.v4.api.models.hypervisors.HypervisorsFact;
 import isqo.puppetdb.client.v4.api.models.memory.MemoryFact;
 import isqo.puppetdb.client.v4.api.models.networking.NetworkingFact;
 import isqo.puppetdb.client.v4.http.HttpClient;
@@ -253,6 +254,11 @@ public class NodesApiTest {
                 MemoryFact memoryFact = new MemoryFact((Map<String, Object>) fact.getValue());
                 assertEquals("1.47 GiB", memoryFact.getSystemData().getUsed());
                 assertEquals(1579233280, memoryFact.getSystemData().getUsed_bytes());
+            }
+            if (fact.getName().equals(hypervisors)) {
+                HypervisorsFact hypervisorsFact = new HypervisorsFact((Map<String, Object>) fact.getValue());
+                assertEquals("hvm", hypervisorsFact.getXenData().getContext());
+                assertEquals("c826a077907ad8a0161c2d510edef73102c428ee19270405e0981b9c32f47b6f", hypervisorsFact.getDockerData().getId());
             }
 
         }
