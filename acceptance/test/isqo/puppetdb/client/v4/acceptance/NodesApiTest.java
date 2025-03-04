@@ -2,6 +2,7 @@ package isqo.puppetdb.client.v4.acceptance;
 
 import isqo.puppetdb.client.v4.api.Endpoints;
 import isqo.puppetdb.client.v4.api.models.*;
+import isqo.puppetdb.client.v4.api.models.memory.MemoryFact;
 import isqo.puppetdb.client.v4.api.models.networking.NetworkingFact;
 import isqo.puppetdb.client.v4.http.HttpClient;
 import isqo.puppetdb.client.v4.querybuilder.Facts;
@@ -11,10 +12,7 @@ import isqo.puppetdb.client.v4.querybuilder.QueryBuilder;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static isqo.puppetdb.client.v4.querybuilder.BooleanOperators.and;
 import static isqo.puppetdb.client.v4.querybuilder.Facts.*;
@@ -238,6 +236,25 @@ public class NodesApiTest {
                 assertEquals("02:42:ac:17:00:07", networkingFact.getInterfaces().get("eth0").getMac());
                 assertEquals(65536, networkingFact.getInterfaces().get("lo").getMtu());
             }
+
+            if (fact.getName().equals(processors)) {
+                ProcessorsFact processorsFact = new ProcessorsFact((Map<String, Object>) fact.getValue());
+
+                assertEquals(Arrays.asList("Intel(R) Xeon(R) CPU E5-2686 v4 @ 2.30GHz", "Intel(R) Xeon(R) CPU E5-2686 v4 @ 2.30GHz"), processorsFact.getModels());
+            }
+
+            if (fact.getName().equals(trusted)) {
+                TrustedFact trustedFact = new TrustedFact((Map<String, Object>) fact.getValue());
+                assertEquals("c826a077907a.us-east-2.compute.internal", trustedFact.getCertname());
+            }
+
+
+            if (fact.getName().equals(memory)) {
+                MemoryFact memoryFact = new MemoryFact((Map<String, Object>) fact.getValue());
+                assertEquals("1.47 GiB", memoryFact.getSystemData().getUsed());
+                assertEquals(1579233280, memoryFact.getSystemData().getUsed_bytes());
+            }
+
         }
 
     }
