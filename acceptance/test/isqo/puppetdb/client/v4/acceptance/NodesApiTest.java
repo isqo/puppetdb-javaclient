@@ -2,9 +2,11 @@ package isqo.puppetdb.client.v4.acceptance;
 
 import isqo.puppetdb.client.v4.api.Endpoints;
 import isqo.puppetdb.client.v4.api.models.*;
+import isqo.puppetdb.client.v4.api.models.dmi.DMIFact;
 import isqo.puppetdb.client.v4.api.models.hypervisors.HypervisorsFact;
 import isqo.puppetdb.client.v4.api.models.memory.MemoryFact;
 import isqo.puppetdb.client.v4.api.models.networking.NetworkingFact;
+import isqo.puppetdb.client.v4.api.models.os.OSFact;
 import isqo.puppetdb.client.v4.http.HttpClient;
 import isqo.puppetdb.client.v4.querybuilder.Facts;
 import isqo.puppetdb.client.v4.querybuilder.Operators;
@@ -106,7 +108,7 @@ public class NodesApiTest {
     }
 
     @Test
-    @DisplayName("puppetdb API  should return the count of each OS")
+    @DisplayName("puppetdb API should return the count of each OS")
     void normalCase5() {
 
         HttpClient client = new HttpClient("puppetdb", 8080);
@@ -170,7 +172,7 @@ public class NodesApiTest {
     }
 
     @Test
-    @DisplayName("puppetdb API should return factsets of Ubuntu VMs while unmarshalling made easy ")
+    @DisplayName("puppetdb API should return factsets of Ubuntu VMs while unmarshalling made easy")
     void normalCase7() {
 
         HttpClient client = new HttpClient("localhost", 8080);
@@ -178,6 +180,7 @@ public class NodesApiTest {
         QueryBuilder query = certname.in(extract(certname, select(SELECT_FACT_CONTENT, and(Property.name.equals(operatingsystem), Property.value.equals("Ubuntu")))));
 
         List<FactSetData> data = Endpoints.factsets(client).get(query);
+        // We select first element. /!\ null if db is empty.
         List<Fact> facts = data.get(0).getFacts().getData();
 
         for (Fact fact : facts) {
@@ -249,7 +252,6 @@ public class NodesApiTest {
                 assertEquals("c826a077907a.us-east-2.compute.internal", trustedFact.getCertname());
             }
 
-
             if (fact.getName().equals(memory)) {
                 MemoryFact memoryFact = new MemoryFact((Map<String, Object>) fact.getValue());
                 assertEquals("1.47 GiB", memoryFact.getSystemData().getUsed());
@@ -260,11 +262,56 @@ public class NodesApiTest {
                 assertEquals("hvm", hypervisorsFact.getXenData().getContext());
                 assertEquals("c826a077907ad8a0161c2d510edef73102c428ee19270405e0981b9c32f47b6f", hypervisorsFact.getDockerData().getId());
             }
-
         }
 
     }
 
+    @Test
+    @DisplayName("puppetdb API should return all facts of edbe0bdb0c1e.us-east-2.compute.internal VM.")
+    void normalCase8() {
+
+        HttpClient client = new HttpClient("localhost", 8080);
+        QueryBuilder query = certname.equals("edbe0bdb0c1e.us-east-2.compute.internal");
+        List<FactData> facts = Endpoints.facts(client).get(query);
+            for (FactData fact : facts) {
+            if (fact.getName().equals(Facts.dmi)) {
+                Map<String, Object> factValue = (Map<String, Object>) fact.getValue();
+                DMIFact dmiFact = new DMIFact(factValue);
+                assertEquals("Xen", dmiFact.getManufacturer());
+                assertEquals("ec2e2cf9-4043-bd09-fb6d-ba2b7d08a030",dmiFact.getProductData().getSerial_number());
+                assertEquals("EC2E2CF9-4043-BD09-FB6D-BA2B7D08A030",dmiFact.getProductData().getUuid());
+                assertEquals("Other",dmiFact.getChassisData().getType());
+                assertEquals("08/24/2006",dmiFact.getBiosData().getRelease_date());
+            }
+        }
+    }
+
+
+    @Test
+    @DisplayName("puppetdb API should return all facts of of c826a077907a.us-east-2.compute.internal VM, Os fact is present.")
+    void normalCase9() {
+
+        HttpClient client = new HttpClient("localhost", 8080);
+        QueryBuilder query = certname.equals("c826a077907a.us-east-2.compute.internal");
+        List<FactData> facts = Endpoints.facts(client).get(query);
+
+        for (FactData fact : facts) {
+            if (fact.getName().equals(os)) {
+                OSFact osFact = new OSFact((Map<String, Object>) fact.getValue());
+                assertEquals("Ubuntu", osFact.getName());
+                assertEquals("Debian", osFact.getFamily());
+                assertEquals("x86_64", osFact.getHardware());
+                assertEquals("amd64", osFact.getArchitecture());
+                assertEquals(false,osFact.getSelinuxData().isEnabled());
+                assertEquals("18.04",osFact.getReleaseData().getFull());
+                assertEquals("18.04",osFact.getReleaseData().getMajor());
+                assertEquals("18.04",osFact.getDistroData().getReleaseData().getFull());
+                assertEquals("18.04",osFact.getDistroData().getReleaseData().getMajor());
+                assertEquals("bionic",osFact.getDistroData().getCodename());
+                assertEquals("Ubuntu 18.04.3 LTS",osFact.getDistroData().getDescription());
+            }
+        }
+    }
 
     public Map<String, Object> searchFact(List<Map<String, Object>> data, String fact, String value) {
 

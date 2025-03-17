@@ -1,5 +1,7 @@
 package isqo.puppetdb.client.v4.api;
 
+import isqo.puppetdb.client.v4.api.models.Fact;
+import isqo.puppetdb.client.v4.api.models.FactData;
 import isqo.puppetdb.client.v4.api.models.FactSetData;
 import isqo.puppetdb.client.v4.api.models.NodeData;
 import isqo.puppetdb.client.v4.http.HttpClient;
@@ -97,6 +99,10 @@ public class Endpoints {
             super(fqdn, port);
         }
 
+        public List<FactData> get(QueryBuilder query) {
+            return Arrays.asList(super.get(query.build(), FactData[].class));
+        }
+
         @Override
         public String getEndpoint() {
             return "/pdb/query/v4/facts";
@@ -122,7 +128,6 @@ public class Endpoints {
 
         public List<FactSetData> get(QueryBuilder query) {
             return Arrays.asList(super.get(query.build(), FactSetData[].class));
-
 
         }
     }

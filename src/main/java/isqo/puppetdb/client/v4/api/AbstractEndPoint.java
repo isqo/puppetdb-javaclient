@@ -32,6 +32,8 @@ public abstract class AbstractEndPoint {
     }
   }
 
+  // get List Map means get raw reply, you'd still have to unmarshal it.
+  // you'd have to cast Object to another type.
   public List<Map<String,Object>> getListMap(QueryBuilder query) {
     try {
 
