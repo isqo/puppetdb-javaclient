@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class NodesApiTest {
     @Test
     @DisplayName("puppetdb API  should responds correctly for c826a077907a.us-east-2.compute.internal node")
-    void normalCase1() {
+    void nominalCase1() {
 
         HttpClient client = new HttpClient("puppetdb", 8080);
 
@@ -45,7 +45,7 @@ public class NodesApiTest {
 
     @Test
     @DisplayName("puppetdb API  should responds with production")
-    void normalCase2() {
+    void nominalCase2() {
 
         HttpClient client = new HttpClient("puppetdb", 8080);
 
@@ -58,7 +58,7 @@ public class NodesApiTest {
 
     @Test
     @DisplayName("puppetdb API  should respond with production puppet.us-east-2.compute.internal")
-    void normalCase3() {
+    void nominalCase3() {
 
         HttpClient client = new HttpClient("puppetdb", 8080);
 
@@ -71,7 +71,7 @@ public class NodesApiTest {
     @Test
 
     @DisplayName("puppetdb API  should respond with the OS of each vm")
-    void normalCase4() {
+    void nominalCase4() {
 
         HttpClient client = new HttpClient("puppetdb", 8080);
 
@@ -109,7 +109,7 @@ public class NodesApiTest {
 
     @Test
     @DisplayName("puppetdb API should return the count of each OS")
-    void normalCase5() {
+    void nominalCase5() {
 
         HttpClient client = new HttpClient("puppetdb", 8080);
 
@@ -130,7 +130,7 @@ public class NodesApiTest {
 
     @Test
     @DisplayName("puppetdb API should return factsets of Ubuntu VMs")
-    void normalCase6() {
+    void nominalCase6() {
 
         HttpClient client = new HttpClient("localhost", 8080);
 
@@ -173,7 +173,7 @@ public class NodesApiTest {
 
     @Test
     @DisplayName("puppetdb API should return factsets of Ubuntu VMs while unmarshalling made easy")
-    void normalCase7() {
+    void nominalCase7() {
 
         HttpClient client = new HttpClient("localhost", 8080);
 
@@ -268,7 +268,7 @@ public class NodesApiTest {
 
     @Test
     @DisplayName("puppetdb API should return all facts of edbe0bdb0c1e.us-east-2.compute.internal VM.")
-    void normalCase8() {
+    void nominalCase8() {
 
         HttpClient client = new HttpClient("localhost", 8080);
         QueryBuilder query = certname.equals("edbe0bdb0c1e.us-east-2.compute.internal");
@@ -288,15 +288,15 @@ public class NodesApiTest {
 
 
     @Test
-    @DisplayName("puppetdb API should return all facts of of c826a077907a.us-east-2.compute.internal VM, Os fact is present.")
-    void normalCase9() {
+    @DisplayName("puppetdb API should return all facts of c826a077907a.us-east-2.compute.internal VM, Os fact must be present as well.")
+    void nominalCase9() {
 
         HttpClient client = new HttpClient("localhost", 8080);
         QueryBuilder query = certname.equals("c826a077907a.us-east-2.compute.internal");
         List<FactData> facts = Endpoints.facts(client).get(query);
 
         for (FactData fact : facts) {
-            if (fact.getName().equals(os)) {
+            if (fact.getName().equals(Facts.os)) {
                 OSFact osFact = new OSFact((Map<String, Object>) fact.getValue());
                 assertEquals("Ubuntu", osFact.getName());
                 assertEquals("Debian", osFact.getFamily());
