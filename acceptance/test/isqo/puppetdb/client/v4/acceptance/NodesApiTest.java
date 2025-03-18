@@ -28,7 +28,7 @@ public class NodesApiTest {
     @DisplayName("puppetdb API  should responds correctly for c826a077907a.us-east-2.compute.internal node")
     void nominalCase1() {
 
-        HttpClient client = new HttpClient("puppetdb", 8080);
+        HttpClient client = new HttpClient("localhost", 8080);
 
         List<NodeData> nodes = Endpoints.nodes(client).get(certname.equals("c826a077907a.us-east-2.compute.internal"));
 
@@ -47,7 +47,7 @@ public class NodesApiTest {
     @DisplayName("puppetdb API  should responds with production")
     void nominalCase2() {
 
-        HttpClient client = new HttpClient("puppetdb", 8080);
+        HttpClient client = new HttpClient("localhost", 8080);
 
         List<Map<String, Object>> data = Endpoints.environments(client).getListMap();
 
@@ -60,7 +60,7 @@ public class NodesApiTest {
     @DisplayName("puppetdb API  should respond with production puppet.us-east-2.compute.internal")
     void nominalCase3() {
 
-        HttpClient client = new HttpClient("puppetdb", 8080);
+        HttpClient client = new HttpClient("localhost", 8080);
 
         List<Map<String, Object>> data = Endpoints.producers(client).getListMap();
 
@@ -73,7 +73,7 @@ public class NodesApiTest {
     @DisplayName("puppetdb API  should respond with the OS of each vm")
     void nominalCase4() {
 
-        HttpClient client = new HttpClient("puppetdb", 8080);
+        HttpClient client = new HttpClient("localhost", 8080);
 
         List<Map<String, Object>> data = Endpoints.facts(client).getListMap(Property.name.equals(operatingsystem));
 
@@ -111,7 +111,7 @@ public class NodesApiTest {
     @DisplayName("puppetdb API should return the count of each OS")
     void nominalCase5() {
 
-        HttpClient client = new HttpClient("puppetdb", 8080);
+        HttpClient client = new HttpClient("localhost", 8080);
 
         QueryBuilder query = Operators.extract(Operators.count(Property.value), Property.name.equals(operatingsystem), group_by(Property.value));
 
